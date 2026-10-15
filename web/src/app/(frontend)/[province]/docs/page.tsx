@@ -116,8 +116,18 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
     views: sum(fileViews, d) + (linkOpens.get(d.id) ?? 0),
     downloads: d.files.length ? sum(fileDownloads, d) : undefined,
   })
-  // year+topic pairs that have a dashboard, for the "see the dashboard" link on dataset cards
-  const dashTopics = new Set(dashboards.filter((d) => d.topic).map((d) => `${d.fiscalYear}:${d.topic!.slug}`))
+  // The "see the dashboard" link on dataset cards: the topic's dashboards of the same year, or, when that year
+  // has none, of the nearest year that has some (the newer one on a tie); no link when the topic has none at all.
+  const dashYears = new Map<string, number[]>()
+  for (const d of dashboards) {
+    const slug = d.topic?.slug
+    if (slug && d.fiscalYear) dashYears.set(slug, [...(dashYears.get(slug) ?? []), d.fiscalYear])
+  }
+  const dashYearFor = (slug: string, year: number) => {
+    const ys = dashYears.get(slug)
+    if (!ys?.length) return null
+    return ys.includes(year) ? year : [...new Set(ys)].sort((a, b) => Math.abs(a - year) - Math.abs(b - year) || b - a)[0]
+  }
 
   return (
     <>
@@ -199,19 +209,30 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
               }
 
               if (g.key === 'dataset') {
-                // Template 1 → 2 → 3 of one development issue belong together
+                // Template 1 → 2 → 3 of one development issue belong together: rows with the same issue name. Many rows
+                // from the old site have no issue name; those are told apart by topic, and their untagged rows join the
+                // year's one topic set only when they fill its missing templates (some sets have the topic on
+                // Template 1 only), otherwise they make a card of their own.
                 const issues = new Map<string, DocRow[]>()
-                for (const d of rows) {
-                  const k = `${d.fiscalYear}:${d.issueTitle ?? ''}`
-                  issues.set(k, [...(issues.get(k) ?? []), d])
+                const add = (k: string, d: DocRow) => issues.set(k, [...(issues.get(k) ?? []), d])
+                for (const d of rows) if (d.issueTitle) add(`${d.fiscalYear}:${d.issueTitle}`, d)
+                for (const y of new Set(rows.map((d) => d.fiscalYear))) {
+                  const unnamed = rows.filter((d) => d.fiscalYear === y && !d.issueTitle)
+                  const tagged = unnamed.filter((d) => d.topic?.slug)
+                  const untagged = unnamed.filter((d) => !d.topic?.slug)
+                  for (const d of tagged) add(`${y}:#${d.topic!.slug}`, d)
+                  const topics = new Set(tagged.map((d) => d.topic!.slug))
+                  const codes = unnamed.map((d) => d.type.code)
+                  const fills = topics.size === 1 && new Set(codes).size === codes.length
+                  for (const d of untagged) add(fills ? `${y}:#${[...topics][0]}` : `${y}:`, d)
                 }
                 return (
                   <section className={`sec tone-${g.tone}`} key={g.key} id={`sec-${g.key}`} data-search-group>
                     {head}
                     <div className="grid-issues">
-                      {[...issues.entries()].map(([key, items]) => {
+                      {[...issues.entries()].sort((a, b) => Number(b[0].split(':')[0]) - Number(a[0].split(':')[0])).map(([key, items]) => {
                         const year = Number(key.split(':')[0])
-                        const issue = key.slice(key.indexOf(':') + 1)
+                        const issue = items.find((i) => i.issueTitle)?.issueTitle ?? ''
                         const topic = items.find((i) => i.topic)?.topic ?? null
                         const c = topicColor(topic)
                         const ordered = [...items].sort((a, b) => a.type.code.localeCompare(b.type.code))
@@ -220,7 +241,7 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
                             <div>
                               {multi && <span className="year-tag">ปี {year}</span>}
                               {topic && <span className="issue__topic">{topic.nameTh}</span>}
-                              <div className="issue__title">{issue || 'ชุดข้อมูล'}</div>
+                              <div className="issue__title">{issue || (topic ? `ชุดข้อมูลประเด็น${topic.nameTh}` : 'ชุดข้อมูล')}</div>
                             </div>
                             <ol className="steps">
                               {ordered.map((d) => {
@@ -248,14 +269,17 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
                                 )
                               })}
                             </ol>
-                            {topic && dashTopics.has(`${year}:${topic.slug}`) && (
-                              <Link href={`/${province.slug}/utilization?year=${year}&topic=${topic.slug}`} className="issue__more">
-                                ดูแดชบอร์ดประเด็นนี้
-                                <Svg size={18}>
-                                  <path d="M5 12h14M13 6l6 6-6 6" />
-                                </Svg>
-                              </Link>
-                            )}
+                            {(() => {
+                              const dy = topic?.slug ? dashYearFor(topic.slug, year) : null
+                              return topic && dy ? (
+                                <Link href={`/${province.slug}/utilization?year=${dy}&topic=${topic.slug}`} className="issue__more">
+                                  ดูแดชบอร์ดประเด็นนี้{dy !== year ? ` (ปี ${dy})` : ''}
+                                  <Svg size={18}>
+                                    <path d="M5 12h14M13 6l6 6-6 6" />
+                                  </Svg>
+                                </Link>
+                              ) : null
+                            })()}
                           </div>
                         )
                       })}
