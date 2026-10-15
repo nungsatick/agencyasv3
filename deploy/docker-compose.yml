@@ -1,0 +1,40 @@
+# Production stack: the web app and its PostgreSQL database.
+# Copy .env.example to .env, fill it in, then:  docker compose up -d --build
+# The app listens on 127.0.0.1:3000; put nginx (see nginx.conf) in front of it.
+
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: agencyas
+      POSTGRES_USER: agencyas
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agencyas -d agencyas"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web:
+    build: ../web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://agencyas:${DB_PASSWORD}@db:5432/agencyas
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env}
+      SITE_URL: ${SITE_URL:?set SITE_URL in .env}
+      FIRST_ADMIN_USERNAME: ${FIRST_ADMIN_USERNAME:-}
+      FIRST_ADMIN_NAME: ${FIRST_ADMIN_NAME:-}
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3000}:3000"
+    volumes:
+      - storage:/app/storage
+
+volumes:
+  dbdata:
+  storage:

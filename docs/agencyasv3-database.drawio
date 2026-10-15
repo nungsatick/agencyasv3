@@ -1,0 +1,480 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="Database overview" id="database">
+    <mxGraphModel grid="1" page="1" pageWidth="2200" pageHeight="1770">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="AGENCYAS V3 / DATABASE" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=21;fontColor=#0284c7;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="30" width="292.0" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="แผนผังฐานข้อมูลและความสัมพันธ์หลัก" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=40;fontColor=#0f172a;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="72" width="704.0" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="PostgreSQL 17  •  แสดงฟิลด์สำคัญ  •  ลูกศรชี้จากตารางลูกไปตารางที่ถูกอ้างอิง (FK → PK)" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=22;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="55" y="137" width="852.0" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="เส้นทึบ: Foreign Key   |   เส้นประสีทอง: อ้างอิงด้วยโค้ด ไม่มี Foreign Key   |   ฉบับละเอียด: 37 ตาราง / 64 FK" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=20;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="55" y="179" width="934.0" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#2563eb;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="270" width="350" height="258" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="provinces" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#2563eb;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="73" y="284" width="131.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="ข้อมูลจังหวัด" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="320" width="96.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="357" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="      name_th" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="390" width="120.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="      slug" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="423" width="80.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="      code" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="456" width="86.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="FK  hero_image_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="489" width="167.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#2563eb;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="580" width="350" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="document_types" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#2563eb;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="73" y="594" width="219.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="ประเภทเอกสาร" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="630" width="116.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="17" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="667" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="18" value="      code" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="700" width="86.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="19" value="      name_th" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="733" width="120.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="      group" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="766" width="96.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#2563eb;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="870" width="350" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="topics" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#2563eb;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="73" y="884" width="85.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="หมวดประเด็น" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="920" width="101.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="24" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="957" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="25" value="      name_th" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="990" width="120.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="26" value="      slug" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="1023" width="80.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="27" value="      color" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="1056" width="86.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="28" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#0f766e;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="650" y="270" width="420" height="357" as="geometry" />
+        </mxCell>
+        <mxCell id="29" value="documents" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#0f766e;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="668" y="284" width="148.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="30" value="เอกสารการดำเนินงาน" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="320" width="156.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="357" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="FK  province_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="390" width="139.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="FK  type_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="423" width="104.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="34" value="FK  topic_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="456" width="108.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="35" value="      title" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="489" width="76.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="36" value="      fiscal_year" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="522" width="133.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="37" value="      _status" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="555" width="105.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="38" value="      deleted_at" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="588" width="134.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="39" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#0f766e;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="650" y="760" width="420" height="357" as="geometry" />
+        </mxCell>
+        <mxCell id="40" value="dashboards" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#0f766e;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="668" y="774" width="156.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="สารสนเทศเพื่อการตัดสินใจ" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="810" width="193.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="847" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="43" value="FK  province_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="880" width="139.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="44" value="FK  topic_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="913" width="108.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="45" value="FK  thumbnail_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="946" width="152.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="46" value="      title" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="979" width="76.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="47" value="      embed_url" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="1012" width="136.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="48" value="      pinned" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="1045" width="104.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="49" value="      _status" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="668" y="1078" width="105.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="50" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="310" width="340" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="documents_rels" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#7c3aed;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="324" width="211.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="52" value="ตารางเชื่อมไฟล์เอกสาร" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="360" width="170.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="53" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="397" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="54" value="FK  parent_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="430" width="123.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="55" value="      path" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="463" width="84.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="56" value="FK  files_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="496" width="100.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="57" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#7c3aed;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="810" width="340" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="58" value="dashboards_rels" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#7c3aed;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="824" width="219.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="59" value="ตารางเชื่อมไฟล์ประกอบ" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="860" width="176.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="60" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="897" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="61" value="FK  parent_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="930" width="123.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="62" value="      path" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="963" width="84.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="63" value="FK  files_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="996" width="100.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="64" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#c2410c;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="350" width="430" height="357" as="geometry" />
+        </mxCell>
+        <mxCell id="65" value="files" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#c2410c;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="364" width="64.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="66" value="ไฟล์และเวอร์ชันของไฟล์" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="400" width="180.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="67" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="437" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="68" value="      filename" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="470" width="117.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="69" value="      public_path" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="503" width="144.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="70" value="      mime_type" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="536" width="138.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="71" value="      version_no" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="569" width="136.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="72" value="      is_current" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="602" width="129.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="73" value="FK  version_of_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="635" width="153.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="74" value="FK  uploaded_by_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="668" width="176.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="75" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#6d28d9;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="870" width="430" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="76" value="users" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=25;fontColor=#6d28d9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="884" width="78.0" height="39" as="geometry" />
+        </mxCell>
+        <mxCell id="77" value="บัญชีเจ้าหน้าที่" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="920" width="110.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="78" value="PK  id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="957" width="58.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="79" value="      username" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="990" width="129.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="80" value="      role" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="1023" width="77.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="81" value="      status" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1718" y="1056" width="95.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="82" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="390" as="sourcePoint" />
+            <mxPoint x="405" y="390" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="83" value="province_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="450" y="355" width="94.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="84" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="450" as="sourcePoint" />
+            <mxPoint x="405" y="665" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="515" y="450" />
+              <mxPoint x="515" y="665" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="85" value="type_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="555" width="64.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="86" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="510" as="sourcePoint" />
+            <mxPoint x="405" y="950" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="570" y="510" />
+              <mxPoint x="570" y="950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="87" value="topic_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="425" y="915" width="68.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="88" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="875" as="sourcePoint" />
+            <mxPoint x="405" y="490" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="465" y="875" />
+              <mxPoint x="465" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="89" value="province_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="470" y="740" width="94.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="90" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="940" as="sourcePoint" />
+            <mxPoint x="405" y="1040" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="940" />
+              <mxPoint x="600" y="1040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="91" value="topic_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1050" width="68.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="92" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1170" y="390" as="sourcePoint" />
+            <mxPoint x="1070" y="390" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="93" value="parent_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1083" y="353" width="80.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="94" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1510" y="465" as="sourcePoint" />
+            <mxPoint x="1700" y="465" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="95" value="files_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="429" width="62.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="96" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1170" y="895" as="sourcePoint" />
+            <mxPoint x="1070" y="895" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="97" value="parent_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1083" y="858" width="80.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="98" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1510" y="975" as="sourcePoint" />
+            <mxPoint x="1700" y="610" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1600" y="975" />
+              <mxPoint x="1600" y="610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="99" value="files_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1610" y="690" width="62.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="100" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="1070" as="sourcePoint" />
+            <mxPoint x="1700" y="680" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1550" y="1070" />
+              <mxPoint x="1550" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="101" value="thumbnail_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1195" y="1080" width="105.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="102" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1915" y="707" as="sourcePoint" />
+            <mxPoint x="1915" y="870" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="103" value="uploaded_by_id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1935" y="772" width="125.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="104" edge="1" parent="1" style="endArrow=block;strokeColor=#64748b;strokeWidth=2;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2130" y="570" as="sourcePoint" />
+            <mxPoint x="2130" y="405" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="2170" y="570" />
+              <mxPoint x="2170" y="405" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="105" value="version_of_id → files.id" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1770" y="302" width="183.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="106" value="ความสัมพันธ์อื่นและตารางประกอบ" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=28;fontColor=#0f172a;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1190" width="441.0" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="107" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#6d28d9;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1245" width="650" height="265" as="geometry" />
+        </mxCell>
+        <mxCell id="108" value="สิทธิ์และการเข้าสู่ระบบ" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=24;fontColor=#6d28d9;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="73" y="1260" width="248.0" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="109" value="users ↔ provinces : ผ่าน users_rels (หลายต่อหลาย)" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="1310" width="390.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="110" value="user_tokens → users : เจ้าของโทเคน / ผู้สร้าง" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="1346" width="341.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="111" value="users_sessions / users_recovery_codes → users" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="1382" width="370.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="112" value="session_activity.user_id → users.id : ไม่มี FK" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="73" y="1418" width="339.984375" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="113" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#0f766e;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="755" y="1245" width="650" height="265" as="geometry" />
+        </mxCell>
+        <mxCell id="114" value="เนื้อหากลางและการตั้งค่า" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=24;fontColor=#0f766e;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="773" y="1260" width="279.0" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="115" value="central_contents ↔ files : central_contents_rels" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="773" y="1310" width="367.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="116" value="central_contents_links → central_contents / files" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="773" y="1346" width="374.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="117" value="announcements ↔ provinces : announcements_rels" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="773" y="1382" width="393.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="118" value="announcements.image_id / provinces.hero_image_id → files" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="773" y="1418" width="457.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="119" value="site_settings_footer_links → site_settings" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="773" y="1454" width="322.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="120" value="" style="rounded=1;fillColor=#ffffff;strokeColor=#c2410c;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1455" y="1245" width="675" height="265" as="geometry" />
+        </mxCell>
+        <mxCell id="121" value="สถิติและประวัติ" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=24;fontColor=#c2410c;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1473" y="1260" width="169.0" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="122" value="page_views → provinces : ยอดรายวัน / หน้า" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1473" y="1310" width="329.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="123" value="activity_logs → users / provinces : ประวัติใช้งาน" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1473" y="1346" width="361.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="124" value="cookie_consents : บันทึกความยินยอมแบบไม่ระบุตัวตน" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1473" y="1382" width="392.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="125" value="ตาราง _*_v : ประวัติเอกสาร / แดชบอร์ด / ประกาศ" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1473" y="1418" width="359.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="126" value="ตาราง payload_* : ข้อมูลภายใน CMS" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=17;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="1473" y="1454" width="271.0" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="127" value="" style="rounded=1;fillColor=#fffbeb;strokeColor=#fbbf24;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1540" width="2075" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="128" value="hit_counts" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=24;fontColor=#92400e;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="75" y="1558" width="137.0" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="129" value="UNIQUE (kind, ref_id)  •  hits = ยอดรวม" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=18;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="75" y="1598" width="330.0" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="130" edge="1" parent="1" style="endArrow=block;strokeColor=#d97706;strokeWidth=2;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="580" y="1590" as="sourcePoint" />
+            <mxPoint x="850" y="1590" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="131" value="files.id : file_view / file_download     |     documents.id : doc_link     |     dashboards.id : dashboard_view" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=18;fontColor=#92400e;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="880" y="1575" width="850.0" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="132" value="หมายเหตุ: ไฟล์เดียวแนบได้หลายรายการผ่าน *_rels • FK บางช่องอนุญาต NULL เพื่อรองรับร่าง • ไม่แสดงทุกเส้นในภาพรวม" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=19;fontColor=#334155;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1674" width="969.0" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="133" value="อ้างอิง migration 20261014_143408_idle_sessions และ collections • ยังไม่ได้เทียบฐานข้อมูลที่กำลังรันจริง" style="text;html=0;align=left;verticalAlign=top;spacing=0;fontFamily=Tahoma;fontSize=18;fontColor=#64748b;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1712" width="822.0" height="32" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1770"><rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="55" y="51" font-family="Tahoma,sans-serif" font-size="21" font-weight="700" fill="#0284c7">AGENCYAS V3 / DATABASE</text>
+<text x="55" y="112" font-family="Tahoma,sans-serif" font-size="40" font-weight="700" fill="#0f172a">แผนผังฐานข้อมูลและความสัมพันธ์หลัก</text>
+<text x="55" y="159" font-family="Tahoma,sans-serif" font-size="22" font-weight="400" fill="#334155">PostgreSQL 17  •  แสดงฟิลด์สำคัญ  •  ลูกศรชี้จากตารางลูกไปตารางที่ถูกอ้างอิง (FK → PK)</text>
+<text x="55" y="199" font-family="Tahoma,sans-serif" font-size="20" font-weight="400" fill="#64748b">เส้นทึบ: Foreign Key   |   เส้นประสีทอง: อ้างอิงด้วยโค้ด ไม่มี Foreign Key   |   ฉบับละเอียด: 37 ตาราง / 64 FK</text>
+<rect x="55" y="270" width="350" height="258" rx="16" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+<text x="73" y="309" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#2563eb">provinces</text>
+<text x="73" y="337" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">ข้อมูลจังหวัด</text>
+<text x="73" y="376" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="73" y="409" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      name_th</text>
+<text x="73" y="442" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      slug</text>
+<text x="73" y="475" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      code</text>
+<text x="73" y="508" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  hero_image_id</text>
+<rect x="55" y="580" width="350" height="225" rx="16" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+<text x="73" y="619" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#2563eb">document_types</text>
+<text x="73" y="647" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">ประเภทเอกสาร</text>
+<text x="73" y="686" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="73" y="719" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      code</text>
+<text x="73" y="752" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      name_th</text>
+<text x="73" y="785" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      group</text>
+<rect x="55" y="870" width="350" height="225" rx="16" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+<text x="73" y="909" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#2563eb">topics</text>
+<text x="73" y="937" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">หมวดประเด็น</text>
+<text x="73" y="976" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="73" y="1009" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      name_th</text>
+<text x="73" y="1042" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      slug</text>
+<text x="73" y="1075" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      color</text>
+<rect x="650" y="270" width="420" height="357" rx="16" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+<text x="668" y="309" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#0f766e">documents</text>
+<text x="668" y="337" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">เอกสารการดำเนินงาน</text>
+<text x="668" y="376" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="668" y="409" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  province_id</text>
+<text x="668" y="442" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  type_id</text>
+<text x="668" y="475" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  topic_id</text>
+<text x="668" y="508" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      title</text>
+<text x="668" y="541" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      fiscal_year</text>
+<text x="668" y="574" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      _status</text>
+<text x="668" y="607" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      deleted_at</text>
+<rect x="650" y="760" width="420" height="357" rx="16" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+<text x="668" y="799" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#0f766e">dashboards</text>
+<text x="668" y="827" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">สารสนเทศเพื่อการตัดสินใจ</text>
+<text x="668" y="866" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="668" y="899" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  province_id</text>
+<text x="668" y="932" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  topic_id</text>
+<text x="668" y="965" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  thumbnail_id</text>
+<text x="668" y="998" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      title</text>
+<text x="668" y="1031" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      embed_url</text>
+<text x="668" y="1064" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      pinned</text>
+<text x="668" y="1097" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      _status</text>
+<rect x="1170" y="310" width="340" height="225" rx="16" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="1188" y="349" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#7c3aed">documents_rels</text>
+<text x="1188" y="377" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">ตารางเชื่อมไฟล์เอกสาร</text>
+<text x="1188" y="416" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="1188" y="449" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  parent_id</text>
+<text x="1188" y="482" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      path</text>
+<text x="1188" y="515" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  files_id</text>
+<rect x="1170" y="810" width="340" height="225" rx="16" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="1188" y="849" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#7c3aed">dashboards_rels</text>
+<text x="1188" y="877" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">ตารางเชื่อมไฟล์ประกอบ</text>
+<text x="1188" y="916" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="1188" y="949" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  parent_id</text>
+<text x="1188" y="982" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      path</text>
+<text x="1188" y="1015" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  files_id</text>
+<rect x="1700" y="350" width="430" height="357" rx="16" fill="#ffffff" stroke="#c2410c" stroke-width="2"/>
+<text x="1718" y="389" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#c2410c">files</text>
+<text x="1718" y="417" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">ไฟล์และเวอร์ชันของไฟล์</text>
+<text x="1718" y="456" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="1718" y="489" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      filename</text>
+<text x="1718" y="522" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      public_path</text>
+<text x="1718" y="555" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      mime_type</text>
+<text x="1718" y="588" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      version_no</text>
+<text x="1718" y="621" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      is_current</text>
+<text x="1718" y="654" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  version_of_id</text>
+<text x="1718" y="687" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">FK  uploaded_by_id</text>
+<rect x="1700" y="870" width="430" height="225" rx="16" fill="#ffffff" stroke="#6d28d9" stroke-width="2"/>
+<text x="1718" y="909" font-family="Tahoma,sans-serif" font-size="25" font-weight="700" fill="#6d28d9">users</text>
+<text x="1718" y="937" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">บัญชีเจ้าหน้าที่</text>
+<text x="1718" y="976" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">PK  id</text>
+<text x="1718" y="1009" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      username</text>
+<text x="1718" y="1042" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      role</text>
+<text x="1718" y="1075" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">      status</text>
+<polyline points="650,390 405,390" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="405,390 417.60625943293746,383.91048252244275 417.60625943293746,396.08951747755725" fill="#64748b"/>
+<text x="450" y="372" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">province_id</text>
+<polyline points="650,450 515,450 515,665 405,665" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="405,665 417.60625943293746,658.9104825224427 417.60625943293746,671.0895174775573" fill="#64748b"/>
+<text x="530" y="572" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">type_id</text>
+<polyline points="650,510 570,510 570,950 405,950" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="405,950 417.60625943293746,943.9104825224427 417.60625943293746,956.0895174775573" fill="#64748b"/>
+<text x="425" y="932" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">topic_id</text>
+<polyline points="650,875 465,875 465,490 405,490" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="405,490 417.60625943293746,483.91048252244275 417.60625943293746,496.08951747755725" fill="#64748b"/>
+<text x="470" y="757" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">province_id</text>
+<polyline points="650,940 600,940 600,1040 405,1040" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="405,1040 417.60625943293746,1033.9104825224429 417.60625943293746,1046.0895174775571" fill="#64748b"/>
+<text x="470" y="1067" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">topic_id</text>
+<polyline points="1170,390 1070,390" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="1070,390 1082.6062594329376,383.91048252244275 1082.6062594329376,396.08951747755725" fill="#64748b"/>
+<text x="1083" y="370" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">parent_id</text>
+<polyline points="1510,465 1700,465" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="1700,465 1687.3937405670624,471.08951747755725 1687.3937405670624,458.91048252244275" fill="#64748b"/>
+<text x="1560" y="446" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">files_id</text>
+<polyline points="1170,895 1070,895" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="1070,895 1082.6062594329376,888.9104825224427 1082.6062594329376,901.0895174775573" fill="#64748b"/>
+<text x="1083" y="875" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">parent_id</text>
+<polyline points="1510,975 1600,975 1600,610 1700,610" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="1700,610 1687.3937405670624,616.0895174775573 1687.3937405670624,603.9104825224427" fill="#64748b"/>
+<text x="1610" y="707" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">files_id</text>
+<polyline points="1070,1070 1550,1070 1550,680 1700,680" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="1700,680 1687.3937405670624,686.0895174775573 1687.3937405670624,673.9104825224427" fill="#64748b"/>
+<text x="1195" y="1097" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">thumbnail_id</text>
+<polyline points="1915,707 1915,870" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="1915,870 1908.9104825224429,857.3937405670625 1921.0895174775571,857.3937405670625" fill="#64748b"/>
+<text x="1935" y="789" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">uploaded_by_id</text>
+<polyline points="2130,570 2170,570 2170,405 2130,405" fill="none" stroke="#64748b" stroke-width="3"/><polygon points="2130,405 2142.6062594329373,398.91048252244275 2142.6062594329373,411.08951747755725" fill="#64748b"/>
+<text x="1770" y="319" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#64748b">version_of_id → files.id</text>
+<text x="55" y="1218" font-family="Tahoma,sans-serif" font-size="28" font-weight="700" fill="#0f172a">ความสัมพันธ์อื่นและตารางประกอบ</text>
+<rect x="55" y="1245" width="650" height="265" rx="16" fill="#ffffff" stroke="#6d28d9" stroke-width="2"/>
+<text x="73" y="1284" font-family="Tahoma,sans-serif" font-size="24" font-weight="700" fill="#6d28d9">สิทธิ์และการเข้าสู่ระบบ</text>
+<text x="73" y="1327" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">users ↔ provinces : ผ่าน users_rels (หลายต่อหลาย)</text>
+<text x="73" y="1363" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">user_tokens → users : เจ้าของโทเคน / ผู้สร้าง</text>
+<text x="73" y="1399" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">users_sessions / users_recovery_codes → users</text>
+<text x="73" y="1435" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">session_activity.user_id → users.id : ไม่มี FK</text>
+<rect x="755" y="1245" width="650" height="265" rx="16" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+<text x="773" y="1284" font-family="Tahoma,sans-serif" font-size="24" font-weight="700" fill="#0f766e">เนื้อหากลางและการตั้งค่า</text>
+<text x="773" y="1327" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">central_contents ↔ files : central_contents_rels</text>
+<text x="773" y="1363" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">central_contents_links → central_contents / files</text>
+<text x="773" y="1399" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">announcements ↔ provinces : announcements_rels</text>
+<text x="773" y="1435" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">announcements.image_id / provinces.hero_image_id → files</text>
+<text x="773" y="1471" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">site_settings_footer_links → site_settings</text>
+<rect x="1455" y="1245" width="675" height="265" rx="16" fill="#ffffff" stroke="#c2410c" stroke-width="2"/>
+<text x="1473" y="1284" font-family="Tahoma,sans-serif" font-size="24" font-weight="700" fill="#c2410c">สถิติและประวัติ</text>
+<text x="1473" y="1327" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">page_views → provinces : ยอดรายวัน / หน้า</text>
+<text x="1473" y="1363" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">activity_logs → users / provinces : ประวัติใช้งาน</text>
+<text x="1473" y="1399" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">cookie_consents : บันทึกความยินยอมแบบไม่ระบุตัวตน</text>
+<text x="1473" y="1435" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">ตาราง _*_v : ประวัติเอกสาร / แดชบอร์ด / ประกาศ</text>
+<text x="1473" y="1471" font-family="Tahoma,sans-serif" font-size="17" font-weight="400" fill="#334155">ตาราง payload_* : ข้อมูลภายใน CMS</text>
+<rect x="55" y="1540" width="2075" height="100" rx="16" fill="#fffbeb" stroke="#fbbf24" stroke-width="2"/>
+<text x="75" y="1582" font-family="Tahoma,sans-serif" font-size="24" font-weight="700" fill="#92400e">hit_counts</text>
+<text x="75" y="1616" font-family="Tahoma,sans-serif" font-size="18" font-weight="400" fill="#334155">UNIQUE (kind, ref_id)  •  hits = ยอดรวม</text>
+<polyline points="580,1590 850,1590" fill="none" stroke="#d97706" stroke-width="3" stroke-dasharray="9 7"/><polygon points="850,1590 837.3937405670625,1596.0895174775571 837.3937405670625,1583.9104825224429" fill="#d97706"/>
+<text x="880" y="1593" font-family="Tahoma,sans-serif" font-size="18" font-weight="400" fill="#92400e">files.id : file_view / file_download     |     documents.id : doc_link     |     dashboards.id : dashboard_view</text>
+<text x="55" y="1693" font-family="Tahoma,sans-serif" font-size="19" font-weight="400" fill="#334155">หมายเหตุ: ไฟล์เดียวแนบได้หลายรายการผ่าน *_rels • FK บางช่องอนุญาต NULL เพื่อรองรับร่าง • ไม่แสดงทุกเส้นในภาพรวม</text>
+<text x="55" y="1730" font-family="Tahoma,sans-serif" font-size="18" font-weight="400" fill="#64748b">อ้างอิง migration 20261014_143408_idle_sessions และ collections • ยังไม่ได้เทียบฐานข้อมูลที่กำลังรันจริง</text>
+</svg>

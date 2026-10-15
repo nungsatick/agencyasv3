@@ -1,0 +1,21 @@
+# Development database. Credentials here are for local development only;
+# the production stack must take them from the environment.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: agencyas
+      POSTGRES_USER: agencyas
+      POSTGRES_PASSWORD: agencyas_dev
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agencyas -d agencyas"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  dbdata:

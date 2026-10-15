@@ -1,0 +1,27 @@
+# web app: dependencies, build output, secrets and uploaded files are also listed in web/.gitignore
+web/node_modules/
+web/.next/
+web/storage/
+web/.env
+web/tsconfig.tsbuildinfo
+
+# files from the old site (4.2 GB): back up separately, rebuilt from migration/manifest.json
+migration/files/
+
+# original province pictures; the site uses 76province_hero/
+image76/
+
+# user manual made outside this project
+docs/manual/
+
+# Python, Office lock files, OS files
+__pycache__/
+*.pyc
+~$*
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# also listed in docs/DEPLOY.md: the server's real settings, raw pages saved from the old site
+deploy/.env
+crawl/raw/

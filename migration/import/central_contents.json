@@ -1,0 +1,500 @@
+[
+ {
+  "section": "plan",
+  "fiscal_year": 2565,
+  "slug": "intro",
+  "title": "แผนการขับเคลื่อนบัญชีข้อมูลพื้นที่",
+  "sort_order": 0,
+  "status": "published",
+  "body": "ปฏิทินการดำเนินงานสนับสนุนการจัดทำ Data Catalog ของส่วนราชการระดับจังหวัด",
+  "source_url": "https://gdhelppage.gdcatalog.go.th/p00_01_015_65.html",
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/messageImage.png",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/messageImage.png"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2565,
+  "slug": "item-1-1",
+  "title": "ขั้นตอนการดำเนินงานในปี 2565",
+  "sort_order": 1,
+  "status": "published",
+  "body": "ขั้นตอนการดำเนินงาน ตามการประเมินตัวชี้วัดส่วนราชการระดับจังหวัด ปี 2565",
+  "source_url": "https://gdhelppage.gdcatalog.go.th/p00_01_003_65_1.html",
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/Timeline-CWT-Data-Catalog-2565.jpg",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/Timeline-CWT-Data-Catalog-2565.jpg"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2565,
+  "slug": "item-1-2",
+  "title": "เกณฑ์การประเมินตัวชี้วัด",
+  "sort_order": 2,
+  "status": "published",
+  "body": "เกณฑ์การประเมินตัวชี้วัดส่วนราชการระดับจังหวัด",
+  "source_url": "https://gdhelppage.gdcatalog.go.th/p00_01_011_65.html",
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/Indicators_province_65.jpg",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/Indicators_province_65.jpg"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2565,
+  "slug": "item-1-3",
+  "title": "คู่มือการประเมินตัวชี้วัด : การพัฒนาระบบข้อมูลให้เป็นดิจิทัล (Digitized Data)",
+  "sort_order": 3,
+  "status": "published",
+  "body": "รายละเอียดตัวชี้วัดการพัฒนาระบบข้อมูลให้เป็นดิจิทัล(Digitized Data) เพื่อนำไปสู่การเปิดเผยข้อมูลภาครัฐ (Open Data) ปี 2565\n\nชี้แจงตัวชี้วัดการพัฒนาระบบข้อมูลให้เป็นดิจิทัล (Digitized Data) เพื่อนำไปสู่การเปิดเผยข้อมูลภาครัฐ (Open Data) ระดับจังหวัด",
+  "source_url": "https://gdhelppage.gdcatalog.go.th/p00_01_017_65_1.html",
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/files/file_p00_01_017_65_1.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/files/file_p00_01_017_65_1.pdf"
+   },
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/files/file_p00_01_017_65_1.1.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/files/file_p00_01_017_65_1.1.pdf"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2566,
+  "slug": "intro",
+  "title": "แผนการขับเคลื่อนบัญชีข้อมูลพื้นที่",
+  "sort_order": 0,
+  "status": "published",
+  "body": "ปฏิทินการดำเนินงานสนับสนุนการจัดทำ Data Catalog ของส่วนราชการระดับจังหวัด ปี 2566",
+  "source_url": "https://gdhelppage.gdcatalog.go.th/p00_01_015_66.html",
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/calendar_province_66.jpg",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/calendar_province_66.jpg"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2566,
+  "slug": "item-1-1-2566",
+  "title": "ขั้นตอนการดำเนินงานในปี 2566",
+  "sort_order": 1,
+  "status": "published",
+  "body": "ขั้นตอนการดำเนินงาน ตามการประเมินตัวชี้วัดส่วนราชการระดับจังหวัด ปี 2566",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/timeline_cwt_66.png",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/timeline_cwt_66.png"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2566,
+  "slug": "item-1-2-2566",
+  "title": "เกณฑ์การประเมินตัวชี้วัด ปี 2566",
+  "sort_order": 2,
+  "status": "published",
+  "body": "เกณฑ์การประเมินตัวชี้วัดส่วนราชการระดับจังหวัด ปี 2566",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/indicator_province_66.png",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/indicator_province_66.png"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2566,
+  "slug": "item-1-3-2566",
+  "title": "คู่มือการประเมินตัวชี้วัด ปี 2566 : การพัฒนาระบบข้อมูลให้เป็นดิจิทัล(Digitized Data)",
+  "sort_order": 3,
+  "status": "published",
+  "body": "รายละเอียดตัวชี้วัดการพัฒนาระบบข้อมูลให้เป็นดิจิทัล(Digitized Data) เพื่อนำไปสู่การเปิดเผยข้อมูลภาครัฐ (Open Data) ปี 2566",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/files/open_data_66_Ver2.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/files/open_data_66_Ver2.pdf"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2567,
+  "slug": "item-1-1-2567",
+  "title": "ขั้นตอนการดำเนินงานในปี 2567",
+  "sort_order": 1,
+  "status": "published",
+  "body": "ขั้นตอนการดำเนินงาน ตามการประเมินตัวชี้วัดส่วนราชการระดับจังหวัด ปี 2567",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/timeline_cwt_67.png",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/timeline_cwt_67.png"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2567,
+  "slug": "item-1-2-2567",
+  "title": "เกณฑ์การประเมินตัวชี้วัด ปี 2567",
+  "sort_order": 2,
+  "status": "published",
+  "body": "เกณฑ์การประเมินตัวชี้วัดส่วนราชการระดับจังหวัด ปี 2567",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/img/indicator_province_67.png",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/img/indicator_province_67.png"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2567,
+  "slug": "item-1-3-2567",
+  "title": "คู่มือการประเมินตัวชี้วัด ปี 2567 : การพัฒนาระบบข้อมูลให้เป็นดิจิทัล(Digitized Data)",
+  "sort_order": 3,
+  "status": "published",
+  "body": "รายละเอียดตัวชี้วัดการพัฒนาระบบข้อมูลให้เป็นดิจิทัล(Digitized Data) เพื่อนำไปสู่การเปิดเผยข้อมูลภาครัฐ (Open Data) ปี 2567",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/files/Slide_open_data_cwt_67.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/files/Slide_open_data_cwt_67.pdf"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2569,
+  "slug": "item-1-1-2569",
+  "title": "ขั้นตอนการดำเนินงานในปี 2569",
+  "sort_order": 1,
+  "status": "published",
+  "body": "ขั้นตอนการดำเนินงาน ตามการประเมินตัวชี้วัดส่วนราชการระดับจังหวัด ปี 2569",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdcatalog.go.th/assets/images/nso_indicators/2569/timeline.png",
+    "local_path": "files/_central/gdcatalog.go.th/assets/images/nso_indicators/2569/timeline.png"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "plan",
+  "fiscal_year": 2569,
+  "slug": "item-1-2-2569",
+  "title": "เกณฑ์การประเมินตัวชี้วัด ปี 2569",
+  "sort_order": 2,
+  "status": "published",
+  "body": "เกณฑ์การประเมินตัวชี้วัดส่วนราชการระดับจังหวัด ปี 2569",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdcatalog.go.th/assets/images/nso_indicators/2569/criteria.png",
+    "local_path": "files/_central/gdcatalog.go.th/assets/images/nso_indicators/2569/criteria.png"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "howto",
+  "fiscal_year": null,
+  "slug": "intro",
+  "title": "เทคนิคการขึ้นชุดข้อมูล",
+  "sort_order": 0,
+  "status": "published",
+  "body": "เป็นส่วนสนับสนุนให้หน่วยงานสามารถนำขึ้นชุดข้อมูลเข้าสู่บัญชีข้อมูลจังหวัด ให้เป็นไปตามแนวทางและมาตรฐานเดียวกัน",
+  "source_url": null,
+  "files": [],
+  "links": []
+ },
+ {
+  "section": "howto",
+  "fiscal_year": null,
+  "slug": "item-2-3",
+  "title": "บทความสั้นสนับสนุนระบบบัญชีข้อมูล",
+  "sort_order": 1,
+  "status": "published",
+  "body": null,
+  "source_url": null,
+  "files": [],
+  "links": [
+   {
+    "title": "กรณีการขึ้นข้อมูลแบบ CSV ให้พร้อมใช้",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.1.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.1.pdf"
+   },
+   {
+    "title": "การตั้งชื่อชุดข้อมูลและรายละเอียดประกอบชุดข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.2.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.2.pdf"
+   },
+   {
+    "title": "การตั้งชื่อไฟล์ของทรัพยากรข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.3.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.3.pdf"
+   },
+   {
+    "title": "การตั้งชื่อคอลัมน์หรือชื่อฟิลด์ (กรณีที่เป็นไฟล์ Excel และ CSV)",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.4.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.4.pdf"
+   },
+   {
+    "title": "คำแนะนำในการตั้งชื่อ URL สำหรับสร้างองค์กร",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.5.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.5.pdf"
+   },
+   {
+    "title": "การจัดทำตารางข้อมูลแบบอนุกรมเวลา (Time Series Table)",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.6.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.6.pdf"
+   },
+   {
+    "title": "Link URL ของแหล่งทรัพยากรข้อมูลต้นทาง ที่ไม่เป็น https",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.7.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.7.pdf"
+   },
+   {
+    "title": "ปัญหาการแสดงผลข้อมูล (Preview) ของทรัพยากรข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.8.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.8.pdf"
+   },
+   {
+    "title": "การกำหนดแท็ก (Tag) เพื่อการค้นหาในระบบบัญชีข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.9.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.9.pdf"
+   },
+   {
+    "title": "การดึงทรัพยากรข้อมูลด้วย CKAN API เพื่อนำเสนอบน Microsoft Power BI",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.10.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.10.pdf"
+   },
+   {
+    "title": "ประเภทของชุดข้อมูลและแหล่งเก็บข้อมูลทางการ",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.11.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.11.pdf"
+   },
+   {
+    "title": "ทรัพยากรข้อมูล ชุดข้อมูล และ กลุ่ม",
+    "url": "https://gdhelppage.gdcatalog.go.th/data/06/article_NO.12.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/06/article_NO.12.pdf"
+   }
+  ]
+ },
+ {
+  "section": "howto",
+  "fiscal_year": null,
+  "slug": "item-2-1",
+  "title": "การจัดทำบัญชีข้อมูล",
+  "sort_order": 2,
+  "status": "published",
+  "body": "เนื้อหาสนับสนุนการจัดทำชุดข้อมูลจังหวัด และการนำขึ้นระบบบัญชีข้อมูลบนแพลตฟอร์ม CKAN Open-D",
+  "source_url": null,
+  "files": [],
+  "links": [
+   {
+    "title": "การเลือกภารกิจและกระบวนงาน",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_001.html",
+    "local_path": null
+   },
+   {
+    "title": "รายละเอียดคำอธิบายชุดข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_006.html",
+    "local_path": null
+   },
+   {
+    "title": "การกำหนดชุดข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_005.html",
+    "local_path": null
+   },
+   {
+    "title": "การจัดการแท็กเพื่อการค้นหา",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_008.html",
+    "local_path": null
+   },
+   {
+    "title": "การกำหนดผู้เป็นเจ้าของข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_004.html",
+    "local_path": null
+   },
+   {
+    "title": "การกำหนดองค์กร",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_002.html",
+    "local_path": null
+   },
+   {
+    "title": "การนำองค์กรขี้นระบบ",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_010.html",
+    "local_path": null
+   },
+   {
+    "title": "การกำหนดหมวดหมู่ของชุดข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_003.html",
+    "local_path": null
+   },
+   {
+    "title": "การนำหมวดหมู่ขึ้นระบบ",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_011.html",
+    "local_path": null
+   },
+   {
+    "title": "การนำชุดข้อมูลพร้อมคำอธิบายชุดข้อมูล (Metadata) ขึ้นระบบ",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_012.html",
+    "local_path": null
+   },
+   {
+    "title": "การระบุลิงก์ (Link) แหล่งข้อมูลต้นทาง",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_013.html",
+    "local_path": null
+   },
+   {
+    "title": "การค้นหาชุดข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_014_1.html",
+    "local_path": null
+   },
+   {
+    "title": "เอกสารและวิดีโอประกอบเพิ่มเติม",
+    "url": "https://gdhelppage.gdcatalog.go.th/p00_03_017.html",
+    "local_path": null
+   },
+   {
+    "title": "สื่อผสมการจัดทำระบบบัญชีข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/content_guide.html",
+    "local_path": null
+   }
+  ]
+ },
+ {
+  "section": "howto",
+  "fiscal_year": null,
+  "slug": "item-2-2",
+  "title": "การลงทะเบียนบัญชีข้อมูล",
+  "sort_order": 3,
+  "status": "published",
+  "body": "การลงทะเบียนบัญชีข้อมูลเข้าสู่ระบบบัญชีข้อมูลภาครัฐ (GD Calatalog) เพื่อนำไปสู่การเปิดเผยข้อมูลภาครัฐและใช้ประโยชน์ข้อมูลร่วมกัน",
+  "source_url": null,
+  "files": [],
+  "links": [
+   {
+    "title": "ผู้ที่เกี่ยวข้องในการลงทะเบียนบัญชีข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p02_01_02.html",
+    "local_path": null
+   },
+   {
+    "title": "ขั้นตอนการลงทะเบียนบัญชีข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p02_01_03.html",
+    "local_path": null
+   },
+   {
+    "title": "การสร้างบัญชีผู้ใช้บนระบบ Open ID",
+    "url": "https://gdhelppage.gdcatalog.go.th/p02_01_04.html",
+    "local_path": null
+   },
+   {
+    "title": "แนวทางการลงทะเบียนบัญชีข้อมูลภาครัฐ",
+    "url": "https://gdhelppage.gdcatalog.go.th/p06_02_06.html",
+    "local_path": null
+   },
+   {
+    "title": "คู่มือการใช้งานสำหรับผู้จัดการระบบบัญชีข้อมูลหน่วยงาน",
+    "url": "https://gdhelppage.gdcatalog.go.th/p02_01_06.html",
+    "local_path": null
+   },
+   {
+    "title": "คู่มือการใช้งานเจ้าหน้าที่ลงทะเบียนชุดข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p02_01_07.html",
+    "local_path": null
+   },
+   {
+    "title": "คำแนะนำการตรวจสอบความถูกต้องก่อนการลงทะเบียนบัญชีข้อมูล",
+    "url": "https://gdhelppage.gdcatalog.go.th/p02_01_08.html",
+    "local_path": null
+   }
+  ]
+ },
+ {
+  "section": "howto",
+  "fiscal_year": null,
+  "slug": "item-2-4",
+  "title": "สื่อมัลติมีเดียโครงการ",
+  "sort_order": 4,
+  "status": "published",
+  "body": "สื่อประชาสัมพันธ์โครงการจัดทำบัญชีข้อมูลภาครัฐ วิดีโอประกอบการสอน และเอกสารประกอบการสอน",
+  "source_url": null,
+  "files": [],
+  "links": [
+   {
+    "title": "สื่อประชาสัมพันธ์โครงการและเอกสารประกอบ",
+    "url": "https://gdhelppage.gdcatalog.go.th/vdo_intro_65.html",
+    "local_path": null
+   },
+   {
+    "title": "สื่อการสอนและเอกสารประกอบ",
+    "url": "https://gdhelppage.gdcatalog.go.th/vdo_edu_65.html",
+    "local_path": null
+   }
+  ]
+ },
+ {
+  "section": "howto",
+  "fiscal_year": null,
+  "slug": "item-2-5",
+  "title": "คู่มือแนวทางการจัดทำเอกสาร",
+  "sort_order": 5,
+  "status": "published",
+  "body": "คู่มือแนวทางการจัดทำเอกสาร ข้อกำหนดการวิเคราะห์ข้อมูล สำหรับประเด็นการพัฒนาจังหวัด",
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/files/data_analysis_guidelines.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/files/data_analysis_guidelines.pdf"
+   }
+  ],
+  "links": []
+ },
+ {
+  "section": "howto",
+  "fiscal_year": null,
+  "slug": "item-2-6",
+  "title": "คู่มือแนวทางการขับเคลื่อนบัญชีข้อมูลจังหวัด",
+  "sort_order": 6,
+  "status": "published",
+  "body": null,
+  "source_url": null,
+  "files": [
+   {
+    "legacy_url": "https://gdhelppage.gdcatalog.go.th/data/0_01/files/file_p00_01_028.pdf",
+    "local_path": "files/_central/gdhelppage.gdcatalog.go.th/data/0_01/files/file_p00_01_028.pdf"
+   }
+  ],
+  "links": []
+ }
+]

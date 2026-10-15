@@ -1,0 +1,2504 @@
+// Backoffice look: same typeface and colours as the public site, dark sidebar with icons.
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+:root {
+  --agy-primary: #0b5a7d;
+  --agy-dark: #083f58;
+  --agy-deep: #062c3e;
+  --agy-tint: #e6f0f5;
+  --agy-ink: #14212b;
+  --agy-muted: #51606e;
+  --agy-line: #d9e0e6;
+  --font-body: 'Prompt', system-ui, sans-serif;
+  --font-serif: 'Prompt', system-ui, sans-serif;
+}
+
+html[data-theme='light'] {
+  --theme-bg: #f4f6f8;
+  --theme-input-bg: #ffffff;
+  --theme-text: #14212b;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+// ── sidebar ──
+.nav {
+  background: var(--agy-deep);
+  border-right: 0;
+
+  .nav__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    margin-bottom: 2px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    // one icon per menu entry, drawn from an inline SVG mask so it follows the text colour
+    &::before {
+      content: '';
+      flex: none;
+      width: 18px;
+      height: 18px;
+      background: currentColor;
+      -webkit-mask: var(--agy-icon) center / contain no-repeat;
+      mask: var(--agy-icon) center / contain no-repeat;
+    }
+  }
+  // exactly one entry is lit: the page on screen (set by NavHighlight, stays after the mouse leaves)
+  .nav__link.agy-active,
+  .nav__link.agy-active:hover {
+    background: var(--agy-primary);
+    font-weight: 600;
+  }
+  .nav__link-indicator {
+    display: none;
+  }
+  .nav__link-label {
+    color: inherit;
+  }
+  .nav-group__toggle {
+    color: #b7cbd6;
+  }
+  .nav-group__label {
+    color: #b7cbd6;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  .nav-group__indicator .stroke {
+    stroke: #b7cbd6;
+  }
+  .nav__controls a,
+  .nav__controls button,
+  .nav__log-out {
+    color: #fff;
+  }
+}
+
+$stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'";
+@function agy-icon($paths) {
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' #{$stroke}%3E#{$paths}%3C/svg%3E");
+}
+#nav-documents,
+.agy-nav [data-icon='doc'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M7 3h7l5 5v13H7z'/%3E%3Cpath d='M14 3v5h5M10 13h6M10 17h6'/%3E")};
+}
+#nav-dashboards,
+.agy-nav [data-icon='chart'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 20V10M10 20V4M16 20v-7M22 20H2'/%3E")};
+}
+#nav-files {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 6a2 2 0 0 1 2-2h4l2 3h6a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z'/%3E")};
+}
+#nav-central-contents {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 5h7v14H4zM13 5h7v14h-7z'/%3E%3Cpath d='M7 9h1M7 13h1M16 9h1M16 13h1'/%3E")};
+}
+#nav-provinces {
+  --agy-icon: #{agy-icon("%3Cpath d='M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E")};
+}
+#nav-topics {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 4h7l9 9-7 7-9-9z'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.2'/%3E")};
+}
+#nav-document-types {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 6h16M4 12h16M4 18h10'/%3E")};
+}
+// account requests: a person with a question mark
+#nav-account-requests {
+  --agy-icon: #{agy-icon("%3Ccircle cx='9' cy='8' r='3.5'/%3E%3Cpath d='M2.5 20a6.5 6.5 0 0 1 13 0M17 9.5a2.2 2.2 0 1 1 2.6 2.2c-.6.2-.6.6-.6 1.3M19 16h.01'/%3E")};
+}
+#nav-users {
+  --agy-icon: #{agy-icon("%3Ccircle cx='9' cy='8' r='3.5'/%3E%3Cpath d='M2.5 20a6.5 6.5 0 0 1 13 0M16 5.2a3.5 3.5 0 0 1 0 5.6M18 14.5a6 6 0 0 1 3.5 5.5'/%3E")};
+}
+.agy-nav [data-icon='home'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z'/%3E")};
+}
+.agy-nav [data-icon='user-plus'] {
+  --agy-icon: #{agy-icon("%3Ccircle cx='9' cy='8' r='3.5'/%3E%3Cpath d='M2.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6'/%3E")};
+}
+.agy-nav [data-icon='globe'] {
+  --agy-icon: #{agy-icon("%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18'/%3E")};
+}
+.agy-nav [data-icon='palette'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 7h10M18 7h2M16 5v4M4 17h2M10 17h10M8 15v4'/%3E")};
+}
+.agy-nav [data-icon='trash'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6'/%3E")};
+}
+.agy-nav {
+  margin-bottom: 18px;
+}
+// our entry placed inside one of Payload's menu groups (SystemNavLink.tsx)
+.agy-nav--slot {
+  margin-bottom: 0;
+}
+.agy-nav__who {
+  padding: 0 12px 14px;
+  color: #b7cbd6;
+  font-size: 13px;
+
+  strong {
+    display: block;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.3;
+  }
+}
+
+// ── buttons and pills ──
+.btn--style-primary {
+  --bg-color: var(--agy-dark);
+  --hover-bg: var(--agy-primary);
+  --color: #fff;
+  --hover-color: #fff;
+  background-color: var(--agy-dark);
+  color: #fff;
+
+  &:hover:not([disabled]) {
+    background-color: var(--agy-primary);
+  }
+}
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+// ── brand mark in the header ──
+.agy-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  img {
+    height: 56px;
+    width: auto;
+  }
+}
+.agy-icon-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--agy-dark);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+// ── custom screens (overview, add/import users) ──
+.agy {
+  color: var(--agy-ink);
+  padding-bottom: 64px;
+
+  h1 {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+  }
+  a {
+    color: var(--agy-primary);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.agy__sub {
+  color: var(--agy-muted);
+  margin: 4px 0 0;
+}
+.agy__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin: 8px 0 24px;
+
+  > div:first-child {
+    flex: 999 1 280px;
+  }
+}
+// Fixed column counts (not auto-fit), so rows always come out even whatever the sidebar does:
+// 4 tiles → 4 / 2 / 1 columns; 6 tiles → 6 / 3 / 2 / 1 columns.
+.agy__tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+  &:has(> :nth-child(5)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  // 8 tiles (central admin): two rows of four
+  &:has(> :nth-child(7)) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1500px) {
+  .agy__tiles:has(> :nth-child(6)):not(:has(> :nth-child(7))) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .agy__tiles,
+  .agy__tiles:has(> :nth-child(5)),
+  .agy__tiles:has(> :nth-child(7)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 420px) {
+  .agy__tiles,
+  .agy__tiles:has(> :nth-child(5)),
+  .agy__tiles:has(> :nth-child(7)) {
+    grid-template-columns: 1fr;
+  }
+}
+.agy__tile {
+  // label on top, number at the bottom: numbers line up even when a label takes two lines
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--agy-line);
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-decoration: none !important;
+
+  span {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--agy-muted);
+  }
+  strong {
+    display: block;
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--agy-dark);
+  }
+  &--warn strong {
+    color: #8a3a08;
+  }
+}
+.agy__card {
+  background: #fff;
+  border: 1px solid var(--agy-line);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.agy__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.agy__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid #c5d0d9;
+  background: #fff;
+  color: var(--agy-ink) !important;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none !important;
+
+  &:hover {
+    border-color: var(--agy-primary);
+  }
+  &--primary {
+    background: var(--agy-dark);
+    border-color: var(--agy-dark);
+    color: #fff !important;
+  }
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+}
+.agy__table-wrap {
+  background: #fff;
+  border: 1px solid var(--agy-line);
+  border-radius: 14px;
+  overflow-x: auto;
+}
+.agy__table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 15px;
+
+  th {
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--agy-muted);
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--agy-line);
+    background: #fff;
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #e7ecf0;
+  }
+  tr:last-child td {
+    border-bottom: 0;
+  }
+  .num {
+    text-align: center;
+  }
+  .zero {
+    color: #9aa6b1;
+  }
+}
+.agy__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  &--active {
+    background: #e6f2ea;
+    color: #154d29;
+  }
+  &--invited {
+    background: #fbe9dd;
+    color: #8a3a08;
+  }
+  &--suspended {
+    background: #eef1f4;
+    color: #3b4854;
+  }
+}
+.agy__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.agy__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  > span {
+    font-weight: 600;
+
+    em {
+      font-style: normal;
+      font-weight: 400;
+      color: var(--agy-muted);
+    }
+  }
+  input,
+  select {
+    min-height: 46px;
+    padding: 0 12px;
+    border: 1px solid #9fb2c0;
+    border-radius: 8px;
+    font: inherit;
+    background: #fff;
+    width: 100%;
+  }
+  // the hint under a box: small and quiet, so it does not compete with the field name
+  small {
+    color: var(--agy-muted);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+}
+.agy__link-box {
+  border: 2px solid var(--agy-dark);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  code {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f4f6f8;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+  }
+}
+.agy__warn {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fbe9dd;
+  color: #6b2d06;
+  font-size: 15px;
+}
+// an information line inside a form (e.g. "creating the account from a request")
+.agy__note {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--agy-tint);
+  color: var(--agy-dark);
+  line-height: 1.6;
+}
+.agy__error {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f7e8e6;
+  color: #701d14;
+  font-weight: 600;
+}
+.agy__split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+
+  div {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+
+    strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+  }
+  .ok {
+    background: #e6f2ea;
+    color: #154d29;
+  }
+  .bad {
+    background: #f7e8e6;
+    color: #701d14;
+  }
+}
+
+// The overview above replaces Payload's default collection cards on the landing screen.
+.dashboard .modular-dashboard {
+  display: none !important; // Payload sets display inline
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+// ── document files: attach, replace, history ──
+.agy-files,
+.agy-theme {
+  padding-bottom: 0;
+  margin-bottom: 24px;
+}
+.agy-files__label {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.agy-file {
+  background: #fff;
+  border: 1px solid var(--agy-line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.agy-file__main,
+.agy-file__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.agy-file__kind {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: #3b4854;
+
+  &--pdf {
+    background: #9a2b1f;
+  }
+}
+.agy-file__info {
+  flex: 999 1 240px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    overflow-wrap: anywhere;
+  }
+  span {
+    font-size: 14px;
+    color: var(--agy-muted);
+  }
+}
+.agy-file__detach {
+  margin-left: auto;
+  color: #9a2b1f !important;
+  border-color: #e3c4c0;
+}
+.agy-file__picked {
+  align-self: center;
+  font-weight: 500;
+}
+.agy-file__panel {
+  border: 2px solid var(--agy-dark);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.agy-file__history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px 14px;
+    padding: 10px 0;
+    border-top: 1px solid #e7ecf0;
+  }
+  li > div {
+    flex: 999 1 240px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+.agy-file__meta {
+  font-size: 14px;
+  color: var(--agy-muted);
+}
+.agy-file__no {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #eef1f4;
+  color: #3b4854;
+  font-weight: 700;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+
+  &--current {
+    background: var(--agy-dark);
+    color: #fff;
+  }
+}
+.agy-files__drop {
+  width: 100%;
+  border: 2px dashed #9fb2c0;
+  border-radius: 12px;
+  background: #f8fafb;
+  padding: 22px 16px;
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--agy-ink);
+
+  strong {
+    color: var(--agy-primary);
+  }
+  span {
+    font-size: 14px;
+    color: var(--agy-muted);
+  }
+  &:hover {
+    border-color: var(--agy-primary);
+  }
+}
+
+// ── theme picker ──
+.agy-theme__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.agy-theme__opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 12px;
+  border: 2px solid var(--agy-line);
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  color: var(--agy-ink);
+
+  small {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  &.is-on {
+    font-weight: 600;
+  }
+}
+.agy-theme__swatch {
+  display: flex;
+  flex: none;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #c5d0d9;
+
+  i {
+    width: 16px;
+    height: 34px;
+  }
+}
+.agy-theme__preview {
+  max-width: 560px;
+  border: 1px solid var(--agy-line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f4f6f8;
+}
+.agy-theme__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: #fff;
+  border-bottom: 1px solid var(--agy-line);
+
+  img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+  div {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+    font-size: 13px;
+
+    span {
+      color: var(--agy-muted);
+    }
+  }
+  em {
+    margin-left: auto;
+    font-style: normal;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+  }
+}
+.agy-theme__hero {
+  padding: 34px 20px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  strong {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+  span {
+    align-self: flex-start;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  &--right span {
+    align-self: flex-end;
+  }
+}
+.agy-theme__body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  font-weight: 600;
+
+  span:first-child {
+    font-size: 26px;
+    font-weight: 700;
+  }
+  span:last-child {
+    margin-left: auto;
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 13px;
+  }
+}
+.agy-theme__foot {
+  padding: 10px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
+#nav-announcements {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 10v4h3l6 4V6l-6 4z'/%3E%3Cpath d='M16.5 9a4 4 0 0 1 0 6M19 6.5a8 8 0 0 1 0 11'/%3E")};
+}
+#nav-global-site-settings {
+  --agy-icon: #{agy-icon("%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1'/%3E")};
+}
+
+// ── my account ──
+.agy-nav [data-icon='key'] {
+  --agy-icon: #{agy-icon("%3Ccircle cx='8' cy='15' r='4'/%3E%3Cpath d='M11 12l9-9M16 7l3 3M14 9l2 2'/%3E")};
+}
+.agy__ok {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #e6f2ea;
+  color: #154d29;
+  font-weight: 600;
+}
+.agy-codes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+  padding: 16px;
+  border-radius: 10px;
+  background: #f4f6f8;
+  font-size: 17px;
+  font-weight: 600;
+
+  code {
+    background: none;
+    padding: 0;
+  }
+}
+.agy-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  cursor: pointer;
+
+  input {
+    width: 20px;
+    height: 20px;
+  }
+}
+.agy-setup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+
+  img {
+    border: 1px solid var(--agy-line);
+    border-radius: 10px;
+  }
+  > div {
+    flex: 1 1 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  code {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f4f6f8;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+}
+// Passwords are changed under "บัญชีของฉัน" (asks for the current one) or through a one-time link.
+#change-password {
+  display: none;
+}
+
+// ── more sidebar icons ──
+.agy-nav [data-icon='eye'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E")};
+}
+.agy-nav [data-icon='check'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M9 11l3 3 8-8'/%3E%3Cpath d='M20 12v7a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h10'/%3E")};
+}
+.agy-nav [data-icon='tag'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 4h7l9 9-7 7-9-9z'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.2'/%3E")};
+}
+#nav-activity-logs {
+  --agy-icon: #{agy-icon("%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E")};
+}
+
+// ── our own screens: headings, pills, charts ──
+.agy__h2 {
+  font-size: 19px;
+  margin: 28px 0 12px;
+}
+.agy__pill--ok {
+  background: #e6f2ea;
+  color: #154d29;
+}
+.agy__pill--wait {
+  background: #fbe9dd;
+  color: #8a3a08;
+}
+.agy__btn--small {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+.agy-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+
+  &__bar {
+    fill: var(--agy-primary);
+  }
+  &__bar:hover {
+    fill: var(--agy-dark);
+  }
+  &__grid {
+    stroke: #e1e7ec;
+    stroke-width: 1;
+  }
+  &__tick {
+    font-size: 12px;
+    fill: var(--agy-muted);
+  }
+}
+.agy-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__row {
+    display: grid;
+    grid-template-columns: minmax(140px, 220px) 1fr 80px;
+    align-items: center;
+    gap: 14px;
+    font-size: 15px;
+
+    strong {
+      text-align: right;
+    }
+  }
+  &__track {
+    height: 12px;
+    border-radius: 6px;
+    background: #eef1f4;
+    overflow: hidden;
+
+    i {
+      display: block;
+      height: 100%;
+      min-width: 2px;
+      border-radius: 6px;
+      background: var(--agy-primary);
+    }
+  }
+}
+
+// ── document screen: standard-title hint ──
+.agy-typehelp {
+  margin-top: -8px;
+  margin-bottom: 20px;
+
+  p {
+    margin: 0 0 6px;
+  }
+}
+
+// ── province screen: focal point of the header picture ──
+.agy-focus {
+  margin-bottom: 24px;
+
+  &__pick {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    padding: 0;
+    border: 1px solid var(--agy-line);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: crosshair;
+    background: none;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+  &__dot {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    background: rgba(11, 90, 125, 0.75);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+  }
+  &__frames {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 16px;
+    margin: 14px 0 8px;
+
+    figure {
+      margin: 0;
+    }
+    figure > div {
+      height: 96px;
+      border-radius: 8px;
+      border: 1px solid var(--agy-line);
+    }
+    figcaption {
+      font-size: 13px;
+      color: var(--agy-muted);
+      margin-top: 4px;
+    }
+  }
+}
+
+// ── topic screen: usage and merge ──
+.agy-topic {
+  margin-bottom: 24px;
+
+  &__swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: -1px;
+  }
+}
+
+// ── sign out, at the end of our menu ──
+.agy-nav [data-icon='logout'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11'/%3E")};
+}
+.agy-nav--end {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+// Payload's own small logout icon is replaced by the labelled entry above
+.nav__controls .nav__log-out {
+  display: none;
+}
+
+// ── edit screens: each group of fields is a card with a header ──
+.collapsible-field.agy-sec,
+.agy-sec.collapsible-field {
+  margin-bottom: 24px;
+}
+.agy-sec .collapsible {
+  border: 1px solid var(--agy-line);
+  border-top: 3px solid var(--agy-primary);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 33, 43, 0.05);
+  // not overflow:hidden — the ⓘ hint bubbles must be able to rise above the card
+}
+.agy-sec .collapsible__toggle-wrap {
+  border-radius: 11px 11px 0 0;
+  background: #f7fafc;
+  border-bottom: 1px solid #e7ecf0;
+  padding: 14px 20px;
+  min-height: 0;
+}
+.agy-sec .collapsible__toggle-wrap:hover {
+  background: #f0f5f8;
+}
+.agy-sec .collapsible-field__row-label-wrap,
+.agy-sec .collapsible__header-wrap .row-label {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--agy-dark);
+}
+.agy-sec .collapsible__content {
+  padding: 20px 22px 8px;
+}
+.agy-sec .collapsible--collapsed .collapsible__toggle-wrap {
+  border-bottom: 0;
+}
+// the old-site block is reference only: quieter colours
+.agy-sec--quiet .collapsible {
+  border-top-color: #9fb2c0;
+}
+.agy-sec--quiet .collapsible-field__row-label-wrap,
+.agy-sec--quiet .collapsible__header-wrap .row-label {
+  color: var(--agy-muted);
+  font-size: 15px;
+}
+.agy-sec .field-description,
+.collapsible-field__description {
+  font-size: 14px;
+  color: var(--agy-muted);
+}
+
+// fields: clear labels, roomier inputs, a visible focus ring
+.document-fields .field-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--agy-ink);
+  margin-bottom: 6px;
+}
+.document-fields .field-label .required {
+  color: #b42318;
+}
+.document-fields input[type='text'],
+.document-fields input[type='number'],
+.document-fields input[type='email'],
+.document-fields textarea,
+.document-fields .react-select .rs__control {
+  border-radius: 8px !important;
+  border-color: #c5d0d9 !important;
+}
+// (not the search box hidden inside a drop-down, which would make the drop-down taller)
+.document-fields input[type='text']:not(.rs__input-container input),
+.document-fields input[type='number'],
+.document-fields input[type='email'] {
+  min-height: 44px;
+}
+.document-fields .rs__input-container input {
+  min-height: 0 !important;
+}
+.document-fields input:focus,
+.document-fields textarea:focus,
+.document-fields .react-select .rs__control--is-focused {
+  border-color: var(--agy-primary) !important;
+  box-shadow: 0 0 0 3px rgba(11, 90, 125, 0.18) !important;
+}
+.document-fields input:disabled,
+.document-fields .read-only input {
+  background: #eef2f5;
+  color: var(--agy-muted);
+}
+.document-fields .field-description {
+  font-size: 13px;
+  color: var(--agy-muted);
+}
+
+// the right-hand column (status, order, pin) on a light panel
+.document-fields__sidebar-wrap,
+.document-fields__sidebar {
+  background: #f7fafc;
+}
+.document-fields__sidebar .field-label {
+  font-size: 14px;
+}
+
+// list screens: the table sits on a white card, rows are calm and links not underlined
+.collection-list .table {
+  background: #fff;
+  border: 1px solid var(--agy-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.collection-list .table table {
+  border-collapse: collapse;
+}
+.collection-list .table thead th {
+  background: #f7fafc;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--agy-muted);
+  border-bottom: 1px solid var(--agy-line);
+}
+.collection-list .table tbody tr {
+  background: #fff !important;
+  border-bottom: 1px solid #edf1f4;
+}
+.collection-list .table tbody tr:hover {
+  background: #f5f9fb !important;
+}
+.collection-list .table td a {
+  color: var(--agy-dark);
+  font-weight: 500;
+  text-decoration: none;
+}
+.collection-list .table td a:hover {
+  text-decoration: underline;
+}
+
+// drop-downs the same height as text inputs, so a row of fields lines up
+.document-fields .react-select .rs__control {
+  min-height: 44px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+.document-fields .react-select .rs__value-container {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+.document-fields .relationship-add-new__add-button,
+.document-fields .relationship-add-new .btn {
+  min-height: 44px;
+  height: 44px;
+  border-radius: 0 8px 8px 0;
+}
+
+// ── documents list (/admin/documents) ──
+.agy-dl__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid var(--agy-line);
+  border-radius: 14px;
+
+  .agy__field {
+    margin: 0;
+  }
+  select,
+  input {
+    min-height: 42px;
+  }
+}
+.agy-dl__search {
+  flex: 1 1 260px;
+}
+.agy-dl__filter {
+  flex: 0 1 190px;
+}
+.agy-dl__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.agy-dl__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 4px 2px 12px;
+  color: var(--agy-muted);
+  font-size: 14px;
+}
+.agy-dl__sort a {
+  margin-left: 10px;
+  color: var(--agy-muted);
+  text-decoration: none;
+}
+.agy-dl__sort a.is-on {
+  color: var(--agy-dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.agy-dl__table td {
+  vertical-align: top;
+}
+.agy-dl__title {
+  font-weight: 600;
+  color: var(--agy-dark) !important;
+  text-decoration: none !important;
+}
+.agy-dl__title:hover {
+  text-decoration: underline !important;
+}
+.agy-dl__meta {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--agy-muted);
+}
+.agy-dl__warn {
+  color: #8a3a08;
+  font-weight: 600;
+}
+.agy-dl__date {
+  white-space: nowrap;
+  color: var(--agy-muted);
+  font-size: 14px;
+}
+.agy-dl__act-h {
+  width: 1%;
+}
+.agy-dl__actions {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+.agy-dl__nosite {
+  font-size: 13px;
+  color: #9aa6b1;
+  align-self: center;
+}
+.agy__pill--review {
+  background: #fdf0d5;
+  color: #6b4a12;
+  margin-left: 6px;
+}
+.agy-dl__pages {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  color: var(--agy-muted);
+}
+.agy-dl__foot {
+  margin-top: 18px;
+}
+
+// ── tables: a faint band on every other row so lines are easy to follow ──
+.agy__table tbody tr:nth-child(even) td,
+.collection-list .table tbody tr:nth-child(even),
+.collection-list .table tbody tr:nth-child(even) td {
+  background: #f4f7fa !important;
+}
+.agy__table tbody tr:hover td,
+.collection-list .table tbody tr:hover,
+.collection-list .table tbody tr:hover td {
+  background: #e9f1f6 !important;
+}
+
+// with no side column the form uses the full width, up to a comfortable line length
+.document-fields--no-sidebar .document-fields__edit {
+  max-width: 1180px;
+}
+
+// ── ⓘ hint after a field's label (hover, keyboard focus or tap) ──
+.agy-hint {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  border-radius: 50%;
+  border: 1.5px solid #9fb2c0;
+  color: var(--agy-muted);
+  font-size: 11px;
+  font-weight: 700;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1;
+  vertical-align: 1px;
+  cursor: help;
+}
+.agy-hint:hover,
+.agy-hint:focus-visible,
+.agy-hint.is-open {
+  border-color: var(--agy-primary);
+  background: var(--agy-primary);
+  color: #fff;
+  outline: none;
+}
+.agy-hint__bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  z-index: 50;
+  width: max-content;
+  max-width: 300px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #14212b;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: normal;
+  text-align: left;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+// small arrow under the bubble
+.agy-hint__bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -6px;
+  border: 6px solid transparent;
+  border-top-color: #14212b;
+}
+.agy-hint:hover .agy-hint__bubble,
+.agy-hint:focus-visible .agy-hint__bubble,
+.agy-hint.is-open .agy-hint__bubble {
+  opacity: 1;
+  visibility: visible;
+}
+
+.agy__pill--muted {
+  background: #eef1f4;
+  color: #3b4854;
+  margin-left: 6px;
+}
+.agy__pill:first-child {
+  margin-left: 0;
+}
+.agy-dl__with-thumb {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.agy-dl__thumb {
+  flex: none;
+  width: 72px;
+  height: 38px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 6px;
+  border: 1px solid var(--agy-line);
+  background: #eef1f4;
+}
+
+// profile picture in the top bar: first letter of the name in a coloured circle (Avatar.tsx)
+.agy-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+// topic colour: swatches in the form (TopicColorField.tsx) and sample tags in the list
+.agy-color {
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+    margin-top: 6px;
+  }
+  &__opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px 6px 6px;
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: 10px;
+    background: var(--theme-elevation-0);
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    &:hover {
+      border-color: var(--theme-elevation-400);
+    }
+    &.is-on {
+      border-color: var(--agy-primary);
+      box-shadow: 0 0 0 2px var(--agy-primary);
+      font-weight: 600;
+    }
+  }
+  &__chip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 3px solid;
+  }
+  &__dot {
+    display: inline-block;
+    flex: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  &__name {
+    line-height: 1.3;
+  }
+  &__preview {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--theme-elevation-600);
+  }
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+// trash: red outlined buttons, icon-only in list rows, and the confirmation box (TrashButtons.tsx)
+.agy__btn--trash {
+  color: #a3271c !important;
+  border-color: #e7b7b2;
+  &:hover {
+    background: #fdf0ee;
+    border-color: #a3271c;
+  }
+}
+.agy__btn--icon {
+  padding: 0;
+  width: 36px;
+  justify-content: center;
+}
+.agy__btn--danger {
+  background: #a3271c;
+  border-color: #a3271c;
+  color: #fff !important;
+  &:hover {
+    background: #7f1d15;
+    border-color: #7f1d15;
+  }
+}
+.agy-confirm {
+  // opened from inside a table row: do not inherit the row's no-wrap / alignment
+  white-space: normal;
+  text-align: left;
+  font-weight: 400;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(10, 20, 30, 0.45);
+
+  &__box {
+    width: min(480px, 100%);
+    padding: 22px 24px 18px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+    h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+    p {
+      margin: 0 0 8px;
+      line-height: 1.6;
+    }
+  }
+  &__error {
+    color: #a3271c;
+    font-weight: 600;
+  }
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+  }
+}
+
+// icon of the current menu entry in front of the page heading, about the height of the letters (NavHighlight.tsx)
+h1.agy-title-icon::before {
+  content: '';
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.35em;
+  vertical-align: -0.08em;
+  background: var(--agy-primary);
+  -webkit-mask: var(--agy-title-icon) center / contain no-repeat;
+  mask: var(--agy-title-icon) center / contain no-repeat;
+}
+
+// sortable table headers (ListPage.tsx): the whole label is the link, the arrow shows the current order
+.agy-dl__sort-h {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: inherit !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  &:hover {
+    color: var(--agy-primary) !important;
+  }
+  &.is-on {
+    color: var(--agy-ink) !important;
+  }
+}
+.agy-dl__arrow {
+  font-size: 11px;
+  opacity: 0.45;
+  .is-on & {
+    opacity: 1;
+    color: var(--agy-primary);
+  }
+}
+.agy-dl__sorthint {
+  font-size: 13px;
+  color: var(--agy-muted);
+}
+
+// calendar header with Thai months and Buddhist years (ThaiDateField.tsx)
+.agy-cal__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 6px 8px;
+
+  select {
+    padding: 4px 6px;
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: 6px;
+    background: #fff;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+.agy-cal__nav {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  &:hover:not(:disabled) {
+    background: var(--theme-elevation-100);
+  }
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+}
+
+// picture field (ImageField.tsx): small preview with change / remove, or one "choose a picture" button
+.agy-img {
+  &__box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    padding: 10px;
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: 10px;
+    background: var(--theme-elevation-0);
+  }
+  &__preview {
+    display: block;
+    max-width: 260px;
+    max-height: 150px;
+    border-radius: 6px;
+    background: repeating-conic-gradient(#eef1f4 0 25%, #fff 0 50%) 0 0 / 16px 16px;
+  }
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    font-size: 14px;
+    color: var(--agy-muted);
+  }
+  &__name {
+    color: var(--agy-ink);
+    font-weight: 600;
+    word-break: break-all;
+  }
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  // empty frame: two buttons, a hint about Ctrl+V and dropping; it takes focus so a paste lands in it
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 110px;
+    padding: 14px;
+    border: 2px dashed var(--theme-elevation-200);
+    border-radius: 10px;
+    background: var(--theme-elevation-0);
+    color: var(--agy-muted);
+    font-size: 14px;
+    text-align: center;
+    cursor: text;
+    outline: none;
+    &:hover,
+    &:focus {
+      border-color: var(--agy-primary);
+      background: #f3f8fb;
+    }
+  }
+  &__box {
+    outline: none;
+    &:focus {
+      border-color: var(--agy-primary);
+      box-shadow: 0 0 0 3px rgba(11, 90, 125, 0.15);
+    }
+  }
+  &__choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  &__hint {
+    font-size: 13px;
+  }
+  // a file is being dragged over the field
+  &--over &__empty,
+  &--over &__box {
+    border-color: var(--agy-primary);
+    border-style: solid;
+    background: #e6f0f5;
+  }
+  &__error {
+    margin: 6px 0 0;
+    color: #a3271c;
+    font-weight: 600;
+  }
+}
+
+// header buttons of the summary tables sorted in the browser (SortTable.tsx); look like the list headers
+.agy-sort-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+th.num .agy-sort-btn {
+  justify-content: flex-end;
+  width: 100%;
+}
+
+// province staff: no "ข้อมูลอ้างอิง" group (จังหวัด / ประเด็น / ประเภทเอกสาร); their province is under "ปรับแต่งหน้าเว็บ" (RoleClass.tsx)
+body.agy-province-role #nav-provinces,
+body.agy-province-role [id='nav-group-ข้อมูลอ้างอิง'] {
+  display: none !important;
+}
+
+// "เว็บไซต์ 76 จังหวัด" (ProvinceSites.tsx): search + region chips, then a grid of province cards in each province's theme colour
+.agy-sites {
+  &__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px 20px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    border: 1px solid var(--agy-line);
+    border-radius: 14px;
+    background: #fff;
+  }
+  &__search {
+    flex: 1 1 320px;
+  }
+  &__regions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border: 1px solid var(--agy-line);
+    border-radius: 999px;
+    background: #fff;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    span {
+      padding: 0 7px;
+      border-radius: 999px;
+      background: var(--theme-elevation-100);
+      font-size: 12px;
+    }
+    &:hover {
+      border-color: var(--agy-primary);
+    }
+    &.is-on {
+      background: var(--agy-dark);
+      border-color: var(--agy-dark);
+      color: #fff;
+      font-weight: 600;
+      span {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+  }
+}
+.agy-site {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--agy-line);
+  border-top: 4px solid var(--site);
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  &:hover {
+    box-shadow: 0 8px 22px rgba(10, 30, 50, 0.1);
+    transform: translateY(-2px);
+  }
+  &__main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px 12px;
+    color: var(--agy-ink) !important;
+    text-decoration: none !important;
+    img {
+      flex: none;
+      border-radius: 50%;
+      background: var(--site-tint);
+    }
+    span {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+    strong {
+      font-size: 17px;
+      line-height: 1.3;
+    }
+    small {
+      color: var(--agy-muted);
+      font-size: 13px;
+    }
+    &:hover strong {
+      color: var(--site);
+    }
+  }
+  &__out {
+    flex: none;
+    color: var(--agy-muted);
+  }
+  &__pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 2px;
+    margin-top: auto;
+    padding: 8px 10px;
+    border-top: 1px solid var(--agy-line);
+    background: var(--site-tint);
+    a {
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--site) !important;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none !important;
+      &:hover {
+        background: #fff;
+      }
+    }
+  }
+  &__edit {
+    margin-left: auto;
+    color: var(--agy-muted) !important;
+    font-weight: 500 !important;
+  }
+}
+
+// search boxes of the backoffice lists (ListFilters.tsx, ProvinceSites.tsx): the same capsule as the public site,
+// magnifier on the left. Height comes from padding and a roomy line-height so Thai marks above and below the
+// line are never clipped; a placeholder too long for the box ends in "…" (full text in the tooltip).
+.agy-search {
+  position: relative;
+  display: flex;
+  width: 100%;
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: var(--agy-muted);
+    pointer-events: none;
+  }
+  input,
+  .agy-dl__filters & input,
+  .agy__field & input {
+    width: 100%;
+    min-height: 46px;
+    height: auto;
+    padding: 9px 18px 9px 44px;
+    border: 1px solid #9fb2c0;
+    border-radius: 999px;
+    background: #fff;
+    font: inherit;
+    line-height: 1.6;
+    text-overflow: ellipsis;
+    &::placeholder {
+      color: #8293a1;
+      text-overflow: ellipsis;
+    }
+    &:focus {
+      outline: none;
+      border-color: var(--agy-primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--agy-primary) 22%, transparent);
+    }
+  }
+}
+.agy__field > .agy-search {
+  font-weight: 400; // the label's bold applies to its first <span>, not to the box
+}
+
+// idle warning (IdleGuard.tsx): above everything, countdown in large digits
+.agy-idle {
+  z-index: 10000;
+}
+.agy-idle__count {
+  font-size: 1.15em;
+  font-variant-numeric: tabular-nums;
+  color: #a3271c;
+}
+
+// fiscal-year segmented choice on backoffice screens (AdminYearPicker.tsx), like the public site's
+.agy-years {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 0 0 16px;
+
+  &__label {
+    font-weight: 600;
+    color: var(--agy-muted);
+  }
+  &__seg {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--agy-line);
+    border-radius: 10px;
+    background: #fff;
+    a {
+      padding: 6px 14px;
+      border-radius: 7px;
+      color: var(--agy-ink) !important;
+      font-weight: 600;
+      text-decoration: none !important;
+      font-variant-numeric: tabular-nums;
+      &:hover {
+        background: var(--theme-elevation-100);
+      }
+      &.is-on {
+        background: var(--agy-dark);
+        color: #fff !important;
+      }
+    }
+  }
+  &__hint {
+    font-size: 12px;
+    color: var(--agy-muted);
+  }
+}
+
+// ── paging under the lists (Pager.tsx): page numbers, go-to-page and page size; a compact one above ──
+.agy-pg {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--agy-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--agy-muted);
+  font-size: 14px;
+
+  &__nums {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+  &__num,
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 9px;
+    color: var(--agy-ink) !important;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none !important;
+    line-height: 1;
+  }
+  a.agy-pg__num:hover,
+  a.agy-pg__btn:hover {
+    background: var(--theme-elevation-100);
+  }
+  &__num.is-on {
+    background: var(--agy-dark);
+    color: #fff !important;
+  }
+  &__btn {
+    width: 36px;
+    padding: 0;
+    border: 1px solid var(--agy-line);
+  }
+  &__btn.is-off {
+    opacity: 0.35;
+  }
+  &__gap {
+    min-width: 20px;
+    text-align: center;
+  }
+  &__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 20px;
+  }
+  &__jump {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    input {
+      width: 72px;
+      height: 36px;
+      padding: 0 10px;
+      border: 1px solid var(--agy-line);
+      border-radius: 9px;
+      font: inherit;
+      color: var(--agy-ink);
+      text-align: center;
+    }
+  }
+  &__size {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    select {
+      height: 36px;
+      padding: 0 10px;
+      border: 1px solid var(--agy-line);
+      border-radius: 9px;
+      font: inherit;
+      color: var(--agy-ink);
+      background: #fff;
+    }
+  }
+
+  // above the table, at the end of the count line
+  &--compact {
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    gap: 6px;
+    .agy-pg__btn {
+      width: 32px;
+      min-width: 32px;
+      height: 32px;
+    }
+  }
+  &__where {
+    padding: 0 4px;
+    white-space: nowrap;
+    strong {
+      color: var(--agy-ink);
+    }
+  }
+}
+// phones: drop the first/last arrows and the pages two away, so one line still fits
+@media (max-width: 700px) {
+  .agy-pg {
+    padding: 10px;
+  }
+  .agy-pg__edge,
+  .agy-pg__far {
+    display: none !important;
+  }
+  .agy-pg__nums {
+    gap: 2px;
+  }
+  .agy-pg__num {
+    min-width: 32px;
+    padding: 0 4px;
+  }
+  .agy-pg__gap {
+    min-width: 12px;
+  }
+}
+
+// ── icon rail: the collapsed sidebar on a computer keeps a narrow strip of clickable icons (NavRail.tsx) ──
+$rail: 68px;
+@media (min-width: 769px) {
+  .template-default--nav-hydrated:not(.template-default--nav-open) {
+    grid-template-columns: $rail auto;
+  }
+  // the ☰ button keeps a dark strip behind it, so icons scrolled up pass under it cleanly
+  // (the button sits outside the template element, so the closed state is read with :has)
+  body:has(.template-default--nav-hydrated:not(.template-default--nav-open)) {
+    .template-default__nav-toggler-wrapper {
+      width: $rail;
+    }
+    .template-default__nav-toggler-container {
+      width: $rail;
+      justify-content: center;
+      background: var(--agy-deep);
+    }
+  }
+  aside.nav.nav--nav-hydrated:not(.nav--nav-open) {
+    opacity: 1;
+    width: $rail;
+
+    // still scrolls with the wheel or a swipe on a short screen, just without a visible scrollbar
+    .nav__scroll {
+      padding-inline: 10px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    // names, group headings and the signed-in person give way to the icons alone
+    .agy-nav__who,
+    .nav-group__toggle,
+    .nav__controls {
+      display: none;
+    }
+    .nav-group {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    // a folded group still shows its icons
+    .nav-group > div[class*='rah-'] {
+      height: auto !important;
+      overflow: visible !important;
+      > div {
+        display: block !important;
+      }
+    }
+    .nav__link {
+      justify-content: center;
+      width: 48px;
+      height: 44px;
+      padding: 0;
+      gap: 0;
+      font-size: 0;
+      &::before {
+        width: 20px;
+        height: 20px;
+      }
+      > * {
+        display: none;
+      }
+    }
+  }
+}
+
+// ── breadcrumb in the top bar: one capsule with a home button, chevrons, and the menu icon of each step ──
+$crumb-home: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11l9-7 9 7'/%3E%3Cpath d='M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E");
+$crumb-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
+.app-header .step-nav {
+  gap: 2px;
+  padding: 4px 6px 4px 4px;
+  background: #fff;
+  border: 1px solid var(--agy-line);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(20, 33, 43, 0.06);
+  font-size: 14px;
+  line-height: 1;
+  &::after {
+    display: none;
+  }
+
+  // home: a round dark button with a house
+  .step-nav__home {
+    width: 30px;
+    height: 30px;
+    flex: none;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--agy-dark);
+    transition: background 0.15s;
+    > span {
+      display: none;
+    }
+    &::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      -webkit-mask: $crumb-home center / contain no-repeat;
+      mask: $crumb-home center / contain no-repeat;
+    }
+    &:hover {
+      background: var(--agy-primary);
+    }
+  }
+  // the "/" between steps becomes a small chevron
+  > span:not(.step-nav__last) {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    font-size: 0;
+    background: #9aa6b1;
+    -webkit-mask: $crumb-chevron center / contain no-repeat;
+    mask: $crumb-chevron center / contain no-repeat;
+  }
+  // steps on the way: quiet links that light up on hover
+  > a:not(.step-nav__home) {
+    gap: 6px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    color: var(--agy-muted);
+    font-weight: 500;
+    &:hover,
+    &:focus-visible {
+      background: var(--agy-tint);
+      color: var(--agy-dark);
+      text-decoration: none;
+    }
+    span {
+      max-width: 180px;
+    }
+  }
+  // where you are: a tinted chip, bold
+  // (a block, not flex, so a long document title ends in "…")
+  .step-nav__last {
+    display: block;
+    max-width: 380px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: var(--agy-tint);
+    color: var(--agy-dark);
+    font-weight: 600;
+  }
+  .step-nav__last.agy-crumb-ic::before {
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: -2px;
+  }
+  .agy-crumb-ic::before {
+    content: '';
+    flex: none;
+    width: 15px;
+    height: 15px;
+    background: currentColor;
+    -webkit-mask: var(--agy-crumb-icon) center / contain no-repeat;
+    mask: var(--agy-crumb-icon) center / contain no-repeat;
+  }
+  // the overview's step is a menu for switching dashboards in Payload; there is only one here, so it is plain text
+  .step-nav__last:has(.dashboard-breadcrumb-select) {
+    display: flex;
+    align-items: center;
+    height: 31px;
+    padding-block: 0;
+    overflow: visible;
+    &::before {
+      margin-right: 6px;
+    }
+  }
+  .dashboard-breadcrumb-select {
+    pointer-events: none;
+    .rs__control {
+      min-height: 0;
+      border: 0;
+    }
+    .rs__value-container > *,
+    .value-container > * {
+      margin: 0;
+      padding: 0;
+    }
+    .rs__indicators {
+      display: none;
+    }
+    .rs__single-value {
+      color: var(--agy-dark);
+      font-weight: 600;
+      margin: 0;
+    }
+    .value-container,
+    .rs__value-container {
+      padding: 0;
+    }
+  }
+}
+// small screens: the capsule fits the bar, the middle steps give way and the page name shrinks to "…"
+.app-header .step-nav {
+  min-width: 0;
+  max-width: 100%;
+  .step-nav__last {
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+}
+.app-header__step-nav-wrapper {
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .app-header .step-nav {
+    > a:not(.step-nav__home),
+    > a:not(.step-nav__home) + span {
+      display: none;
+    }
+  }
+}
+
+// ── notices after saving / errors (Payload's toasts): a white card with a coloured edge and icon ──
+.payload-toast-container .payload-toast-item {
+  --agy-toast: var(--agy-primary);
+  --agy-toast-bg: var(--agy-tint);
+  position: relative;
+  gap: 12px;
+  min-height: 56px;
+  padding: 12px 48px 12px 18px;
+  border: 1px solid var(--agy-line);
+  border-left: 5px solid var(--agy-toast) !important;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--agy-ink);
+  // the toasts sit outside the page body, so they need the loopless Prompt typeface set again
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow:
+    0 12px 32px -12px rgba(6, 44, 62, 0.28),
+    0 2px 6px rgba(6, 44, 62, 0.08);
+  overflow: hidden;
+  &.toast-success {
+    --agy-toast: #1f7a4d;
+    --agy-toast-bg: #e3f4ea;
+  }
+  &.toast-error {
+    --agy-toast: #b42318;
+    --agy-toast-bg: #fdecea;
+  }
+  &.toast-warning {
+    --agy-toast: #b45309;
+    --agy-toast-bg: #fdf0d5;
+  }
+  &.toast-success,
+  &.toast-error,
+  &.toast-warning,
+  &.toast-info {
+    background: #fff;
+    border-color: var(--agy-line);
+    color: var(--agy-ink);
+  }
+  // icon: a round badge in the notice's colour with a white mark (Payload's own icon is hidden)
+  --agy-toast-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 11v6M12 7h.01'/%3E%3C/svg%3E");
+  &.toast-success {
+    --agy-toast-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  }
+  &.toast-error {
+    --agy-toast-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E");
+  }
+  &.toast-warning {
+    --agy-toast-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M12 6v8M12 18h.01'/%3E%3C/svg%3E");
+  }
+  .toast-icon {
+    position: relative;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--agy-toast);
+    > * {
+      display: none !important;
+    }
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 7px;
+      background: #fff;
+      -webkit-mask: var(--agy-toast-mark) center / contain no-repeat;
+      mask: var(--agy-toast-mark) center / contain no-repeat;
+    }
+  }
+  .toast-title,
+  .toast-description,
+  .toast-content {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  // close button inside the card, on the right, instead of a bubble on the corner
+  .payload-toast-close-button,
+  [data-close-button] {
+    position: absolute;
+    inset: 50% 12px auto auto;
+    left: auto;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #8a97a3;
+    box-shadow: none;
+    &:hover {
+      background: #f1f4f7;
+      color: var(--agy-ink);
+    }
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+// add-user form: "is this username free" line and suggestion chips (UserToolsForm.tsx)
+.agy-uname {
+  font-weight: 600;
+  &--ok {
+    color: #1f7a4d !important;
+  }
+  &--bad {
+    color: #a3271c !important;
+  }
+}
+.agy-uname__ideas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--agy-muted);
+}
+.agy-uname__idea {
+  padding: 3px 10px;
+  border: 1px solid var(--agy-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--agy-dark);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover:not(:disabled) {
+    border-color: var(--agy-primary);
+    background: var(--agy-tint);
+  }
+  &.is-taken {
+    text-decoration: line-through;
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+// a box whose content breaks its rule (lib/fieldRules.ts): red edge and the reason under it
+.agy__field input[aria-invalid='true'] {
+  border-color: #a3271c;
+  box-shadow: 0 0 0 3px rgba(163, 39, 28, 0.12);
+}
+.agy__field .agy-field-err {
+  color: #a3271c;
+  font-weight: 600;
+}
+
+// the e-mail draft under an issued link (EmailDraft.tsx)
+.agy-mail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 1px solid var(--agy-line);
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #9fb2c0;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+  }
+}
