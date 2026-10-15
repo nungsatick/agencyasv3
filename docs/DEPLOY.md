@@ -10,7 +10,7 @@
 
 - เซิร์ฟเวอร์ Linux ที่ติดตั้ง Docker และ Docker Compose แล้ว และมี nginx
 - พื้นที่ดิสก์อย่างน้อย 15 GB (ไฟล์เอกสารเดิม 4.2 GB + ฐานข้อมูล + อิมเมจ + ที่ว่างสำหรับไฟล์ใหม่)
-- โฟลเดอร์ `web/` และ `deploy/` ของโปรเจกต์ (ไม่ต้องเอา `web/node_modules`, `web/.next`, `web/storage`)
+- โฟลเดอร์ `web/` และ `deploy/` ของโปรเจกต์ (ไม่ต้องเอา `web/node_modules`, `web/.next`, `web/storage`) ดึงจาก GitHub หรือคัดลอกไปเองก็ได้ ดูข้อ 9
 
 ## 1. ตั้งค่า
 
@@ -131,7 +131,7 @@ docker compose exec -T web tar xzf - -C /app/storage < storage-YYYY-MM-DD.tgz
 
 ไม่ต้องตั้ง cron เพิ่ม ระบบทำเองหลังเริ่มทำงาน 1 นาที และทุก 6 ชั่วโมง:
 
-- ระงับบัญชีที่ไม่ได้เข้าสู่ระบบเกิน 180 วัน (ไม่รวมผู้ดูแลระบบส่วนกลาง)
+- ระงับบัญชีที่ไม่ได้เข้าสู่ระบบเกิน 365 วัน (ไม่รวมผู้ดูแลระบบส่วนกลาง)
 - ลบถาวรเอกสารและแดชบอร์ดที่อยู่ในถังขยะเกิน 30 วัน
 
 ทั้งสองอย่างถูกบันทึกในเมนู "ประวัติการใช้งาน"
@@ -148,13 +148,35 @@ docker compose up -d --build
 
 ## 9. Git
 
-ตามที่ตกลงไว้ ให้ตั้ง git ตอนขึ้นระบบจริง:
+โค้ดอยู่ใน git ตั้งแต่ 15 ต.ค. 2569 ที่โฟลเดอร์หลักของโปรเจกต์ (branch `main`) และเก็บบน GitHub แบบ **private**
+ผ่าน GitHub Desktop ไฟล์ที่ไม่เข้า git กำหนดไว้ใน `.gitignore` ที่ระดับบนสุด ได้แก่ `web/.env`, `deploy/.env`, `web/storage/`,
+`migration/files/`, `image76/`, `docs/manual/`, `crawl/raw/`, `web/node_modules/`, `web/.next/`
+(รายละเอียดและที่เก็บของแต่ละรายการอยู่ใน `README.md`)
+
+**ห้ามนำ `.env` เข้า git** ค่าใน `deploy/.env` ของเซิร์ฟเวอร์ (โดยเฉพาะ `PAYLOAD_SECRET`) เก็บสำรองแยกในที่ปลอดภัย
+
+### นำโค้ดขึ้นเซิร์ฟเวอร์ด้วย git (ทางเลือก)
+
+repository เป็น private เซิร์ฟเวอร์จึงต้องมีสิทธิ์อ่าน วิธีที่แนะนำคือ deploy key แบบอ่านอย่างเดียว:
+
+1. บนเซิร์ฟเวอร์สร้างกุญแจ: `ssh-keygen -t ed25519 -f ~/.ssh/agencyas_deploy -N ""`
+2. ใน GitHub เปิด repository → Settings → Deploy keys → Add deploy key วางเนื้อหาไฟล์ `~/.ssh/agencyas_deploy.pub` **ไม่ติ๊ก** Allow write access
+3. ดึงโค้ด (แทน `<owner>/<repo>` ด้วยชื่อจริง):
 
 ```bash
-git init
-git add .
-git commit -m "Initial import"
+GIT_SSH_COMMAND="ssh -i ~/.ssh/agencyas_deploy" git clone git@github.com:<owner>/<repo>.git /opt/agencyas
 ```
 
-ไฟล์ที่ไม่ควรเข้า git: `web/storage/`, `web/node_modules/`, `web/.next/`, `web/.env`, `deploy/.env`, `migration/files/`, `crawl/raw/`
-(`web/.gitignore` กันสามรายการแรกไว้แล้ว ส่วนที่เหลือต้องเพิ่ม `.gitignore` ที่ระดับบนสุด)
+อัปเดตครั้งต่อไป (แทนการคัดลอกโฟลเดอร์ในข้อ 8):
+
+```bash
+cd /opt/agencyas
+GIT_SSH_COMMAND="ssh -i ~/.ssh/agencyas_deploy" git pull
+cd deploy
+docker compose up -d --build
+```
+
+`deploy/.env` และ `web/storage` ไม่อยู่ใน git จึงไม่ถูกแตะตอน `git pull` ไฟล์เอกสารยังต้องคัดลอกแยกตามข้อ 4.2 ครั้งแรกครั้งเดียว
+ถ้าไม่สะดวกตั้ง deploy key ให้คัดลอกโฟลเดอร์ `web/` และ `deploy/` ขึ้นไปเองเหมือนเดิม
+
+ขั้นตอนนี้ยังไม่ได้ทดสอบบนเซิร์ฟเวอร์จริง
