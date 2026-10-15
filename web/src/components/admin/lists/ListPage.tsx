@@ -62,6 +62,13 @@ export const OpenButton = ({ href, label = 'ดูบนเว็บ', title }: 
     </a>
   ) : null
 
+/** Row action: a list of documents (e.g. one province's). Icon only. */
+export const DocsButton = ({ href, label = 'เอกสาร' }: { href: string; label?: string }) => (
+  <Link href={href} className="agy__btn agy__btn--small agy__btn--icon" title={label} aria-label={label}>
+    <Icon d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6" />
+  </Link>
+)
+
 /** Row action: the activity log, filtered to this record (a person's actions). Icon only. */
 export const HistoryButton = ({ href, label = 'ประวัติการใช้งาน' }: { href: string; label?: string }) => (
   <Link href={href} className="agy__btn agy__btn--small agy__btn--icon" title={label} aria-label={label}>

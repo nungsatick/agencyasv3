@@ -67,9 +67,13 @@ export default buildConfig({
     // the backoffice home is called "ภาพรวม" everywhere; Payload's own word ("แดชบอร์ด") clashed with the dashboards menu
     translations: { th: { general: { dashboard: 'ภาพรวม' } } },
   },
-  collections: [Documents, Dashboards, Files, CentralContents, Announcements, Provinces, Topics, DocumentTypes, Users, AccountRequests, UserTokens, SessionActivity, ActivityLogs, PageViews, HitCounts, CookieConsents],
+  // The "API" tab on edit pages shows the raw JSON of a record, which is for developers only, so it is hidden
+  // everywhere. The REST API itself is unchanged (the backoffice and the import use it).
+  collections: [Documents, Dashboards, Files, CentralContents, Announcements, Provinces, Topics, DocumentTypes, Users, AccountRequests, UserTokens, SessionActivity, ActivityLogs, PageViews, HitCounts, CookieConsents].map(
+    (c) => ({ ...c, admin: { ...c.admin, hideAPIURL: true } }),
+  ),
   endpoints: [{ path: '/overview-export', method: 'get', handler: overviewExport }],
-  globals: [SiteSettings],
+  globals: [SiteSettings].map((g) => ({ ...g, admin: { ...g.admin, hideAPIURL: true } })),
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

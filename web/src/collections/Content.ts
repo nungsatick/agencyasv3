@@ -16,7 +16,8 @@ const legacyFields: Field[] = [
   {
     type: 'collapsible',
     label: 'ข้อมูลจากเว็บเดิม',
-    admin: { initCollapsed: true, className: 'agy-sec agy-sec--quiet' },
+    // only on rows that came from the old site: new rows have nothing to show here
+    admin: { initCollapsed: true, className: 'agy-sec agy-sec--quiet', condition: (data) => Boolean(data?.legacyId || data?.legacyTitle || data?.needsReview) },
     fields: [
       // reference only: kept out of the list's column and filter pickers
       { name: 'legacyId', type: 'number', unique: true, index: true, label: 'รหัสในเว็บเดิม', admin: { readOnly: true, disableListColumn: true, disableListFilter: true } },

@@ -25,3 +25,6 @@ desktop.ini
 # also listed in docs/DEPLOY.md: the server's real settings, raw pages saved from the old site
 deploy/.env
 crawl/raw/
+
+# province boundaries downloaded for migration/build_thai_map.py (the built paths are in web/src/lib/thaiMapPaths.ts)
+migration/geo/

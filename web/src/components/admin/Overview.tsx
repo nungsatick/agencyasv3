@@ -6,7 +6,9 @@ import React from 'react'
 import { INACTIVE_WARN_DAYS } from '@/lib/maintenance'
 
 import { AdminYearPicker } from './AdminYearPicker'
+import { DocsButton, OpenButton } from './lists/ListPage'
 import { SortTable } from './SortTable'
+import { Tile, todo } from './Tile'
 
 type AnyUser = { id: number; name?: string; role?: string; provinces?: (number | { id: number })[] } | null | undefined
 type Counts = { docs: number; dash: number; review: number; drafts: number }
@@ -87,14 +89,8 @@ export async function Overview({ payload, user, searchParams }: ServerProps) {
     : [0, 0]
   const peopleTiles = managesPeople ? (
     <>
-      <Link className={nearSuspension ? 'agy__tile agy__tile--warn' : 'agy__tile'} href="/admin/users?idle=1">
-        <span>บัญชีใกล้ถูกระงับ (ไม่ได้ใช้งานเกิน {INACTIVE_WARN_DAYS} วัน)</span>
-        <strong>{nearSuspension}</strong>
-      </Link>
-      <Link className={waitingRequests ? 'agy__tile agy__tile--warn' : 'agy__tile'} href="/admin/account-requests">
-        <span>คำขอบัญชีรอพิจารณา</span>
-        <strong>{waitingRequests}</strong>
-      </Link>
+      <Tile icon="clock" label="บัญชีใกล้ถูกระงับ" value={nearSuspension} tone={todo(nearSuspension)} href="/admin/users?idle=1" hint={`ไม่ได้ใช้งานเกิน ${INACTIVE_WARN_DAYS} วัน`} />
+      <Tile icon="inbox" label="คำขอบัญชีรอพิจารณา" value={waitingRequests} tone={todo(waitingRequests)} href="/admin/account-requests" hint={waitingRequests ? 'รออนุมัติหรือไม่อนุมัติ' : 'ไม่มีคำขอค้าง'} />
     </>
   ) : null
 
@@ -116,12 +112,10 @@ export async function Overview({ payload, user, searchParams }: ServerProps) {
         </div>
         {years.length > 0 && <AdminYearPicker years={years} selected={selected} />}
         <div className="agy__tiles">
-          <div className="agy__tile"><span>เอกสารที่เผยแพร่ {yearText}</span><strong>{c.docs}</strong></div>
-          <div className="agy__tile"><span>แดชบอร์ด {yearText}</span><strong>{c.dash}</strong></div>
-          <div className="agy__tile"><span>ร่างที่ยังไม่เผยแพร่ {yearText}</span><strong>{c.drafts}</strong></div>
-          <Link className={c.review ? 'agy__tile agy__tile--warn' : 'agy__tile'} href="/admin/review">
-            <span>รายการรอตรวจ (ทุกปี)</span><strong>{c.review}</strong>
-          </Link>
+          <Tile icon="doc" label="เอกสารที่เผยแพร่" value={c.docs} hint={yearText} href="/admin/documents?status=published" />
+          <Tile icon="chart" label="แดชบอร์ด" value={c.dash} hint={yearText} href="/admin/dashboards?status=published" />
+          <Tile icon="draft" label="ร่างที่ยังไม่เผยแพร่" value={c.drafts} hint={yearText} href="/admin/documents?status=draft" />
+          <Tile icon="review" label="รายการรอตรวจ" value={c.review} tone={todo(c.review)} hint="ทุกปี" href="/admin/review" />
           {peopleTiles}
         </div>
         <div className="agy__card">
@@ -160,16 +154,19 @@ export async function Overview({ payload, user, searchParams }: ServerProps) {
       </div>
       {years.length > 0 && <AdminYearPicker years={years} selected={selected} />}
       <div className="agy__tiles">
-        <div className="agy__tile"><span>จังหวัดที่มีเอกสาร {yearText}</span><strong>{withDocs}</strong></div>
-        <div className="agy__tile"><span>จังหวัดที่มีแดชบอร์ด {yearText}</span><strong>{withDash}</strong></div>
-        <div className="agy__tile"><span>เอกสาร {yearText}</span><strong>{total.docs}</strong></div>
-        <div className="agy__tile"><span>แดชบอร์ด {yearText}</span><strong>{total.dash}</strong></div>
-        <Link className="agy__tile agy__tile--warn" href="/admin/review">
-          <span>รายการรอตรวจทั้งระบบ (ทุกปี)</span><strong>{total.review}</strong>
-        </Link>
-        <div className={managed.size < provinces.docs.length ? 'agy__tile agy__tile--warn' : 'agy__tile'}>
-          <span>จังหวัดที่ยังไม่มีผู้ดูแล</span><strong>{provinces.docs.length - managed.size}</strong>
-        </div>
+        <Tile icon="map" label="จังหวัดที่มีเอกสาร" value={withDocs} of={provinces.docs.length} hint={yearText} />
+        <Tile icon="map" label="จังหวัดที่มีแดชบอร์ด" value={withDash} of={provinces.docs.length} hint={yearText} />
+        <Tile icon="doc" label="เอกสารที่เผยแพร่" value={total.docs} hint={yearText} href="/admin/documents?status=published" />
+        <Tile icon="chart" label="แดชบอร์ด" value={total.dash} hint={yearText} href="/admin/dashboards?status=published" />
+        <Tile icon="review" label="รายการรอตรวจ" value={total.review} tone={todo(total.review)} hint="ทั้งระบบ ทุกปี" href="/admin/review" />
+        <Tile
+          icon="shield"
+          label="จังหวัดที่ยังไม่มีผู้ดูแล"
+          value={provinces.docs.length - managed.size}
+          tone={todo(provinces.docs.length - managed.size)}
+          hint={`มีผู้ดูแลแล้ว ${managed.size} จาก ${provinces.docs.length} จังหวัด`}
+          href="/admin/users?role=province_manager"
+        />
         {peopleTiles}
       </div>
       <SortTable
@@ -196,10 +193,9 @@ export async function Overview({ payload, user, searchParams }: ServerProps) {
               c.drafts,
               c.review,
               managed.has(p.id) ? 'มีแล้ว' : <span style={{ color: '#8a3a08', fontWeight: 600 }}>ยังไม่มี</span>,
-              <span key="l" style={{ whiteSpace: 'nowrap' }}>
-                <Link href={docsLink(p.id)}>เอกสาร</Link>
-                {' · '}
-                <a href={`/${p.slug}`} target="_blank" rel="noopener noreferrer">หน้าเว็บ</a>
+              <span key="l" className="agy-dl__actions">
+                <DocsButton href={docsLink(p.id)} label={`เอกสารของ${p.nameTh}`} />
+                <OpenButton href={`/${p.slug}`} label={`หน้าเว็บ${p.nameTh}`} />
               </span>,
             ],
           }

@@ -262,7 +262,31 @@ $stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' str
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 420px) {
+// phones keep two columns (one long column of eight cards was a lot of scrolling); smaller cards there
+@media (max-width: 480px) {
+  .agy__tiles {
+    gap: 10px;
+  }
+  .agy__tile {
+    padding: 12px;
+  }
+  .agy__tile-top {
+    gap: 8px;
+  }
+  // the arrow sits in the corner on phones; keep the label clear of it
+  .agy__tile--link .agy__tile-top {
+    padding-right: 14px;
+  }
+  .agy__tile-go {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+  .agy__tile-value {
+    font-size: 22px;
+  }
+}
+@media (max-width: 330px) {
   .agy__tiles,
   .agy__tiles:has(> :nth-child(5)),
   .agy__tiles:has(> :nth-child(7)) {
@@ -271,31 +295,148 @@ $stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' str
 }
 .agy__tile {
   // label on top, number at the bottom: numbers line up even when a label takes two lines
+  --tone: var(--agy-primary);
+  --tone-bg: var(--agy-tint);
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   background: #fff;
   border: 1px solid var(--agy-line);
-  border-radius: 12px;
-  padding: 16px 18px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
   text-decoration: none !important;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 
-  span {
+  // a thin colour line along the top in the card's tone
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: var(--tone);
+    opacity: 0.85;
+  }
+
+  // plain cards (stats, topic report): <span> label + <strong> number
+  > span:not([class]) {
     display: block;
     font-size: 14px;
     font-weight: 500;
     color: var(--agy-muted);
   }
-  strong {
+  > strong:not([class]) {
     display: block;
-    font-size: 28px;
-    line-height: 1.2;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
     color: var(--agy-dark);
   }
-  &--warn strong {
+
+  &--warn {
+    --tone: #c2580c;
+    --tone-bg: #fff1e2;
+    > strong:not([class]) {
+      color: #8a3a08;
+    }
+  }
+  &--ok {
+    --tone: #1f7a4a;
+    --tone-bg: #e5f4ea;
+  }
+  &--link:hover,
+  &--link:focus-visible {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--tone) 45%, var(--agy-line));
+    box-shadow: 0 10px 24px -12px rgba(8, 63, 88, 0.35);
+  }
+}
+.agy__tile-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+}
+.agy__tile-ic {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--tone-bg);
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  color: var(--tone);
+}
+.agy__tile-label {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--agy-muted);
+}
+@media (max-width: 480px) {
+  .agy__tile-label {
+    font-size: 13px;
+  }
+}
+.agy__tile-go {
+  flex: none;
+  align-self: flex-start;
+  color: var(--agy-muted);
+  opacity: 0.45;
+  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  .agy__tile--link:hover &,
+  .agy__tile--link:focus-visible & {
+    opacity: 1;
+    color: var(--tone);
+    transform: translate(2px, -2px);
+  }
+}
+.agy__tile-value {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--agy-dark);
+  font-variant-numeric: tabular-nums;
+  small {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--agy-muted);
+  }
+  .agy__tile--warn & {
     color: #8a3a08;
   }
+  .agy__tile--ok & {
+    color: #17603a;
+  }
+}
+.agy__tile-bar {
+  display: block;
+  height: 4px;
+  border-radius: 99px;
+  background: #edf1f4;
+  overflow: hidden;
+  i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--tone);
+  }
+}
+.agy__tile-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--agy-muted);
 }
 .agy__card {
   background: #fff;
@@ -2501,4 +2642,230 @@ $crumb-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     line-height: 1.6;
     resize: vertical;
   }
+}
+
+// ── visit statistics: map of Thailand (ThaiVisitMap.tsx) ──
+.agy-geomap {
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  gap: 24px 32px;
+  align-items: start;
+
+  h3 {
+    margin: 4px 0 8px;
+    font-size: 15px;
+  }
+}
+@media (max-width: 860px) {
+  .agy-geomap {
+    grid-template-columns: 1fr;
+  }
+  .agy-geomap__map {
+    max-width: 440px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+.agy-geomap__map {
+  position: relative;
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+.agy-geomap__prov {
+  cursor: pointer;
+  outline: none;
+}
+.agy-geomap__shape {
+  stroke: #fff;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  transition: filter 0.15s ease;
+  &.is-blank {
+    fill: #f1f3f5;
+    stroke: #b9c3cc;
+    stroke-dasharray: 2 2;
+  }
+  &.is-context {
+    fill: #eef1f4;
+    stroke: #fff;
+  }
+  .is-hover > &,
+  .agy-geomap__prov:focus-visible > & {
+    stroke: var(--agy-ink);
+    stroke-width: 2;
+    filter: brightness(1.06);
+  }
+  .is-live > & {
+    stroke: #e8590c;
+    stroke-width: 1.6;
+  }
+}
+// someone opened this province's site in the last 15 minutes: a dot with a ring that grows and fades
+.agy-geomap__live {
+  pointer-events: none;
+}
+.agy-geomap__dot {
+  fill: #e8590c;
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+.agy-geomap__ring {
+  fill: none;
+  stroke: #e8590c;
+  stroke-width: 2.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: agy-geo-pulse 1.6s ease-out infinite;
+}
+@keyframes agy-geo-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agy-geomap__ring,
+  .agy-geomap__pulse-dot {
+    animation: none !important;
+  }
+}
+.agy-geomap__inset-bg {
+  fill: #fff;
+  stroke: var(--agy-line);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 4px 10px rgba(8, 63, 88, 0.12));
+}
+.agy-geomap__inset-title {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--agy-muted);
+}
+.agy-geomap__inset-mark {
+  fill: none;
+  stroke: var(--agy-muted);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+  pointer-events: none;
+}
+.agy-geomap__tip {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 14px));
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 170px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--agy-deep);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  white-space: nowrap;
+  strong {
+    font-size: 14px;
+  }
+  small {
+    opacity: 0.75;
+  }
+  .is-live {
+    color: #ffb27a;
+  }
+}
+.agy-geomap__credit {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--agy-muted);
+}
+.agy-geomap__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: var(--agy-muted);
+}
+.agy-geomap__legend-title {
+  flex-basis: 100%;
+  font-weight: 600;
+  color: var(--agy-ink);
+}
+.agy-geomap__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  i {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  i.is-live {
+    border-radius: 50%;
+    background: #e8590c;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px rgba(232, 89, 12, 0.35);
+  }
+}
+.agy-geomap__list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #f5f8fa;
+    font-size: 14px;
+  }
+  a {
+    flex: 1;
+    font-weight: 500;
+  }
+  small {
+    color: var(--agy-muted);
+  }
+  &--rank {
+    counter-reset: rank;
+    li::before {
+      counter-increment: rank;
+      content: counter(rank);
+      width: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--agy-muted);
+      text-align: right;
+    }
+  }
+}
+.agy-geomap__pulse-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #e8590c;
+  animation: agy-dot 1.6s ease-in-out infinite;
+}
+@keyframes agy-dot {
+  50% {
+    box-shadow: 0 0 0 5px rgba(232, 89, 12, 0.2);
+  }
+}
+.agy-geomap__note {
+  font-size: 12px;
+  color: var(--agy-muted);
+  margin: 0;
 }

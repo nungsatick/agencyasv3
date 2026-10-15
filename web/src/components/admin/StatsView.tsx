@@ -9,6 +9,7 @@ import { bangkokDay } from '@/lib/site'
 import { AdminYearPicker } from './AdminYearPicker'
 import { Shell, type Staff, staffProvinces } from './Shell'
 import { SortTable } from './SortTable'
+import { type MapItem, ThaiVisitMap } from './ThaiVisitMap'
 
 const PAGE_LABEL: Record<string, string> = { home: 'หน้าหลัก', docs: 'เอกสาร', utilization: 'สารสนเทศเพื่อการตัดสินใจ', guides: 'แผนงานและคู่มือ' }
 const RANGES = [30, 90, 365]
@@ -103,9 +104,11 @@ export async function StatsView(props: AdminViewServerProps) {
                  coalesce(sum(views) filter (where day = ${today}), 0)::int as today,
                  coalesce(sum(views) filter (where ${inPeriod}), 0)::int as range,
                  coalesce(sum(views) filter (where day >= ${fyStart}), 0)::int as fy,
-                 sum(views)::int as total
+                 sum(views)::int as total,
+                 -- every count stamps updated_at, so this is when someone last opened the province's site today
+                 floor(extract(epoch from now() - max(updated_at) filter (where day = ${today})) / 60)::int as ago
           from page_views group by province_id`)
-      ).rows as { province_id: number; today: number; range: number; fy: number; total: number }[])
+      ).rows as { province_id: number; today: number; range: number; fy: number; total: number; ago: number | null }[])
   const rankBy = new Map(ranking.map((r) => [Number(r.province_id), r]))
 
   // Opens of each file through its public link (counted since this feature was switched on).
@@ -125,6 +128,13 @@ export async function StatsView(props: AdminViewServerProps) {
     const qs = Object.entries(merged).filter(([, v]) => v !== undefined).map(([k, v]) => `${k}=${v}`).join('&')
     return `/admin/visit-stats${qs ? `?${qs}` : ''}`
   }
+
+  // the map: every province, coloured by its views in the period (central admins, all provinces)
+  const mapItems: MapItem[] = provinces.docs.map((p) => {
+    const r = rankBy.get(p.id)
+    return { id: p.id, code: p.code, nameTh: p.nameTh, views: Number(r?.range ?? 0), ago: r?.ago == null ? null : Number(r.ago), href: link({ province: p.id }) }
+  })
+  const updatedAt = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Bangkok' })
 
   // bar chart: one bar per day, drawn as plain SVG
   const W = 960, H = 220, pad = 28
@@ -154,6 +164,16 @@ export async function StatsView(props: AdminViewServerProps) {
           <div className="agy__tile"><span>ปีงบประมาณนี้</span><strong>{n(totals.fy)}</strong></div>
           <div className="agy__tile"><span>ทั้งหมด</span><strong>{n(totals.total)}</strong></div>
         </div>
+
+        {!one && (
+          <div className="agy__card">
+            <div>
+              <h2>แผนที่การเข้าชม</h2>
+              <p className="agy__sub">สีเข้ม = เข้าชมมากใน {periodText} · จุดสีส้มกระพริบ = มีผู้เปิดหน้าเว็บจังหวัดนั้นในช่วง 15 นาทีล่าสุด · กดที่จังหวัดเพื่อดูรายละเอียด</p>
+            </div>
+            <ThaiVisitMap items={mapItems} periodText={periodText} updatedAt={updatedAt} />
+          </div>
+        )}
 
         <div className="agy__card">
           <div className="agy__head" style={{ marginBottom: 0 }}>
