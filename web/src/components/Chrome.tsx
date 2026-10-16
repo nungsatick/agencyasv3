@@ -6,18 +6,12 @@ import { topicColor } from '@/lib/themes'
 import type { Province, Topic } from '@/payload-types'
 
 import { CookieSettingsButton } from './Consent'
-import { NavPill } from './NavPill'
+import { MainNav } from './MainNav'
 import { DisplayTools } from './Tools'
 
-type Page = 'home' | 'docs' | 'utilization' | 'guides'
-
-export function SiteHeader({ province, active }: { province: Province; active: Page }) {
+/** The province site's header: logo and name, the top menu and the display tools. Drawn once by the province layout. */
+export function SiteHeader({ province }: { province: Province }) {
   const base = `/${province.slug}`
-  const item = (key: Page, href: string, label: string) => (
-    <Link href={href} className={active === key ? 'nav-link is-active' : 'nav-link'} aria-current={active === key ? 'page' : undefined}>
-      {label}
-    </Link>
-  )
   return (
     <header className="site-header">
       <div className="wrap site-header__in">
@@ -29,13 +23,7 @@ export function SiteHeader({ province, active }: { province: Province; active: P
             <span className="brand__sub">จังหวัด{province.nameTh}</span>
           </span>
         </Link>
-        <nav className="nav" aria-label="เมนูหลัก">
-          <NavPill />
-          {item('home', base, 'หน้าหลัก')}
-          {item('utilization', `${base}/utilization`, 'สารสนเทศเพื่อการตัดสินใจ')}
-          {item('docs', `${base}/docs`, 'เอกสาร')}
-          {item('guides', `${base}/guides`, 'แผนงานและคู่มือ')}
-        </nav>
+        <MainNav base={base} />
         <DisplayTools />
       </div>
     </header>

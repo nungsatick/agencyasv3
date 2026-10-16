@@ -4,7 +4,7 @@ import React from 'react'
 
 import { PageExtras } from '@/components/PageExtras'
 
-import { SiteHeader } from '@/components/Chrome'
+
 import { type DashCard, DashboardViewer } from '@/components/Interactive'
 import { YearPicker } from '@/components/Tools'
 import { distinctYears, fileUrl, getDashboards, getProvince, selectYears } from '@/lib/data'
@@ -41,7 +41,6 @@ export default async function UtilizationPage({
 
   return (
     <>
-      <SiteHeader province={province} active="utilization" />
       <PageExtras province={province} page="utilization" />
       <main className="wrap page">
         <h1 className="page__title">สารสนเทศเพื่อการตัดสินใจ</h1>

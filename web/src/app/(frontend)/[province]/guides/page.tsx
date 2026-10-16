@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
 
-import { SiteHeader } from '@/components/Chrome'
+
 import { PageExtras } from '@/components/PageExtras'
 import { YearPicker } from '@/components/Tools'
 import { FileIcon } from '@/components/FileIcon'
@@ -77,7 +77,6 @@ export default async function GuidesPage({ params, searchParams }: { params: Pro
 
   return (
     <>
-      <SiteHeader province={province} active="guides" />
       <PageExtras province={province} page="guides" />
       <main className="wrap page">
         <h1 className="page__title">แผนงานและคู่มือ</h1>

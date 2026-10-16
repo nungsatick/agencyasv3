@@ -125,7 +125,7 @@ h2 {
   background: var(--tint);
   color: var(--dark);
 }
-/* one highlight that slides between entries (NavPill.tsx); the entries sit on top of it */
+/* one highlight that slides between entries (MainNav.tsx); the entries sit on top of it */
 .nav {
   position: relative;
 }
@@ -146,13 +146,6 @@ h2 {
 }
 .nav.has-pill .nav-link.is-active {
   background: transparent;
-}
-/* while the next page loads, the clicked entry already looks current */
-.nav.has-pill .nav-link.is-going {
-  color: var(--dark);
-}
-.nav.has-pill:has(.is-going) .nav-link.is-active:not(.is-going) {
-  color: var(--ink);
 }
 @media (prefers-reduced-motion: reduce) {
   .nav__pill,

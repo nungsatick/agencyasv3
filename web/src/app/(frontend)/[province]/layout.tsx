@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import React, { Suspense } from 'react'
 
 import { Analytics } from '@/components/Analytics'
-import { MourningRibbon, SiteFooter } from '@/components/Chrome'
+import { MourningRibbon, SiteFooter, SiteHeader } from '@/components/Chrome'
 import { ConsentProvider } from '@/components/Consent'
 import { BackToTop } from '@/components/Tools'
 import { getProvince } from '@/lib/data'
@@ -40,8 +40,10 @@ export default async function ProvinceLayout({ children, params }: Props) {
           </Suspense>
         )}
         {mourning?.ribbon && <MourningRibbon corner={mourning.corner} />}
-        {/* pages render their own header; the note sits right under it via CSS order */}
+        {/* one header for every page, so the menu stays put (and its highlight slides) while pages change;
+            the mourning note sits right under it via CSS order */}
         <div className="site__pages">
+          <SiteHeader province={province} />
           {children}
           {mourning?.message && <div className="mourning-note">{mourning.message}</div>}
         </div>

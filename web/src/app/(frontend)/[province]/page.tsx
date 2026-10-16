@@ -5,7 +5,7 @@ import React from 'react'
 import { PageExtras } from '@/components/PageExtras'
 import { CountUp } from '@/components/CountUp'
 
-import { HitStats, SiteHeader, TopicTag } from '@/components/Chrome'
+import { HitStats, TopicTag } from '@/components/Chrome'
 import { groupOf, Svg } from '@/components/docGroups'
 import { FileIcon } from '@/components/FileIcon'
 import { distinctYears, getDashboards, getDocuments, getProvince, fileUrl } from '@/lib/data'
@@ -55,7 +55,6 @@ export default async function ProvinceHome({ params }: { params: Promise<{ provi
 
   return (
     <>
-      <SiteHeader province={province} active="home" />
       <PageExtras province={province} page="home" />
 
       <section className={`hero hero--${side}${heroUrl ? ' hero--image' : ''}`} style={heroStyle}>

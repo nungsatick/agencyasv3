@@ -4,7 +4,7 @@ import React from 'react'
 
 import { PageExtras } from '@/components/PageExtras'
 
-import { HitStats, SiteHeader } from '@/components/Chrome'
+import { HitStats } from '@/components/Chrome'
 import { GROUPS, Svg } from '@/components/docGroups'
 import { FileIcon } from '@/components/FileIcon'
 import { FilePreview, StepFile } from '@/components/Interactive'
@@ -131,7 +131,6 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
 
   return (
     <>
-      <SiteHeader province={province} active="docs" />
       <PageExtras province={province} page="docs" />
       <main className="wrap page">
         <h1 className="page__title">เอกสารการดำเนินงาน</h1>
