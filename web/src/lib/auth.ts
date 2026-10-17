@@ -113,7 +113,7 @@ export function newRecoveryCodes(n = 10): string[] {
 export const normalizeRecoveryCode = (code: string): string => code.toUpperCase().replace(/[^A-Z0-9]/g, '')
 
 export function checkPassword(password: unknown, username?: string): string | null {
-  if (typeof password !== 'string' || password.length < 10) return 'รหัสผ่านต้องยาวอย่างน้อย 10 ตัวอักษร'
+  if (typeof password !== 'string' || password.length < 8) return 'รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร'
   if (username && password.toLowerCase().includes(username.toLowerCase())) return 'รหัสผ่านต้องไม่มีชื่อผู้ใช้อยู่ข้างใน'
   return null
 }

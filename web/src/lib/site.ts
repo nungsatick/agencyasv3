@@ -86,7 +86,7 @@ export async function activePopup(provinceId: number, page: string): Promise<Pop
   }
 }
 
-export type HitKind = 'file_view' | 'file_download' | 'doc_link' | 'dashboard_view'
+export type HitKind = 'file_view' | 'file_download' | 'doc_link' | 'dashboard_view' | 'guide_link'
 
 /** True for requests that should not be counted: robots, and staff who are signed in. */
 export const uncounted = (userAgent: string | null, cookie: string | null): boolean =>

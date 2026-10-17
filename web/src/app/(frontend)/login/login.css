@@ -74,6 +74,15 @@
 .auth-input:focus-within { border-color: #147f88; outline: 2px solid #147f88; outline-offset: 2px; }
 .auth-input > svg { width: 19px; height: 19px; color: #637c87; flex: none; }
 .auth--split .auth-input input { min-width: 0; width: 100%; border: 0; background: transparent; box-shadow: none; outline: none; height: 52px; padding: 0; font-size: 15px; }
+/* the browser paints fields it filled from saved logins light blue: keep the box white (a white inset shadow covers
+   the paint; the long transition stops Chrome repainting it) */
+.auth-input input:-webkit-autofill,
+.auth-input input:-webkit-autofill:hover,
+.auth-input input:-webkit-autofill:focus,
+.auth--split .field input:-webkit-autofill,
+.auth--split .field input:-webkit-autofill:hover,
+.auth--split .field input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #fff inset; box-shadow: 0 0 0 1000px #fff inset; -webkit-text-fill-color: #173947; caret-color: #173947; transition: background-color 9999s ease-out 0s; }
+.auth-input input:autofill, .auth--split .field input:autofill { background: #fff; }
 .auth--split input::placeholder { color: #788c95; font-size: 14px; }
 .auth-show { border: 0; background: none; color: #50727f; padding: 0; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .auth-show svg { width: 21px; height: 21px; }

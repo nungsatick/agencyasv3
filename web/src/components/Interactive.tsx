@@ -16,7 +16,13 @@ function useOpenFromHash(itemId: string | undefined, canPreview: boolean, setOpe
       if (window.location.hash !== `#preview-${itemId}`) return
       setOpen(true)
       const row = document.getElementById(`item-${itemId}`)
-      row?.classList.add('is-flash')
+      // a short highlight that fades (styles.css); taken off afterwards so it can play again next time
+      if (row) {
+        row.classList.remove('is-flash')
+        void row.offsetWidth
+        row.classList.add('is-flash')
+        window.setTimeout(() => row.classList.remove('is-flash'), 2600)
+      }
       requestAnimationFrame(() => row?.scrollIntoView({ block: 'start' }))
     }
     fromHash()
@@ -25,7 +31,15 @@ function useOpenFromHash(itemId: string | undefined, canPreview: boolean, setOpe
   }, [itemId, canPreview, setOpen])
 }
 
-function PreviewPane({ url, kind, name }: { url: string; kind: string; name: string }) {
+function PreviewPane({ url, kind, name, fileId }: { url: string; kind: string; name: string; fileId?: number }) {
+  // one view each time the preview is opened (the ref keeps React's development double-run from counting twice)
+  const counted = useRef(false)
+  useEffect(() => {
+    if (fileId && !counted.current) {
+      counted.current = true
+      sendHit('file_view', fileId)
+    }
+  }, [fileId])
   return (
     <div className="preview">
       {kind === 'PDF' ? (
@@ -40,7 +54,7 @@ function PreviewPane({ url, kind, name }: { url: string; kind: string; name: str
 }
 
 /** A document row's file actions: download link plus an inline preview that loads only when opened. */
-export function FilePreview({ url, kind, name, itemId }: { url: string; kind: string; name: string; itemId?: string }) {
+export function FilePreview({ url, kind, name, itemId, fileId }: { url: string; kind: string; name: string; itemId?: string; fileId?: number }) {
   const [open, setOpen] = useState(false)
   const canPreview = kind === 'PDF' || kind === 'รูปภาพ'
   useOpenFromHash(itemId, canPreview, setOpen)
@@ -58,7 +72,7 @@ export function FilePreview({ url, kind, name, itemId }: { url: string; kind: st
           {open ? 'ปิดตัวอย่าง' : 'ดูตัวอย่าง'}
         </button>
       )}
-      {open && <PreviewPane url={url} kind={kind} name={name} />}
+      {open && <PreviewPane url={url} kind={kind} name={name} fileId={fileId} />}
     </>
   )
 }
@@ -67,7 +81,7 @@ export function FilePreview({ url, kind, name, itemId }: { url: string; kind: st
  * A dataset step's file link (Template 1–3 inside an issue card). It has no preview button of its own;
  * the preview opens only when reached from the home page, and the card then widens to the full row.
  */
-export function StepFile({ url, kind, name, itemId, children }: { url: string; kind: string; name: string; itemId: string; children: React.ReactNode }) {
+export function StepFile({ url, kind, name, itemId, fileId, children }: { url: string; kind: string; name: string; itemId: string; fileId?: number; children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   const canPreview = kind === 'PDF' || kind === 'รูปภาพ'
   useOpenFromHash(itemId, canPreview, setOpen)
@@ -79,7 +93,7 @@ export function StepFile({ url, kind, name, itemId, children }: { url: string; k
           <button type="button" className="btn btn--sm btn--primary step__close" onClick={() => setOpen(false)}>
             ปิดตัวอย่าง
           </button>
-          <PreviewPane url={url} kind={kind} name={name} />
+          <PreviewPane url={url} kind={kind} name={name} fileId={fileId} />
         </>
       )}
     </>
@@ -175,6 +189,8 @@ export function DashboardViewer({ items }: { items: DashCard[] }) {
             type="button"
             key={d.id}
             className={d.id === openId ? 'dash-card is-active' : 'dash-card'}
+            style={{ '--card-tone': d.dot } as React.CSSProperties}
+            aria-pressed={d.id === openId}
             onClick={() => {
               open(d.id)
               window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -194,14 +210,18 @@ export function DashboardViewer({ items }: { items: DashCard[] }) {
               </span>
             )}
             <span className="dash-card__body">
-              {d.year && <span className="year-tag">ปี {d.year}</span>}
+              <span className="dash-card__meta">
               {d.topicName && (
                 <span className="topic-tag" style={{ color: d.text }}>
                   <span className="topic-tag__dot" style={{ background: d.dot }} />
                   {d.topicName}
                 </span>
               )}
+              {d.year && <span className="dash-card__year">ปี {d.year}</span>}
+              </span>
               <span className="dash-card__title">{d.title}</span>
+              <span className="dash-card__footer">
+              <span className="dash-card__state">{d.id === openId ? 'กำลังแสดง' : 'ดูสารสนเทศ'}</span>
               <span className="hit-stats" title={`เข้าชม ${(d.views + (extra[d.id] ?? 0)).toLocaleString('th-TH')} ครั้ง`}>
                 <span>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -213,7 +233,7 @@ export function DashboardViewer({ items }: { items: DashCard[] }) {
                   <span className="sr-only"> ครั้ง</span>
                 </span>
               </span>
-              {d.id === openId && <span className="dash-card__state">กำลังแสดง</span>}
+              </span>
             </span>
           </button>
         ))}

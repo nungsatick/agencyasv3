@@ -6,6 +6,7 @@ import React, { useEffect } from 'react'
 import { NavHighlight } from './NavHighlight'
 import { NavRail } from './NavRail'
 import { PayloadDates } from './PayloadDates'
+import { CreateTitle } from './CreateTitle'
 import { IdleGuard } from './IdleGuard'
 import { RoleClass } from './RoleClass'
 
@@ -89,15 +90,15 @@ const HINTS: Record<string, Record<string, string>> = {
     priority: 'ถ้ามีหลายประกาศในช่วงเดียวกัน เลขมากแสดงก่อน',
   },
   'central-contents': {
-    section: 'หมวดในหน้า "แผนงานและคู่มือ" ของทุกจังหวัด',
-    fiscalYear: 'ปีของเนื้อหา เว้นว่างถ้าใช้ได้ทุกปี',
-    sortOrder: 'เลขน้อยแสดงก่อน',
+    section: 'กลุ่มในหน้า "แผนงานและคู่มือ" ของทุกจังหวัด: แผนการขับเคลื่อน (กรองตามปีงบได้) หรือคู่มือและสื่อสนับสนุน (แสดงทุกปีเสมอ)',
+    fiscalYear: 'ใช้กับกลุ่มแผนการขับเคลื่อน หัวข้อจะแสดงเมื่อผู้เข้าชมเลือกปีนี้ เว้นว่างถ้าใช้ได้ทุกปี (แสดงเสมอ อยู่ก่อนหัวข้อที่มีปี)',
+    sortOrder: 'ระบบตั้งให้เอง (หัวข้อใหม่ต่อท้ายกลุ่ม) เลื่อนลำดับได้ด้วยปุ่ม ▲▼ ในรายการเนื้อหากลาง',
     title: 'หัวข้อที่แสดงบนหน้าเว็บ',
-    slug: 'รหัสใช้ในลิงก์ เป็นภาษาอังกฤษ',
+    slug: 'ระบบตั้งให้เอง ใช้เป็นลิงก์ตรงไปหัวข้อนี้ เช่น /sisaket/guides#รหัส ไม่จำเป็นต้องแก้',
     body: 'เนื้อหาข้อความ',
     sourceUrl: 'แหล่งที่มาของเนื้อหา',
     files: 'ไฟล์หรือภาพที่แสดงในหัวข้อนี้',
-    links: 'รายการลิงก์หรือไฟล์ที่แสดงเป็นข้อ ๆ',
+    links: 'รายการที่แสดงเป็นข้อ ๆ มีเลขลำดับ แต่ละข้อใส่ลิงก์หรือเลือกไฟล์อย่างใดอย่างหนึ่ง (ถ้ามีทั้งสองใช้ไฟล์) ถ้าไม่ใส่เลยจะแสดงเป็นข้อความธรรมดา กดไม่ได้'
   },
   topics: {
     nameTh: 'ชื่อประเด็นที่แสดงบนป้ายและตัวกรองของหน้าเว็บ',
@@ -177,6 +178,7 @@ export function FieldHints({ children }: { children: React.ReactNode }) {
       <PayloadDates />
       <RoleClass />
       <IdleGuard />
+      <CreateTitle />
       {children}
     </>
   )

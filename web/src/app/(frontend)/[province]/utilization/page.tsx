@@ -24,7 +24,7 @@ export default async function UtilizationPage({
   const sp = await searchParams
   const all = await getDashboards(province.id)
   const years = distinctYears(all)
-  const { selected, multi, param } = selectYears(sp.year, years)
+  const { selected, param } = selectYears(sp.year, years)
   const ofYear = all.filter((d) => selected.includes(d.fiscalYear))
   const topics = [...new Map(ofYear.filter((d) => d.topic).map((d) => [d.topic!.slug, d.topic!])).values()]
   const topic = topics.some((t) => t.slug === sp.topic) ? sp.topic : undefined
@@ -36,7 +36,7 @@ export default async function UtilizationPage({
   const items: DashCard[] = shown.map((d) => {
     const { label: _label, ...c } = topicColor(d.topic)
     const thumb = d.thumbnail && typeof d.thumbnail === 'object' ? `${fileUrl(d.thumbnail as FileDoc)}?cover=1` : null
-    return { id: d.id, title: d.title, topicName: d.topic?.nameTh ?? null, ...c, embedUrl: d.embedUrl ?? null, provider: d.provider ?? 'other', views: views.get(d.id) ?? 0, thumb, year: multi ? d.fiscalYear : null }
+    return { id: d.id, title: d.title, topicName: d.topic?.nameTh ?? null, ...c, embedUrl: d.embedUrl ?? null, provider: d.provider ?? 'other', views: views.get(d.id) ?? 0, thumb, year: d.fiscalYear }
   })
 
   return (

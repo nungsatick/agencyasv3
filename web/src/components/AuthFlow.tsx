@@ -167,8 +167,8 @@ export function AuthFlow({ token, notice }: { token?: string; notice?: string })
         </div>
         <label className="field">
           <span>รหัสผ่านใหม่</span>
-          <input type={show ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" required minLength={10} autoFocus />
-          <small className={password.length >= 10 ? 'ok' : 'muted'}>{password.length >= 10 ? '✓ ' : ''}ยาวอย่างน้อย 10 ตัวอักษร และไม่มีชื่อผู้ใช้อยู่ข้างใน</small>
+          <input type={show ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" required minLength={8} autoFocus />
+          <small className={password.length >= 8 ? 'ok' : 'muted'}>{password.length >= 8 ? '✓ ' : ''}ยาวอย่างน้อย 8 ตัวอักษร และไม่มีชื่อผู้ใช้อยู่ข้างใน</small>
         </label>
         <label className="field">
           <span>พิมพ์รหัสผ่านอีกครั้ง</span>

@@ -210,19 +210,19 @@ export interface Province {
 export interface File {
   id: number;
   originalName?: string | null;
-  publicPath?: string | null;
-  sha256?: string | null;
-  legacyUrl?: string | null;
   changeNote?: string | null;
   versionNo?: number | null;
   isCurrent?: boolean | null;
-  versionOf?: (number | null) | File;
   uploadedBy?: (number | null) | User;
+  versionOf?: (number | null) | File;
   history?: {
     docs?: (number | File)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  publicPath?: string | null;
+  sha256?: string | null;
+  legacyUrl?: string | null;
   downloadCount?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -369,11 +369,8 @@ export interface CentralContent {
   id: number;
   section: 'plan' | 'howto';
   fiscalYear?: number | null;
-  sortOrder?: number | null;
   title: string;
-  slug: string;
   body?: string | null;
-  sourceUrl?: string | null;
   files?: (number | File)[] | null;
   links?:
     | {
@@ -383,6 +380,9 @@ export interface CentralContent {
         id?: string | null;
       }[]
     | null;
+  sourceUrl?: string | null;
+  slug: string;
+  sortOrder?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -529,7 +529,7 @@ export interface PageView {
  */
 export interface HitCount {
   id: number;
-  kind: 'file_view' | 'file_download' | 'doc_link' | 'dashboard_view';
+  kind: 'file_view' | 'file_download' | 'doc_link' | 'dashboard_view' | 'guide_link';
   refId: number;
   hits: number;
   updatedAt: string;
@@ -733,15 +733,15 @@ export interface DashboardsSelect<T extends boolean = true> {
  */
 export interface FilesSelect<T extends boolean = true> {
   originalName?: T;
-  publicPath?: T;
-  sha256?: T;
-  legacyUrl?: T;
   changeNote?: T;
   versionNo?: T;
   isCurrent?: T;
-  versionOf?: T;
   uploadedBy?: T;
+  versionOf?: T;
   history?: T;
+  publicPath?: T;
+  sha256?: T;
+  legacyUrl?: T;
   downloadCount?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -762,11 +762,8 @@ export interface FilesSelect<T extends boolean = true> {
 export interface CentralContentsSelect<T extends boolean = true> {
   section?: T;
   fiscalYear?: T;
-  sortOrder?: T;
   title?: T;
-  slug?: T;
   body?: T;
-  sourceUrl?: T;
   files?: T;
   links?:
     | T
@@ -776,6 +773,9 @@ export interface CentralContentsSelect<T extends boolean = true> {
         file?: T;
         id?: T;
       };
+  sourceUrl?: T;
+  slug?: T;
+  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
 }

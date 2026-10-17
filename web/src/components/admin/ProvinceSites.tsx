@@ -66,8 +66,10 @@ export function ProvinceSites({ sites, regions }: { sites: SiteCard[]; regions: 
                     {p.label}
                   </a>
                 ))}
-                <a href={`/admin/collections/provinces/${s.id}`} className="agy-site__edit">
-                  ปรับแต่ง
+                <a href={`/admin/collections/provinces/${s.id}`} className="agy-site__edit" title={`ปรับแต่งหน้าเว็บและข้อมูลสำนักงานจังหวัด${s.name}`} aria-label={`ปรับแต่งจังหวัด${s.name}`}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M4 20h4L19 9l-4-4L4 16v4ZM13.5 6.5l4 4" />
+                  </svg>
                 </a>
               </nav>
             </article>

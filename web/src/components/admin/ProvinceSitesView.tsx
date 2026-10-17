@@ -35,7 +35,7 @@ export async function ProvinceSitesView(props: AdminViewServerProps) {
         <div className="agy__head">
           <div>
             <h1>เว็บไซต์ 76 จังหวัด</h1>
-            <p className="agy__sub">ลิงก์ไปหน้าเว็บของทุกจังหวัด กดชื่อจังหวัดเพื่อเปิดหน้าหลัก หรือกดหน้าที่ต้องการด้านล่าง (เปิดในแท็บใหม่) · &quot;ปรับแต่ง&quot; เปิดหน้าแก้ไขข้อมูลจังหวัด</p>
+            <p className="agy__sub">ลิงก์ไปหน้าเว็บของทุกจังหวัด กดชื่อจังหวัดเพื่อเปิดหน้าหลัก หรือกดหน้าที่ต้องการด้านล่าง (เปิดในแท็บใหม่) · ไอคอนดินสอเปิดหน้าแก้ไขข้อมูลจังหวัด</p>
           </div>
         </div>
         <ProvinceSites sites={sites} regions={REGIONS.map(([r]) => r)} />

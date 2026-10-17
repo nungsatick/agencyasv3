@@ -1,12 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { checkAll, type RuleName, rules } from '@/lib/fieldRules'
 import { thaiDayTime } from '@/lib/thaiDate'
 
 import { EmailDraft } from './EmailDraft'
+import { FileDrop } from './FileDrop'
 
 type Province = { id: number; name: string; slug?: string }
 type LinkResult = { url: string; expiresAt: string; username: string; email?: string; name?: string }
@@ -144,7 +145,6 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
   }
 
   // ── import many ──
-  const fileRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<Preview | null>(null)
   const [created, setCreated] = useState<Created[] | null>(null)
@@ -172,8 +172,8 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
     }
   }
 
-  const pick = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0] ?? null
+  const pick = (files: File[]) => {
+    const f = files[0] ?? null
     setFile(f)
     setPreview(null)
     setCreated(null)
@@ -321,13 +321,7 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
           </p>
         </div>
         {importError && <div className="agy__error" role="alert">{importError}</div>}
-        <div className="agy__actions">
-          <input ref={fileRef} type="file" accept=".xlsx" onChange={pick} hidden />
-          <button type="button" className="agy__btn" onClick={() => fileRef.current?.click()} disabled={importing}>
-            {file ? 'เลือกไฟล์อื่น' : 'เลือกไฟล์ Excel'}
-          </button>
-          {file && <span style={{ alignSelf: 'center' }}>{file.name}</span>}
-        </div>
+        <FileDrop accept=".xlsx" busy={importing} label={file ? 'เลือกไฟล์อื่น' : 'เลือกไฟล์ Excel'} hint="ไฟล์ .xlsx ตามแบบฟอร์มต้นแบบ" picked={file?.name} onFiles={pick} />
 
         {preview && !created && (
           <>

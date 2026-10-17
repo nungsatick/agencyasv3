@@ -1,7 +1,9 @@
 'use client'
 
 import { toast, useField } from '@payloadcms/ui'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+
+import { FileDrop } from './FileDrop'
 
 type FileDoc = {
   id: number
@@ -45,7 +47,6 @@ function FileRow({ file, onChanged, onDetach }: { file: FileDoc; onChanged: () =
   const [next, setNext] = useState<File | null>(null)
   const [note, setNote] = useState('')
   const [busy, setBusy] = useState(false)
-  const pick = useRef<HTMLInputElement>(null)
 
   const loadHistory = useCallback(async () => {
     const res = await api(`/api/files?where[versionOf][equals]=${file.id}&sort=-versionNo&depth=1&limit=50`)
@@ -121,11 +122,14 @@ function FileRow({ file, onChanged, onDetach }: { file: FileDoc; onChanged: () =
 
       {open === 'replace' && (
         <div className="agy-file__panel">
-          <input ref={pick} type="file" accept={ACCEPT} hidden onChange={(e) => setNext(e.target.files?.[0] ?? null)} />
-          <div className="agy__actions">
-            <button type="button" className="agy__btn" onClick={() => pick.current?.click()}>{next ? 'เลือกไฟล์อื่น' : 'เลือกไฟล์ใหม่'}</button>
-            {next && <span className="agy-file__picked">{next.name} · {size(next.size)}</span>}
-          </div>
+          <FileDrop
+            compact
+            accept={ACCEPT}
+            label={next ? 'เลือกไฟล์อื่น' : 'เลือกไฟล์ใหม่'}
+            hint="PDF, Excel, JPG, PNG"
+            picked={next ? `${next.name} · ${size(next.size)}` : null}
+            onFiles={(f) => setNext(f[0] ?? null)}
+          />
           <label className="agy__field">
             <span>เหตุผลที่แก้ไข</span>
             <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="เช่น แก้คำผิดหน้า 3 หรือเพิ่มลายมือชื่อประธาน" />
@@ -175,7 +179,6 @@ export function DocFiles({ path }: { path: string }) {
   const key = ids.join(',')
   const [files, setFiles] = useState<FileDoc[]>([])
   const [busy, setBusy] = useState(false)
-  const pick = useRef<HTMLInputElement>(null)
 
   const load = useCallback(async () => {
     if (!key) return setFiles([])
@@ -188,9 +191,7 @@ export function DocFiles({ path }: { path: string }) {
     void load().catch((e) => toast.error(e.message))
   }, [load])
 
-  const add = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const chosen = [...(e.target.files ?? [])]
-    e.target.value = ''
+  const add = async (chosen: File[]) => {
     if (!chosen.length) return
     setBusy(true)
     try {
@@ -212,11 +213,7 @@ export function DocFiles({ path }: { path: string }) {
       {files.map((f) => (
         <FileRow key={f.id} file={f} onChanged={() => void load()} onDetach={() => setValue(ids.filter((id) => id !== f.id))} />
       ))}
-      <input ref={pick} type="file" accept={ACCEPT} multiple hidden onChange={add} />
-      <button type="button" className="agy-files__drop" disabled={busy} onClick={() => pick.current?.click()}>
-        <strong>{busy ? 'กำลังอัปโหลด...' : files.length ? 'แนบไฟล์เพิ่ม' : 'เลือกไฟล์เพื่อแนบ'}</strong>
-        <span>รองรับ PDF, Excel, JPG, PNG</span>
-      </button>
+      <FileDrop multiple accept={ACCEPT} busy={busy} label={files.length ? 'แนบไฟล์เพิ่ม' : 'เลือกไฟล์เพื่อแนบ'} hint="รองรับ PDF, Excel, JPG, PNG" onFiles={(f) => void add(f)} />
     </div>
   )
 }

@@ -51,7 +51,7 @@ function KindBadge({ doc }: { doc: DocRow }) {
 
 function Actions({ doc }: { doc: DocRow }) {
   const f = doc.files[0]
-  if (f) return <FilePreview url={fileUrl(f)} kind={fileKind(f)} name={doc.title} itemId={String(doc.legacyId ?? doc.id)} />
+  if (f) return <FilePreview url={fileUrl(f)} kind={fileKind(f)} name={doc.title} itemId={String(doc.legacyId ?? doc.id)} fileId={f.id} />
   if (doc.externalUrl)
     return (
       <TrackedLink id={doc.id} href={doc.externalUrl}>
@@ -132,7 +132,7 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
   return (
     <>
       <PageExtras province={province} page="docs" />
-      <main className="wrap page">
+      <main className="wrap page page--docs">
         <h1 className="page__title">เอกสารการดำเนินงาน</h1>
         <p className="muted">รายงานการประชุม คำสั่ง ชุดข้อมูล และข้อกำหนดการวิเคราะห์ ของจังหวัด{province.nameTh}</p>
 
@@ -254,7 +254,7 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
                                       <HitStats {...hitsOf(d)} />
                                     </span>
                                     {f ? (
-                                      <StepFile url={fileUrl(f)} kind={fileKind(f)} name={d.title} itemId={String(d.legacyId ?? d.id)}>
+                                      <StepFile url={fileUrl(f)} kind={fileKind(f)} name={d.title} itemId={String(d.legacyId ?? d.id)} fileId={f.id}>
                                         <a href={fileUrl(f)} target="_blank" rel="noopener noreferrer" className="step__open">
                                           <FileIcon file={f} size={22} withLabel />
                                         </a>

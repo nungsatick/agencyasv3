@@ -246,7 +246,8 @@ export const HitCounts: CollectionConfig = {
   access: { read: () => true, create: () => false, update: () => false, delete: isAdmin },
   indexes: [{ fields: ['kind', 'refId'], unique: true }],
   fields: [
-    { name: 'kind', type: 'select', required: true, options: ['file_view', 'file_download', 'doc_link', 'dashboard_view'] },
+    // guide_link: a link opened from a topic on the guides page (ref = the central-content topic)
+    { name: 'kind', type: 'select', required: true, options: ['file_view', 'file_download', 'doc_link', 'dashboard_view', 'guide_link'] },
     { name: 'refId', type: 'number', required: true, index: true },
     { name: 'hits', type: 'number', required: true, defaultValue: 0 },
   ],

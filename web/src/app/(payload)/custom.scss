@@ -135,6 +135,9 @@ $stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' str
 }
 .agy-nav {
   margin-bottom: 18px;
+  // the sidebar lines its children up to the left without stretching them; our block of entries must
+  // still be as wide as Payload's menu groups, or its highlight stops at the longest label
+  align-self: stretch;
 }
 // our entry placed inside one of Payload's menu groups (SystemNavLink.tsx)
 .agy-nav--slot {
@@ -771,31 +774,6 @@ $stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' str
   &--current {
     background: var(--agy-dark);
     color: #fff;
-  }
-}
-.agy-files__drop {
-  width: 100%;
-  border: 2px dashed #9fb2c0;
-  border-radius: 12px;
-  background: #f8fafb;
-  padding: 22px 16px;
-  font: inherit;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: var(--agy-ink);
-
-  strong {
-    color: var(--agy-primary);
-  }
-  span {
-    font-size: 14px;
-    color: var(--agy-muted);
-  }
-  &:hover {
-    border-color: var(--agy-primary);
   }
 }
 
@@ -2011,10 +1989,18 @@ body.agy-province-role [id='nav-group-ข้อมูลอ้างอิง'] 
       }
     }
   }
+  // the pencil: edit this province (icon only, the name is in the tooltip)
   &__edit {
     margin-left: auto;
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0 !important;
     color: var(--agy-muted) !important;
-    font-weight: 500 !important;
+    &:hover {
+      color: var(--site) !important;
+    }
   }
 }
 
@@ -2868,4 +2854,505 @@ $crumb-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
   font-size: 12px;
   color: var(--agy-muted);
   margin: 0;
+}
+
+// ── cards and sections, refreshed (16 Oct 2569): soft shadow, a header band with an accent, calmer fields ──
+// Applies to every .agy__card on our own screens, and to the field groups on edit screens (.agy-sec).
+// The header is the card's first child when it is (or holds) the h2, so no screen needed new markup.
+.agy__card {
+  border: 1px solid #e3e9ee;
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 6px 18px -10px rgba(8, 63, 88, 0.18);
+  gap: 18px;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--agy-dark);
+    margin: 0;
+  }
+}
+.agy__card > :first-child:is(h2, div:has(h2), .agy__head) {
+  margin: -24px -24px 2px;
+  padding: 18px 24px 16px;
+  border-bottom: 1px solid #e8eef2;
+  border-radius: 15px 15px 0 0;
+  background: linear-gradient(180deg, #f2f7fa 0%, #fff 100%);
+
+  .agy__sub {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 4px;
+  }
+}
+// the accent: a short bar in front of the card's title (a card with its own icon shows that instead)
+.agy__card > h2:first-child,
+.agy__card > :first-child:is(div:has(h2), .agy__head) h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &::before {
+    content: '';
+    flex: none;
+    width: 4px;
+    height: 1.1em;
+    border-radius: 4px;
+    background: linear-gradient(180deg, var(--agy-primary), var(--agy-dark));
+  }
+}
+.agy__card > :first-child:has(.agy__card-ic) h2::before {
+  display: none;
+}
+.agy__card-ic {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--agy-tint);
+  color: var(--agy-primary);
+  box-shadow: inset 0 0 0 1px rgba(11, 90, 125, 0.12);
+}
+// title row with an icon: icon, then the title and its description stacked
+.agy__card-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+// fields on our own screens
+.agy__field {
+  > span {
+    font-size: 14px;
+    color: var(--agy-ink);
+  }
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    border: 1px solid #c9d4dd;
+    border-radius: 10px;
+    background: #fbfcfd;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      background-color 0.15s ease;
+  }
+  textarea {
+    padding: 10px 12px;
+  }
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: #9fb2c0;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--agy-primary);
+    box-shadow: 0 0 0 3px rgba(11, 90, 125, 0.16);
+  }
+  // the hint under a box, with a faint ⓘ in front
+  > small {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    &::before {
+      content: 'i';
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 15px;
+      height: 15px;
+      margin-top: 2px;
+      border-radius: 50%;
+      border: 1px solid #b7c4cf;
+      font-size: 10px;
+      font-weight: 700;
+      font-style: italic;
+      font-family: Georgia, serif;
+      color: #8a99a6;
+    }
+  }
+}
+
+// buttons: a little lift on hover, the main one in a gradient
+.agy__btn {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+  &:hover:not(:disabled) {
+    box-shadow: 0 4px 12px -6px rgba(8, 63, 88, 0.35);
+  }
+  &--primary {
+    background: linear-gradient(180deg, var(--agy-primary), var(--agy-dark));
+    border-color: var(--agy-dark);
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px -8px rgba(8, 63, 88, 0.55);
+    }
+  }
+}
+
+// field groups on edit screens: the same card look
+.agy-sec .collapsible {
+  border: 1px solid #e3e9ee;
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 6px 18px -10px rgba(8, 63, 88, 0.18);
+}
+.agy-sec .collapsible__toggle-wrap {
+  border-radius: 15px 15px 0 0;
+  background: linear-gradient(180deg, #f2f7fa 0%, #fff 100%);
+  border-bottom: 1px solid #e8eef2;
+  padding: 16px 22px;
+}
+.agy-sec .collapsible__toggle-wrap:hover {
+  background: linear-gradient(180deg, #e9f2f7 0%, #fbfdfe 100%);
+}
+.agy-sec .collapsible-field__row-label-wrap,
+.agy-sec .collapsible__header-wrap .row-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  &::before {
+    content: '';
+    width: 4px;
+    height: 1.1em;
+    border-radius: 4px;
+    background: linear-gradient(180deg, var(--agy-primary), var(--agy-dark));
+  }
+}
+.agy-sec--quiet .collapsible-field__row-label-wrap::before,
+.agy-sec--quiet .collapsible__header-wrap .row-label::before {
+  background: #b7c4cf;
+}
+.agy-sec .collapsible--collapsed .collapsible__toggle-wrap {
+  border-radius: 15px;
+}
+
+@media (max-width: 600px) {
+  .agy__card {
+    padding: 18px;
+  }
+  .agy__card > :first-child:is(h2, div:has(h2), .agy__head) {
+    margin: -18px -18px 2px;
+    padding: 14px 18px 12px;
+  }
+}
+// the label wrapper and the label inside it both matched above: one bar only
+.agy-sec .collapsible-field__row-label-wrap .row-label::before {
+  display: none;
+}
+.agy-sec .collapsible__content {
+  padding-bottom: 20px;
+}
+
+// ── central-content form (collections/Content.ts CentralContents) ──
+.agy-year-field {
+  select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid #c5d0d9;
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+  }
+  select:focus {
+    outline: none;
+    border-color: var(--agy-primary);
+    box-shadow: 0 0 0 3px rgba(11, 90, 125, 0.18);
+  }
+}
+.agy-central-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--agy-muted);
+  &--off {
+    font-style: italic;
+  }
+}
+.agy-linkrow {
+  strong {
+    display: inline-block;
+    min-width: 26px;
+    color: var(--agy-muted);
+  }
+  em {
+    font-style: normal;
+    font-size: 13px;
+    color: var(--agy-muted);
+  }
+}
+.agy-move {
+  display: inline-flex;
+  gap: 4px;
+  .agy__btn {
+    font-size: 11px;
+  }
+}
+
+// "new file" explanation (UploadHelp.tsx)
+.agy-upload-help {
+  margin-top: 16px;
+  ul {
+    margin: 6px 0 0;
+    padding-left: 20px;
+  }
+  li {
+    margin: 2px 0;
+  }
+}
+
+// ── "[ไม่มีชื่อ]" on a new record shows "เพิ่ม…ใหม่" instead (CreateTitle.tsx); the old text keeps its space ──
+.agy-untitled {
+  position: relative;
+  color: transparent !important;
+  // ::after, because page headings already use ::before for their icon (h1.agy-title-icon)
+  &::after {
+    content: attr(data-agy-title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    color: var(--agy-dark);
+  }
+}
+// past the icon: 0.85em wide + 0.35em gap
+h1.agy-title-icon.agy-untitled::after {
+  left: 1.2em;
+}
+
+
+// ── one look for every place a file is chosen or dropped ──
+// Our own boxes (FileDrop.tsx .agy-drop, ImageField's empty frame, document attachments) and Payload's
+// (the files screen, the multi-file pop-up, upload fields in forms) all get: a dashed frame, an upload
+// mark, one strong button and a quiet line on what is accepted; the frame lights up while a file is dragged over.
+$agy-upload-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b5a7d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15V4M7 9l5-5 5 5'/%3E%3Cpath d='M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3'/%3E%3C/svg%3E");
+
+@mixin agy-drop-frame {
+  border: 2px dashed color-mix(in srgb, var(--agy-primary) 45%, #c5d0d9) !important;
+  border-radius: 16px !important;
+  background: linear-gradient(180deg, #f3f8fb, #fff) !important;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+@mixin agy-drop-over {
+  border-color: var(--agy-primary) !important;
+  background: linear-gradient(180deg, #e6f0f5, #f7fbfd) !important;
+}
+@mixin agy-drop-mark($size: 52px) {
+  content: '';
+  flex: none;
+  width: $size;
+  height: $size;
+  border-radius: 14px;
+  background: var(--agy-tint) $agy-upload-mark no-repeat center / 50%;
+}
+@mixin agy-drop-button {
+  min-height: 42px;
+  padding: 0 20px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: linear-gradient(180deg, var(--agy-primary), var(--agy-dark)) !important;
+  color: #fff !important;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 14px -8px rgba(8, 63, 88, 0.6);
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+@mixin agy-drop-quiet-button {
+  min-height: 42px;
+  padding: 0 18px !important;
+  border: 1px solid #c5d0d9 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: var(--agy-ink) !important;
+  font-weight: 600;
+}
+@mixin agy-drop-hint {
+  margin: 0 !important;
+  color: var(--agy-muted) !important;
+  font-size: 13.5px;
+}
+
+// our own: FileDrop.tsx
+.agy-drop {
+  @include agy-drop-frame;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 26px 20px;
+  text-align: center;
+  &::before {
+    @include agy-drop-mark;
+  }
+  &.is-over {
+    @include agy-drop-over;
+  }
+  &--compact {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 14px 16px;
+    text-align: left;
+    &::before {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+  }
+}
+.agy-drop__button {
+  @include agy-drop-button;
+}
+.agy-drop__hint {
+  @include agy-drop-hint;
+}
+.agy-drop__picked {
+  flex-basis: 100%;
+  font-weight: 600;
+  color: var(--agy-dark);
+}
+
+// ImageField.tsx: the empty picture frame
+.agy-img__empty {
+  @include agy-drop-frame;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 24px 20px !important;
+  text-align: center;
+  &::before {
+    @include agy-drop-mark;
+  }
+  .agy__btn--primary {
+    @include agy-drop-button;
+  }
+  .agy__btn:not(.agy__btn--primary) {
+    @include agy-drop-quiet-button;
+  }
+}
+.agy-img--over .agy-img__empty {
+  @include agy-drop-over;
+}
+.agy-img__hint {
+  @include agy-drop-hint;
+}
+
+// Payload: the files screen
+.file-field__upload .dropzone {
+  @include agy-drop-frame;
+  min-height: 190px;
+  &:hover,
+  &.dragging {
+    @include agy-drop-over;
+  }
+}
+.file-field__dropzoneContent {
+  width: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 26px 20px;
+  text-align: center;
+  &::before {
+    @include agy-drop-mark;
+  }
+}
+.file-field__dropzoneButtons {
+  justify-content: center;
+  .btn {
+    @include agy-drop-button;
+  }
+}
+.file-field__dragAndDropText {
+  @include agy-drop-hint;
+}
+
+// Payload: the multi-file pop-up ("สร้างใหม่" from a field that takes several files)
+.bulk-upload--add-files__dropArea .dropzone {
+  @include agy-drop-frame;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  &:hover,
+  &.dragging {
+    @include agy-drop-over;
+  }
+  &::before {
+    @include agy-drop-mark(64px);
+  }
+  .btn {
+    @include agy-drop-button;
+  }
+}
+.bulk-upload--add-files__dragAndDropText {
+  @include agy-drop-hint;
+}
+
+// Payload: an upload field in a form, still empty ("สร้างใหม่ หรือ เลือกจากที่มีอยู่ หรือ ลากและวางไฟล์")
+.upload__dropzoneAndUpload .dropzone {
+  @include agy-drop-frame;
+  &:hover,
+  &.dragging {
+    @include agy-drop-over;
+  }
+}
+.upload__dropzoneContent {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 20px 16px;
+  text-align: center;
+  &::before {
+    @include agy-drop-mark(44px);
+  }
+}
+.upload__dropzoneContent__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  .upload__createNewToggler {
+    @include agy-drop-button;
+  }
+  .upload__listToggler {
+    @include agy-drop-quiet-button;
+  }
+}
+.upload__dragAndDropText {
+  @include agy-drop-hint;
 }

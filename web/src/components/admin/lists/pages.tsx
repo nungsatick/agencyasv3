@@ -14,6 +14,7 @@ import { type Staff, staffProvinces } from '../Shell'
 import { FileIcon } from '@/components/FileIcon'
 
 import { AccountRequestActions } from '../AccountRequestActions'
+import { MoveButtons } from '../central/MoveButtons'
 import { TrashButton } from '../TrashButtons'
 import { forgetOldRequests } from '@/collections/AccountRequests'
 import { EditButton, HistoryButton, idOf, ListPage, OpenButton, Pill, pickLimit, pickPage, type Search, sortFor, shortDay, dayTime, type SortDef } from './ListPage'
@@ -366,29 +367,62 @@ export async function CentralContentsListView(view: AdminViewServerProps) {
   if (sp.year === 'any') and.push({ fiscalYear: { exists: false } })
   else if (sp.year) and.push({ fiscalYear: { equals: Number(sp.year) } })
   const result = await c.payload.find({ collection: 'central-contents', where: asWhere(and), sort: sortFor(sp, sorts), limit: pickLimit(sp), page: pickPage(sp), depth: 0, user: c.req.user, overrideAccess: false })
-  const SECTION: Record<string, string> = { plan: 'แผนการขับเคลื่อน', howto: 'เทคนิคการขึ้นชุดข้อมูล' }
+  const SECTION: Record<string, string> = { plan: 'แผนการขับเคลื่อนบัญชีข้อมูลจังหวัด', howto: 'คู่มือและสื่อสนับสนุน' }
+  // the page is the same in every province: preview it on the first one
+  const sample = (await c.payload.find({ collection: 'provinces', limit: 1, depth: 0, sort: 'nameTh' })).docs[0]
+  // per topic, over all provinces: outside links opened (views) and its files opened or saved (downloads)
+  const ids = result.docs.map((d) => d.id)
+  const hitRows = ids.length
+    ? ((
+        await c.payload.db.drizzle.execute(sql`
+          with tf as (
+            select parent_id as topic, files_id as file from central_contents_rels where files_id is not null
+            union select _parent_id, file_id from central_contents_links where file_id is not null)
+          select c.id,
+                 coalesce((select hits from hit_counts where kind = 'guide_link' and ref_id = c.id), 0)::int as views,
+                 coalesce((select sum(h.hits) from tf join hit_counts h on h.kind = 'file_download' and h.ref_id = tf.file where tf.topic = c.id), 0)::int as downloads
+          from central_contents c where c.id in (${sql.join(ids.map((id) => sql`${id}`), sql`, `)})`)
+      ).rows as { id: number; views: number; downloads: number }[])
+    : []
+  const hitsOf = new Map(hitRows.map((r) => [Number(r.id), r]))
+  // ▲▼ move a topic within its group; offered when the list is in page order (the default sort)
+  const inPageOrder = !sp.sort || sp.sort === 'order'
+  const groupKey = (d: CentralContent) => (d.section === 'plan' ? `plan:${d.fiscalYear ?? '-'}` : d.section)
+  const firstLast = (d: CentralContent) => {
+    const same = result.docs.filter((x) => groupKey(x) === groupKey(d))
+    return { first: same[0]?.id === d.id, last: same[same.length - 1]?.id === d.id }
+  }
+  const onSite = (d: CentralContent) =>
+    sample ? `/${sample.slug}/guides${d.section === 'plan' && d.fiscalYear ? `?year=${d.fiscalYear}` : ''}#guide-${d.id}` : null
   return (
     <ListPage<CentralContent>
       view={view}
       basePath="/admin/central-contents"
       title="เนื้อหากลาง"
-      intro="เนื้อหาในหน้า &quot;แผนงานและคู่มือ&quot; ที่แสดงเหมือนกันทุกจังหวัด แก้ที่นี่ครั้งเดียวมีผลทั้ง 76 จังหวัด"
+      intro="เนื้อหาในหน้า &quot;แผนงานและคู่มือ&quot; ที่แสดงเหมือนกันทุกจังหวัด แก้ที่นี่ครั้งเดียวมีผลทั้ง 76 จังหวัดทันทีเมื่อบันทึก (ไม่มีขั้นร่าง) เรียงแบบเดียวกับบนหน้าเว็บ ใช้ ▲▼ เลื่อนหัวข้อในกลุ่ม หัวข้อใหม่ต่อท้ายกลุ่มเอง"
       actions={c.isAdmin ? <Link className="agy__btn agy__btn--primary" href="/admin/collections/central-contents/create">+ เพิ่มเนื้อหา</Link> : undefined}
       search={{ label: 'ค้นหาหัวข้อ', placeholder: 'พิมพ์บางส่วนของหัวข้อ' }}
       selects={[
-        { key: 'section', label: 'หมวด', all: 'ทุกหมวด', options: Object.entries(SECTION).map(([value, label]) => ({ value, label })) },
+        { key: 'section', label: 'กลุ่ม', all: 'ทุกกลุ่ม', options: Object.entries(SECTION).map(([value, label]) => ({ value, label })) },
         { key: 'year', label: 'ปีงบประมาณ', all: 'ทุกปี', options: [...YEARS, { value: 'any', label: '(ใช้ได้ทุกปี)' }] },
       ]}
       sp={sp}
       result={result}
       columns={[
         { label: 'หัวข้อ', sort: 'title', cell: (d) => <Title href={`/admin/collections/central-contents/${d.id}`}>{d.title}</Title> },
-        { label: 'หมวด', sort: 'section', cell: (d) => SECTION[d.section] ?? d.section },
-        { label: 'ปี', sort: 'fiscalYear', className: 'num', cell: (d) => d.fiscalYear ?? 'ทุกปี' },
+        { label: 'กลุ่ม', sort: 'section', cell: (d) => SECTION[d.section] ?? d.section },
+        { label: 'ปี', sort: 'fiscalYear', className: 'num', cell: (d) => (d.section === 'howto' ? '—' : (d.fiscalYear ?? 'ทุกปี')) },
         { label: 'ลำดับ', sort: 'sortOrder', className: 'num', cell: (d) => d.sortOrder ?? 0 },
+        { label: 'เข้าชม / ดาวน์โหลด', className: 'num', cell: (d) => `${(hitsOf.get(d.id)?.views ?? 0).toLocaleString('th-TH')} / ${(hitsOf.get(d.id)?.downloads ?? 0).toLocaleString('th-TH')}` },
         { label: 'แก้ไขล่าสุด', sort: 'updatedAt', className: 'agy-dl__date', cell: (d) => shortDay(d.updatedAt) },
       ]}
-      rowActions={(d) => <EditButton href={`/admin/collections/central-contents/${d.id}`} label={c.isAdmin ? 'แก้ไข' : 'ดู'} />}
+      rowActions={(d) => (
+        <>
+          {inPageOrder && <MoveButtons id={d.id} {...firstLast(d)} />}
+          <EditButton href={`/admin/collections/central-contents/${d.id}`} label={c.isAdmin ? 'แก้ไข' : 'ดู'} />
+          <OpenButton href={onSite(d)} title={`ดูบนเว็บ (ตัวอย่างจังหวัด${sample?.nameTh ?? ''}, เปิดแท็บใหม่)`} />
+        </>
+      )}
     />
   )
 }

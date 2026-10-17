@@ -3,7 +3,11 @@ import { ThaiDateField as ThaiDateField_43743a4fc833ae84ecd7a7919105056a } from 
 import { DocFiles as DocFiles_4ddbd3fb46ad6f3e18afab98e16f31ac } from '../../../components/admin/DocFiles'
 import { TrashDocControl as TrashDocControl_f1fd59933a4f6131908dceb98c7c7ed3 } from '../../../components/admin/TrashButtons'
 import { ImageField as ImageField_a2989761b1e3aac725f05992ac125b2a } from '../../../components/admin/ImageField'
+import { UploadHelp as UploadHelp_10177f1582df7d4f598bb864c40fb8ff } from '../../../components/admin/UploadHelp'
 import { RestoreVersion as RestoreVersion_be214f2d3d7d78488b9861c8aa8bcc48 } from '../../../components/admin/RestoreVersion'
+import { PreviewLink as PreviewLink_56770fc4662936ec177e17845ffe03f8 } from '../../../components/admin/central/PreviewLink'
+import { YearField as YearField_a572b4507514b1f1f7e9a79d76e25129 } from '../../../components/admin/central/YearField'
+import { LinkRowLabel as LinkRowLabel_3315016b3d9314664e18cda36aee857f } from '../../../components/admin/central/LinkRowLabel'
 import { ThemePicker as ThemePicker_a55685bb8b6d23498310556a4388daad } from '../../../components/admin/ThemePicker'
 import { HeroFocus as HeroFocus_1ab9144af86f91dcf87f4c36df1e21d8 } from '../../../components/admin/HeroFocus'
 import { TopicTools as TopicTools_0b8f9d7ef1a7df588c8d29d36c5c173d } from '../../../components/admin/TopicTools'
@@ -44,7 +48,11 @@ export const importMap = {
   "/components/admin/DocFiles#DocFiles": DocFiles_4ddbd3fb46ad6f3e18afab98e16f31ac,
   "/components/admin/TrashButtons#TrashDocControl": TrashDocControl_f1fd59933a4f6131908dceb98c7c7ed3,
   "/components/admin/ImageField#ImageField": ImageField_a2989761b1e3aac725f05992ac125b2a,
+  "/components/admin/UploadHelp#UploadHelp": UploadHelp_10177f1582df7d4f598bb864c40fb8ff,
   "/components/admin/RestoreVersion#RestoreVersion": RestoreVersion_be214f2d3d7d78488b9861c8aa8bcc48,
+  "/components/admin/central/PreviewLink#PreviewLink": PreviewLink_56770fc4662936ec177e17845ffe03f8,
+  "/components/admin/central/YearField#YearField": YearField_a572b4507514b1f1f7e9a79d76e25129,
+  "/components/admin/central/LinkRowLabel#LinkRowLabel": LinkRowLabel_3315016b3d9314664e18cda36aee857f,
   "/components/admin/ThemePicker#ThemePicker": ThemePicker_a55685bb8b6d23498310556a4388daad,
   "/components/admin/HeroFocus#HeroFocus": HeroFocus_1ab9144af86f91dcf87f4c36df1e21d8,
   "/components/admin/TopicTools#TopicTools": TopicTools_0b8f9d7ef1a7df588c8d29d36c5c173d,

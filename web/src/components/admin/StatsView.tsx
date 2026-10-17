@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import type { AdminViewServerProps } from 'payload'
 import React from 'react'
 
+import { fiscalYearOf } from '@/lib/fiscalYear'
 import { bangkokDay } from '@/lib/site'
 
 import { AdminYearPicker } from './AdminYearPicker'
@@ -16,11 +17,7 @@ const RANGES = [30, 90, 365]
 const n = (v: unknown) => Number(v ?? 0).toLocaleString('th-TH')
 const shortDay = (iso: string) => new Date(iso + 'T00:00:00+07:00').toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })
 const longDay = (iso: string) => new Date(iso + 'T00:00:00+07:00').toLocaleDateString('th-TH', { dateStyle: 'long' })
-/** Thai fiscal year (พ.ศ.) of a day: 1 October starts the next year, e.g. 2026-10-12 → 2570. */
-const fyOf = (iso: string) => {
-  const [y, m] = iso.split('-').map(Number)
-  return (m >= 10 ? y + 1 : y) + 543
-}
+const fyOf = fiscalYearOf
 /** First and last day (ค.ศ., yyyy-mm-dd) of a fiscal year. */
 const fyRange = (fy: number) => ({ start: `${fy - 544}-10-01`, end: `${fy - 543}-09-30` })
 const nextDay = (iso: string) => {
@@ -111,17 +108,38 @@ export async function StatsView(props: AdminViewServerProps) {
       ).rows as { province_id: number; today: number; range: number; fy: number; total: number; ago: number | null }[])
   const rankBy = new Map(ranking.map((r) => [Number(r.province_id), r]))
 
-  // Opens of each file through its public link (counted since this feature was switched on).
+  // Each file's in-page previews and downloads (the running totals in hit_counts; counted since the feature was
+  // switched on). The old files.download_count column is never updated, so it is not used.
   const files = (
     await db.execute(sql`
-      select f.id, f.original_name, f.download_count::int as n, min(d.title) as title, min(p.name_th) as province
+      with h as (
+        select ref_id, sum(hits) filter (where kind = 'file_view')::int as views, sum(hits) filter (where kind = 'file_download')::int as downloads
+        from hit_counts where kind in ('file_view', 'file_download') group by ref_id)
+      select f.id, f.original_name, coalesce(h.views, 0) as views, coalesce(h.downloads, 0) as downloads,
+             min(d.title) as title, min(p.name_th) as province
       from files f
+      join h on h.ref_id = f.id
       join documents_rels r on r.files_id = f.id and r.path = 'files'
       join documents d on d.id = r.parent_id and d.deleted_at is null
       join provinces p on p.id = d.province_id
-      where f.is_current and coalesce(f.download_count, 0) > 0 and ${one ? sql`d.province_id = ${one.id}` : sql`true`}
-      group by f.id order by f.download_count desc limit 15`)
-  ).rows as { id: number; original_name: string; n: number; title: string; province: string }[]
+      where f.is_current and ${one ? sql`d.province_id = ${one.id}` : sql`true`}
+      group by f.id, h.views, h.downloads order by coalesce(h.views, 0) + coalesce(h.downloads, 0) desc limit 15`)
+  ).rows as { id: number; original_name: string; views: number; downloads: number; title: string; province: string }[]
+
+  // Central documents (the guides page, the same in every province): each topic's outside-link opens and
+  // file downloads, summed over all provinces. Central admins, all-province view only.
+  const central = isAdmin && !one
+    ? ((
+        await db.execute(sql`
+          with tf as (
+            select parent_id as topic, files_id as file from central_contents_rels where files_id is not null
+            union select _parent_id, file_id from central_contents_links where file_id is not null)
+          select c.id, c.title, c.section::text as section,
+                 coalesce((select hits from hit_counts where kind = 'guide_link' and ref_id = c.id), 0)::int as views,
+                 coalesce((select sum(h.hits) from tf join hit_counts h on h.kind = 'file_download' and h.ref_id = tf.file where tf.topic = c.id), 0)::int as downloads
+          from central_contents c`)
+      ).rows as { id: number; title: string; section: string; views: number; downloads: number }[]).filter((r) => r.views + r.downloads > 0).sort((a, b) => b.views + b.downloads - (a.views + a.downloads))
+    : []
 
   const link = (q: Record<string, string | number | undefined>) => {
     const merged = { days: days === 30 ? undefined : days, year: byYear ? selected.join(',') : undefined, province: one && isAdmin ? one.id : undefined, ...q }
@@ -272,13 +290,39 @@ export async function StatsView(props: AdminViewServerProps) {
           <p className="agy__sub">ยังไม่มีข้อมูล ระบบเริ่มนับเมื่อมีผู้เปิดไฟล์จากหน้าเว็บ</p>
         ) : (
           <SortTable
-            columns={[{ label: 'เอกสาร' }, ...(!one ? [{ label: 'จังหวัด' }] : []), { label: 'ไฟล์' }, { label: 'จำนวนครั้งที่เปิด', className: 'num' }]}
+            columns={[{ label: 'เอกสาร' }, ...(!one ? [{ label: 'จังหวัด' }] : []), { label: 'ไฟล์' }, { label: 'ดูตัวอย่าง', className: 'num' }, { label: 'ดาวน์โหลด', className: 'num' }]}
+            initial={{ col: !one ? 4 : 3, desc: true }}
             rows={files.map((f) => ({
               key: f.id,
-              sort: [f.title, ...(!one ? [f.province] : []), f.original_name, Number(f.n)],
-              cells: [f.title, ...(!one ? [f.province] : []), <Link key="f" href={`/admin/collections/files/${f.id}`}>{f.original_name}</Link>, n(f.n)],
+              sort: [f.title, ...(!one ? [f.province] : []), f.original_name, Number(f.views), Number(f.downloads)],
+              cells: [f.title, ...(!one ? [f.province] : []), <Link key="f" href={`/admin/collections/files/${f.id}`}>{f.original_name}</Link>, n(f.views), n(f.downloads)],
             }))}
           />
+        )}
+
+        {isAdmin && !one && (
+          <>
+            <h2 className="agy__h2">เอกสารส่วนกลาง (หน้าแผนงานและคู่มือ){byYear ? ' (นับรวมทุกปี)' : ''}</h2>
+            <p className="agy__sub" style={{ marginBottom: 12 }}>รวมทุกจังหวัด · เข้าชม = เปิดลิงก์ในหัวข้อ · ดาวน์โหลด = เปิดหรือบันทึกไฟล์ในหัวข้อ (ภาพที่แสดงในหน้าไม่นับ)</p>
+            {central.length === 0 ? (
+              <p className="agy__sub">ยังไม่มีข้อมูล</p>
+            ) : (
+              <SortTable
+                columns={[{ label: 'หัวข้อ' }, { label: 'กลุ่ม' }, { label: 'เข้าชม', className: 'num' }, { label: 'ดาวน์โหลด', className: 'num' }]}
+                initial={{ col: 3, desc: true }}
+                rows={central.map((c) => ({
+                  key: c.id,
+                  sort: [c.title, c.section, Number(c.views), Number(c.downloads)],
+                  cells: [
+                    <Link key="t" href={`/admin/collections/central-contents/${c.id}`}>{c.title}</Link>,
+                    c.section === 'plan' ? 'แผนการขับเคลื่อน' : 'คู่มือและสื่อสนับสนุน',
+                    n(c.views),
+                    n(c.downloads),
+                  ],
+                }))}
+              />
+            )}
+          </>
         )}
       </div>
     </Shell>

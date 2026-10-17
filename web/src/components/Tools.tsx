@@ -18,8 +18,8 @@ const write = (key: string, value: string) => {
   }
 }
 
-/** Tell the server a visitor opened an external link or a dashboard (an anonymous running total). */
-export const sendHit = (kind: 'doc_link' | 'dashboard_view', id: number) => {
+/** Tell the server a visitor opened an external link, a dashboard or a file preview (an anonymous running total). */
+export const sendHit = (kind: 'doc_link' | 'dashboard_view' | 'file_view' | 'guide_link', id: number) => {
   void fetch('/hit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind, id }), keepalive: true }).catch(() => undefined)
 }
 
@@ -168,10 +168,13 @@ export function DocSearch({ total }: { total: number }) {
   )
 }
 
-/** A document's external link; opening it adds one to the document's view count. */
-export function TrackedLink({ id, href, children }: { id: number; href: string; children: React.ReactNode }) {
+/**
+ * An outside link that counts its opens: a document's link (kind doc_link, id = the document) by default,
+ * or a link in a guides-page topic (kind guide_link, id = the topic).
+ */
+export function TrackedLink({ id, href, children, kind = 'doc_link', className = 'link-strong' }: { id: number; href: string; children: React.ReactNode; kind?: 'doc_link' | 'guide_link'; className?: string }) {
   return (
-    <a href={href} className="link-strong" target="_blank" rel="noopener noreferrer" onClick={() => sendHit('doc_link', id)} onAuxClick={() => sendHit('doc_link', id)}>
+    <a href={href} className={className} target="_blank" rel="noopener noreferrer" onClick={() => sendHit(kind, id)} onAuxClick={() => sendHit(kind, id)}>
       {children}
     </a>
   )

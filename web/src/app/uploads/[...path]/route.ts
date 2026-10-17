@@ -29,13 +29,13 @@ export async function GET(req: Request, ctx: { params: Promise<{ path: string[] 
   } catch {
     return new Response('Not found', { status: 404 })
   }
-  // Count the open: "?view=1" is the in-page preview, anything else a download / direct open.
-  // A viewer fetching the rest of a file in ranges is the same open, so only the first request counts.
+  // Count a download / direct open. "?view=1" is the in-page preview: the page counts that itself when the
+  // preview opens (POST /hit), because the browser may serve the file again from its cache and a PDF viewer
+  // can fetch it twice. A viewer fetching the rest of a file in ranges is the same open: only the first counts.
   const range = req.headers.get('range')
   const query = new URL(req.url).searchParams
-  if (!query.has('cover') && (!range || /^bytes=0-/.test(range)) && !uncounted(req.headers.get('user-agent'), req.headers.get('cookie'))) {
-    const kind = query.get('view') === '1' ? 'file_view' : 'file_download'
-    await countHit(kind, file.id).catch(() => undefined)
+  if (!query.has('cover') && !query.has('view') && (!range || /^bytes=0-/.test(range)) && !uncounted(req.headers.get('user-agent'), req.headers.get('cookie'))) {
+    await countHit('file_download', file.id).catch(() => undefined)
   }
 
   const body = Readable.toWeb(fs.createReadStream(onDisk)) as ReadableStream

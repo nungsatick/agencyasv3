@@ -1,4 +1,5 @@
-import type { Access, FieldAccess, Where } from 'payload'
+import { APIError } from 'payload'
+import type { Access, Field, FieldAccess, Where } from 'payload'
 
 type AnyUser = { role?: string; provinces?: (number | { id: number })[] } | null | undefined
 
@@ -46,3 +47,41 @@ export const publishedOrOwnProvince: Access = ({ req: { user } }) => {
   if (!u) return { _status: { equals: 'published' } } as Where
   return { province: { in: provinceIds(u) } } as Where
 }
+
+/**
+ * The "จังหวัด" field of documents and dashboards. Central admins pick any province. Province staff only see
+ * their own province(s) in the drop-down, a new row starts on their province, and the server refuses any
+ * other province on create or edit (so a row can neither be added to nor moved into another province).
+ */
+export const provinceField = (width: string): Field => ({
+  name: 'province',
+  type: 'relationship',
+  relationTo: 'provinces',
+  required: true,
+  index: true,
+  label: 'จังหวัด',
+  admin: { width },
+  defaultValue: ({ user }: { user?: unknown }) => {
+    const u = user as AnyUser
+    return u && u.role !== 'admin' ? provinceIds(u)[0] : undefined
+  },
+  filterOptions: ({ user }) => {
+    const u = user as AnyUser
+    // no user = the system itself (import, scripts); signed-out visitors cannot create or edit at all
+    return !u || u.role === 'admin' ? true : ({ id: { in: [-1, ...provinceIds(u)] } } as Where)
+  },
+  hooks: {
+    beforeValidate: [
+      ({ value, req }) => {
+        const u = req.user as AnyUser
+        if (!u || u.role === 'admin') return value
+        const own = provinceIds(u)
+        const id = value == null || value === '' ? null : typeof value === 'object' ? (value as { id: number }).id : Number(value)
+        // nothing chosen: their province (when they have just one)
+        if (id == null) return own.length === 1 ? own[0] : value
+        if (!own.includes(id)) throw new APIError('เลือกได้เฉพาะจังหวัดของคุณ', 403, undefined, true)
+        return value
+      },
+    ],
+  },
+})

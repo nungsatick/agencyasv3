@@ -8,6 +8,8 @@ import * as migration_20261014_182756_mourning_gray_level from './20261014_18275
 import * as migration_20261015_022539_google_analytics from './20261015_022539_google_analytics';
 import * as migration_20261015_025612_account_requests from './20261015_025612_account_requests';
 import * as migration_20261015_043645_name_en from './20261015_043645_name_en';
+import * as migration_20261017_060459_guide_link_hits from './20261017_060459_guide_link_hits';
+import * as migration_20261017_062154_central_form_defaults from './20261017_062154_central_form_defaults';
 
 export const migrations = [
   {
@@ -58,6 +60,16 @@ export const migrations = [
   {
     up: migration_20261015_043645_name_en.up,
     down: migration_20261015_043645_name_en.down,
-    name: '20261015_043645_name_en'
+    name: '20261015_043645_name_en',
+  },
+  {
+    up: migration_20261017_060459_guide_link_hits.up,
+    down: migration_20261017_060459_guide_link_hits.down,
+    name: '20261017_060459_guide_link_hits',
+  },
+  {
+    up: migration_20261017_062154_central_form_defaults.up,
+    down: migration_20261017_062154_central_form_defaults.down,
+    name: '20261017_062154_central_form_defaults'
   },
 ];

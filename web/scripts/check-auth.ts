@@ -102,6 +102,8 @@ try {
   const info = await call('GET', `/api/users/link/${token}`)
   assert.equal(info.body.username, 'zz-test-manager')
   assert.equal((await call('POST', `/api/users/link/${token}`, { password: 'short' })).status, 400)
+  // the minimum is 8 characters: 7 is refused
+  assert.equal((await call('POST', `/api/users/link/${token}`, { password: 'Qz7#mPw' })).status, 400)
   const managerPw = 'manager-password-2569'
   const act = await call('POST', `/api/users/link/${token}`, { password: managerPw })
   assert.equal(act.body.next, 'setup', JSON.stringify(act.body))
@@ -137,6 +139,17 @@ try {
   assert.equal((await call('PATCH', `/api/documents/${docOther.id}`, { description: 'x' }, editor.cookie)).status, 403)
   const own = await call('PATCH', `/api/documents/${docOwn.id}`, { description: docOwn.description ?? null }, editor.cookie)
   assert.equal(own.status, 200, JSON.stringify(own.body).slice(0, 300))
+  // …and cannot move a row into another province, nor add one there
+  assert.equal((await call('PATCH', `/api/documents/${docOwn.id}`, { province: provB.id }, editor.cookie)).status, 403, 'move to another province refused')
+  assert.equal(Number((await payload.findByID({ collection: 'documents', id: docOwn.id, depth: 0 })).province), provA.id, 'row stayed in its province')
+  const draft = { title: 'zz-test ร่างทดสอบจังหวัด', fiscalYear: docOwn.fiscalYear, type: docOwn.type, _status: 'draft' }
+  assert.equal((await call('POST', '/api/documents?draft=true', { ...draft, province: provB.id }, editor.cookie)).status, 403, 'create in another province refused')
+  // no province given: the editor's own
+  const ownDraft = await call('POST', '/api/documents?draft=true', draft, editor.cookie)
+  assert.equal(ownDraft.status, 201, JSON.stringify(ownDraft.body).slice(0, 300))
+  assert.equal(Number(ownDraft.body.doc.province?.id ?? ownDraft.body.doc.province), provA.id, 'new row starts in the editor’s province')
+  await payload.delete({ collection: 'documents', id: ownDraft.body.doc.id, overrideAccess: true, trash: false } as never)
+  assert.equal((await payload.find({ collection: 'documents', where: { title: { like: 'zz-test' } }, trash: true, limit: 5, depth: 0 } as never)).totalDocs, 0, 'test rows removed')
 
   // 8. Reset 2FA → next sign-in goes through setup again.
   assert.equal((await call('POST', `/api/users/${editorRow.id}/reset-2fa`, {}, manager.cookie)).status, 200)

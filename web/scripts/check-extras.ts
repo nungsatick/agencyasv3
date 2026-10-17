@@ -73,7 +73,8 @@ try {
   const file = (withFile.files as { id: number; publicPath: string }[])[0]
   const fileUrl = BASE + '/' + file.publicPath
 
-  // 1. file counters: a plain open is a download, "?view=1" a view; robots, staff and follow-up ranges are not counted
+  // 1. file counters: a plain open is a download; the "?view=1" file request is not counted (the page posts the
+  //    preview view itself); robots, staff and follow-up ranges are not counted
   const [d0, v0] = [await hits('file_download', file.id), await hits('file_view', file.id)]
   const get = async (url: string, headers: Record<string, string> = {}) => {
     const r = await fetch(url, { headers: { 'User-Agent': BROWSER, ...headers } })
@@ -87,7 +88,13 @@ try {
   await get(fileUrl, { Cookie: 'payload-token=abc' })
   await get(fileUrl, { Range: 'bytes=4096-' })
   assert.equal(await hits('file_download', file.id), d0 + 1, 'one download')
-  assert.equal(await hits('file_view', file.id), v0 + 2, 'two views')
+  assert.equal(await hits('file_view', file.id), v0, 'the preview file request is not a view')
+  // opening a preview posts one view; staff and robots are not counted; unknown files are ignored
+  assert.equal((await post('/hit', { kind: 'file_view', id: file.id })).status, 204)
+  assert.equal((await post('/hit', { kind: 'file_view', id: file.id }, { Cookie: 'payload-token=abc' })).status, 204)
+  assert.equal((await post('/hit', { kind: 'file_view', id: file.id }, { 'User-Agent': 'curl/8' })).status, 204)
+  assert.equal((await post('/hit', { kind: 'file_view', id: 999999999 })).status, 204)
+  assert.equal(await hits('file_view', file.id), v0 + 1, 'one preview view')
 
   // 2. link / dashboard counters: published items only
   const dash = (await payload.find({ collection: 'dashboards', where: { _status: { equals: 'published' } }, limit: 1, depth: 0 })).docs[0]
@@ -101,6 +108,25 @@ try {
   assert.equal(await hits('doc_link', withFile.id), l0 + 1)
   assert.equal(await hits('dashboard_view', dash.id), b0 + 1)
   assert.equal(await hits('doc_link', draft.id), 0, 'drafts are not counted')
+
+  // 2b. central documents (guides page): a topic's outside links count as its views; its files count as downloads
+  //     when opened, but not when a picture is just shown in the page ("?view=1")
+  const topics = (await payload.find({ collection: 'central-contents', limit: 100, depth: 1 })).docs
+  const withLink = topics.find((t) => (t.links ?? []).some((l) => l.url && !l.file))!
+  const withPic = topics.find((t) => (t.files ?? []).some((f) => typeof f === 'object' && (f.mimeType ?? '').startsWith('image/') && f.publicPath))!
+  const pic = (withPic.files as { id: number; publicPath: string; mimeType: string }[]).find((f) => f.mimeType.startsWith('image/'))!
+  const [g0, p0] = [await hits('guide_link', withLink.id), await hits('file_download', pic.id)]
+  assert.equal((await post('/hit', { kind: 'guide_link', id: withLink.id })).status, 204)
+  assert.equal((await post('/hit', { kind: 'guide_link', id: withLink.id }, { Cookie: 'payload-token=abc' })).status, 204)
+  assert.equal((await post('/hit', { kind: 'guide_link', id: withLink.id }, { 'User-Agent': 'curl/8' })).status, 204)
+  assert.equal(await hits('guide_link', withLink.id), g0 + 1, 'one outside-link open (staff and robots not counted)')
+  assert.equal(await get(BASE + '/' + pic.publicPath + '?view=1'), 200)
+  assert.equal(await hits('file_download', pic.id), p0, 'a picture shown in the page is not a download')
+  assert.equal(await get(BASE + '/' + pic.publicPath), 200)
+  assert.equal(await hits('file_download', pic.id), p0 + 1, 'opening the picture is a download')
+  const guidesHtml = await (await fetch(BASE + '/loei/guides', { headers: { 'User-Agent': BROWSER } })).text()
+  assert.ok(guidesHtml.includes(`/${pic.publicPath.split('/').map(encodeURIComponent).join('/')}?view=1`), 'the page shows pictures with ?view=1')
+  assert.match(guidesHtml, /class="hit-stats"/, 'topics show their numbers')
 
   // 3. the public pages show per-item numbers and search, and no site-wide visit numbers
   const page = async (p: string) => (await fetch(BASE + p, { headers: { 'User-Agent': BROWSER }, cache: 'no-store' })).text()
