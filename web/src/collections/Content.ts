@@ -98,7 +98,11 @@ export const Files: CollectionConfig = {
     pasteURL: false,
     mimeTypes: [
       'application/pdf',
-      'image/*',
+      // named one by one: "image/*" would also cover SVG, which can carry scripts (Payload refuses it too)
+      'image/jpeg',
+      'image/png',
+      'image/gif',
+      'image/webp',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'application/vnd.ms-excel',
     ],

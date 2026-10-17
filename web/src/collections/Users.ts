@@ -47,6 +47,9 @@ export const Users: CollectionConfig = {
     maxLoginAttempts: 5,
     lockTime: 15 * 60 * 1000,
     tokenExpiration: 8 * 60 * 60,
+    // the session cookie: never readable by page scripts (Payload default), not sent from other sites'
+    // forms (Lax), and only over HTTPS once the site runs on https:// (SITE_URL)
+    cookies: { sameSite: 'Lax', secure: (process.env.SITE_URL ?? '').startsWith('https://') },
     // runs before Payload's own check: ends sessions left unused for 30 minutes (lib/idle.ts)
     strategies: [idleSessionStrategy],
   },

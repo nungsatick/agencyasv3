@@ -69,6 +69,12 @@ export default buildConfig({
   },
   // The "API" tab on edit pages shows the raw JSON of a record, which is for developers only, so it is hidden
   // everywhere. The REST API itself is unchanged (the backoffice and the import use it).
+  // The signed-in cookie is only honoured on requests from these addresses (Payload's CSRF check), and only
+  // they may call the API from a browser. SITE_URL is the public address in production.
+  csrf: [process.env.SITE_URL, 'http://localhost:3000'].filter((u): u is string => Boolean(u)),
+  cors: [process.env.SITE_URL, 'http://localhost:3000'].filter((u): u is string => Boolean(u)),
+  // nothing uses GraphQL (the backoffice and the site use the REST API): switched off, with its playground
+  graphQL: { disable: true },
   collections: [Documents, Dashboards, Files, CentralContents, Announcements, Provinces, Topics, DocumentTypes, Users, AccountRequests, UserTokens, SessionActivity, ActivityLogs, PageViews, HitCounts, CookieConsents].map(
     (c) => ({ ...c, admin: { ...c.admin, hideAPIURL: true } }),
   ),

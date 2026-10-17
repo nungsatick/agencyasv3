@@ -198,7 +198,8 @@ try {
   assert.equal(session.status, 200)
   assert.equal(await logged('sign_in', 'zz-test-extras'), 1)
   assert.ok((await payload.findByID({ collection: 'users', id: admin.id, depth: 0 })).lastLoginAt)
-  const auth = { Cookie: session.cookie, 'User-Agent': BROWSER }
+  // a browser marks its own requests as same-origin; the sign-in cookie is refused without that (or an Origin)
+  const auth = { Cookie: session.cookie, 'User-Agent': BROWSER, 'Sec-Fetch-Site': 'same-origin' }
 
   // 9. the log is read-only, and closed to the public
   const logs = await fetch(BASE + '/api/activity-logs?limit=5', { headers: auth })
