@@ -28,3 +28,6 @@ crawl/raw/
 
 # province boundaries downloaded for migration/build_thai_map.py (the built paths are in web/src/lib/thaiMapPaths.ts)
 migration/geo/
+
+# Claude Code app settings for this machine (how to start the dev server); not part of the project
+.claude/
