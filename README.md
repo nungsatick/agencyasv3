@@ -81,7 +81,7 @@ npx payload run scripts/check-auth.ts
 
 ## ติดตั้งบนเซิร์ฟเวอร์
 
-เตรียมเครื่องตาม [docs/SERVER_PREP.md](docs/SERVER_PREP.md) แล้วทำตาม [docs/DEPLOY.md](docs/DEPLOY.md) ได้แก่ ตั้งค่า `deploy/.env`, สร้างอิมเมจ, ย้ายฐานข้อมูลและ `web/storage`, ตั้ง nginx และตั้งการสำรองข้อมูลรายวัน
+เตรียมเครื่องตาม [docs/SERVER_PREP.md](docs/SERVER_PREP.md) ติดตั้งตาม [docs/SERVER_INSTALL.md](docs/SERVER_INSTALL.md) รายละเอียดอยู่ใน [docs/DEPLOY.md](docs/DEPLOY.md) ได้แก่ ตั้งค่า `deploy/.env`, สร้างอิมเมจ, ย้ายฐานข้อมูลและ `web/storage`, ตั้ง nginx และตั้งการสำรองข้อมูลรายวัน
 
 ## เอกสารอื่น
 

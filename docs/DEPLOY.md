@@ -15,7 +15,7 @@
 
 ## สิ่งที่ต้องมี
 
-> เตรียมเครื่องเซิร์ฟเวอร์ (Docker, nginx, เวลาเครื่อง, firewall, DNS, deploy key) ตาม [SERVER_PREP.md](SERVER_PREP.md) ก่อน
+> ขั้นตอนแบบเช็กลิสต์: เตรียมเครื่องตาม [SERVER_PREP.md](SERVER_PREP.md) แล้วติดตั้งตาม [SERVER_INSTALL.md](SERVER_INSTALL.md) ไฟล์นี้อธิบายรายละเอียดและเหตุผลของแต่ละขั้น
 
 - เซิร์ฟเวอร์ Linux ที่ติดตั้ง Docker และ Docker Compose แล้ว และมี nginx
 - พื้นที่ดิสก์อย่างน้อย 15 GB (ไฟล์เอกสารเดิม 4.2 GB + ฐานข้อมูล + อิมเมจ + ที่ว่างสำหรับไฟล์ใหม่)

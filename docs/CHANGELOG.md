@@ -7,6 +7,7 @@
 
 ## 19 ตุลาคม 2569 (ค.ศ. 2026)
 
+- เพิ่ม `docs/SERVER_INSTALL.md`: ขั้นตอนหลังดึงโค้ดจาก git แบบเช็กลิสต์ (เตรียมไฟล์บนเครื่องพัฒนา, clone, `.env` พร้อมคำสั่งสร้างค่าลับ, เริ่มระบบ, ผู้ดูแลคนแรก, ย้ายเนื้อหาและไฟล์ พร้อมคำสั่งตรวจจำนวน, nginx/HTTPS, สำรองข้อมูล cron, นำเข้าผู้ดูแลจังหวัด 76 บัญชี, เปิดใช้งาน, การอัปเดตครั้งต่อไป) SERVER_PREP เพิ่มขั้นให้บัญชีใช้ docker ได้โดยไม่ต้อง sudo
 - เพิ่ม `docs/SERVER_PREP.md`: ขั้นตอนเตรียมเครื่องเซิร์ฟเวอร์ก่อนดึงโค้ดจาก git (สเปก อัปเดต เวลาเครื่อง Docker nginx firewall DNS/ใบรับรอง deploy key) ลิงก์จาก DEPLOY.md และ README.md
 - **โดเมนเว็บใหม่: `https://newagencyas.gdcatalog.go.th`** (เดิมวางแผนใช้โดเมนเดิม) แก้ `deploy/.env.example` (SITE_URL), `deploy/nginx.conf` (server_name และตัวอย่างส่งต่อโดเมนเดิม 301 แบบคง path), DEPLOY.md, README.md, ร่างนโยบายความเป็นส่วนตัว โค้ดไม่ได้เขียนโดเมนตายตัว (อ่านจาก SITE_URL)
 - **เอาโฟลเดอร์ที่ไม่จำเป็นออกจาก git** (ยังอยู่ในเครื่อง เพิ่มใน `.gitignore`): `.claude/`, `web/.vscode/`, `docs/design/`, `assets/hero-old/`, `assets/login/`, `76province_logo/` (ซ้ำกับ `web/public/logos/` สคริปต์ `migration/build_import.py` เปลี่ยนไปใช้ `web/public/logos/`) และลบ `web/undefined/` (ภาพหน้าจอ 4 ไฟล์ที่สคริปต์ทดสอบบันทึกผิดที่) repository เล็กลงราว 24 MB

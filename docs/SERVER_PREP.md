@@ -51,6 +51,12 @@ curl -fsSL https://get.docker.com | sudo sh
 sudo docker --version && sudo docker compose version
 ```
 
+ให้บัญชีที่ใช้ติดตั้งสั่ง docker ได้โดยไม่ต้องใช้ sudo (ออกจากระบบแล้วเข้าใหม่ 1 ครั้งจึงมีผล)
+
+```bash
+sudo usermod -aG docker $USER
+```
+
 ## 5. ติดตั้ง nginx และ git
 
 ```bash
@@ -126,12 +132,12 @@ ssh -i ~/.ssh/agencyas_deploy -T git@github.com
 - [ ] ดิสก์ว่าง ≥ 15 GB, RAM ≥ 4 GB
 - [ ] ระบบอัปเดตแล้ว
 - [ ] เวลาเครื่องตรง (`System clock synchronized: yes`)
-- [ ] Docker และ Docker Compose ใช้งานได้
+- [ ] Docker และ Docker Compose ใช้งานได้ (สั่ง `docker ps` ได้โดยไม่ต้องใช้ sudo)
 - [ ] nginx และ git ติดตั้งแล้ว
 - [ ] firewall เปิดเฉพาะ 22, 80, 443
 - [ ] DNS `newagencyas.gdcatalog.go.th` ชี้มาเครื่องนี้ และมีใบรับรอง HTTPS (หรือพร้อมขอ Let's Encrypt)
 - [ ] มีโฟลเดอร์ `/opt/agencyas`
 - [ ] deploy key เชื่อม GitHub ได้
 
-ครบแล้ว ขั้นต่อไปคือดึงโค้ดด้วย `git clone` และตั้งค่า `deploy/.env` ตาม [DEPLOY.md](DEPLOY.md) ข้อ 1 และข้อ 9
+ครบแล้ว ขั้นต่อไปคือดึงโค้ดและติดตั้งตาม [SERVER_INSTALL.md](SERVER_INSTALL.md)
 (ใน `deploy/.env` ตั้ง `SITE_URL=https://newagencyas.gdcatalog.go.th` ตรงทุกตัวอักษร ไม่มี / ท้าย)
