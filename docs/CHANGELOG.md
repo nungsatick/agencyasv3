@@ -5,6 +5,10 @@
 
 ---
 
+## 19 ตุลาคม 2569 (ค.ศ. 2026)
+
+- **เอาโฟลเดอร์ที่ไม่จำเป็นออกจาก git** (ยังอยู่ในเครื่อง เพิ่มใน `.gitignore`): `.claude/`, `web/.vscode/`, `docs/design/`, `assets/hero-old/`, `assets/login/`, `76province_logo/` (ซ้ำกับ `web/public/logos/` สคริปต์ `migration/build_import.py` เปลี่ยนไปใช้ `web/public/logos/`) และลบ `web/undefined/` (ภาพหน้าจอ 4 ไฟล์ที่สคริปต์ทดสอบบันทึกผิดที่) repository เล็กลงราว 24 MB
+
 ## 17 ตุลาคม 2569 (ค.ศ. 2026)
 
 - **ตรวจความปลอดภัยไซเบอร์ทั้งระบบ** (รายละเอียดใน SYSTEM_SUMMARY ข้อ 9): ทดสอบช่องทางเข้าระบบ สิทธิ์ทุกตาราง endpoint ทั้งหมด การอัปโหลด path traversal headers คุกกี้ และแพ็กเกจ แก้: security headers ทุกหน้า (กันซ้อนหน้าในเว็บอื่น nosniff ฯลฯ) และเอา X-Powered-By ออก, คุกกี้ HTTPS-only บนระบบจริง, รับคุกกี้เฉพาะคำขอจาก SITE_URL (กัน CSRF), ปิด GraphQL/Playground, ระบุชนิดไฟล์ภาพทีละชนิด, nginx เพิ่ม HSTS/ซ่อนเวอร์ชัน/จำกัดการเข้าสู่ระบบต่อ IP ทดสอบผ่านทั้ง 4 ชุด (ปรับ `check-extras` ให้คำขอทดสอบระบุ same-origin เหมือนเบราว์เซอร์) ค้าง: อัปเดตแพ็กเกจตาม npm audit (`next.config.ts`, `payload.config.ts`, `Users.ts`, `Content.ts`, `deploy/nginx.conf`)

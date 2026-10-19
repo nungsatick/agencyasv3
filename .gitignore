@@ -31,3 +31,11 @@ migration/geo/
 
 # Claude Code app settings for this machine (how to start the dev server); not part of the project
 .claude/
+
+# kept on this machine only: old and unused pictures, design drafts, editor settings, and a copy of the
+# province seals (the site and migration/build_import.py use web/public/logos/)
+assets/hero-old/
+assets/login/
+docs/design/
+web/.vscode/
+76province_logo/

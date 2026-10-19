@@ -80,10 +80,10 @@ def provider_of(url):
     return 'other'
 
 
-# legacy slug -> 3-letter province code; the seal for each province is ../76province_logo/{CODE}.png
+# legacy slug -> 3-letter province code; the seal for each province is ../web/public/logos/{CODE}.png
 _codes = ("smprakan SPK nknayok NYK amnatchr ACR bungkan BKN lampang LPG phrae PRE kpphet KPT smsakhon SKN krabi KBI phangnga PNA phuket PKT ranong RNG satun STN trang TRG sisaket SSK phayao PYO phetburi PBI uttaradit UTT nkrat NMA khkaen KKN chrai CRI angthong ATG lopburi LRI singburi SBR chainat CNT pchburi PRI buriram BRM surin SRN ubon UBN yasothon YST nongkhai NKI kalasin KSN sakonnk SNK nkphanom NPM maehson MSN tak TAK skhothai STI ratburi RBR smskhram SKM pchkkhan PKN nksitham NST surat SNI chumphon CPN songkhla SKA phatlung PLG yala YLA naratwat NWT nkpathom NPT trat TRT chchsao CCO lamphun LPN nksawan NSN ptthani PTE ayuttaya AYA nblamphu NBP nan NAN pattani PTN roiet RET phichit PCT nontburi NBI saraburi SRI suphan SPB chonburi CBI mukdahan MDH udon UDN chyaphum CPM chtburi CTI kcnburi KRI rayong RYG sakaeo SKW loei LEI sarakham MKM uthai UTI phchabun PNB chmai CMI psnulok PLK").split()
 PROVINCE_CODE = dict(zip(_codes[::2], _codes[1::2]))
-LOGO_DIR = os.path.join(HERE, '..', '76province_logo')
+LOGO_DIR = os.path.join(HERE, '..', 'web', 'public', 'logos')
 
 provinces, files, documents, dashboards = [], {}, [], []
 
@@ -108,7 +108,7 @@ for s in sites:
                           phone=phone.group(1).strip() if phone else None,
                           fax=fax.group(1).strip() if fax else None,
                           email=s['email'] or None, website=web.group(0) if web else None,
-                          code=PROVINCE_CODE[s['slug']], logo_path=f"76province_logo/{PROVINCE_CODE[s['slug']]}.png"))
+                          code=PROVINCE_CODE[s['slug']], logo_path=f"web/public/logos/{PROVINCE_CODE[s['slug']]}.png"))
     assert os.path.exists(os.path.join(LOGO_DIR, PROVINCE_CODE[s['slug']] + '.png')), s['slug']
     issue = None  # (year, title) of the last file-less heading item; the templates after it belong to that issue
     for order, i in enumerate(s['doc_items']):
