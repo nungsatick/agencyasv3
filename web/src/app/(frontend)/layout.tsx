@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic'
 export const metadata = {
   title: 'ระบบสนับสนุนการจัดทำบัญชีข้อมูลจังหวัด',
   description: 'การจัดทำบัญชีข้อมูลจังหวัด เพื่อส่งเสริมการใช้ประโยชน์ข้อมูลและแบ่งปันข้อมูลร่วมกัน',
+  icons: { icon: { url: '/brand/favicon.png', type: 'image/png' }, apple: '/brand/favicon.png' },
 }
 
 const PREFS = `try{var d=document.documentElement,m=localStorage.getItem('agy_mode'),f=localStorage.getItem('agy_fs');if(m==='dark')d.dataset.mode='dark';if(f==='lg'||f==='xl')d.dataset.fs=f}catch(e){}`
