@@ -7,7 +7,7 @@
 - โฟลเดอร์ติดตั้ง: `/opt/agencyas`
 - คำสั่ง `docker compose …` ทุกคำสั่ง รันในโฟลเดอร์ `/opt/agencyas/deploy`
 
-ปรับปรุงล่าสุด: 19 ตุลาคม 2569
+ปรับปรุงล่าสุด: 20 ตุลาคม 2569
 
 > **ห้ามทำบนเซิร์ฟเวอร์นี้**
 > - `docker compose down -v`, `docker volume rm`, `docker volume prune`, `docker system prune --volumes` — ลบฐานข้อมูลและไฟล์เอกสารทิ้งถาวร (จะหยุดระบบใช้ `docker compose down` เฉยๆ)
@@ -30,7 +30,7 @@ mkdir -p deploy-export && { docker exec agencyasv3-db-1 pg_dump -U agencyas -d a
 
 - [ ] เตรียมไฟล์ที่จะคัดลอกไปเซิร์ฟเวอร์:
   - `deploy-export/content.sql`
-  - โฟลเดอร์ `web/storage/` (ประมาณ 4.3 GB)
+  - ไฟล์ทั้งหมดใน `web/storage/` (3,498 ไฟล์ ประมาณ 4.26 GB) คัดลอกด้วย FileZilla (SFTP) ตามข้อ 5
   - `migration/import/province_managers_76.xlsx` (บัญชีผู้ดูแลจังหวัด 76 บัญชี)
 
 ---
@@ -109,39 +109,137 @@ docker compose logs web | grep "First admin"
 
 ### 5. ย้ายเนื้อหา (ทำครั้งเดียว ทันทีหลังข้อ 3)
 
-คัดลอกไฟล์จากเครื่องพัฒนาไปเซิร์ฟเวอร์ เช่นด้วย WinSCP หรือ `scp` (จาก Git Bash บนเครื่องพัฒนา แทน `user@server` ด้วยบัญชีจริง)
+ต้องย้าย 2 อย่างคู่กัน ถ้าย้ายอย่างเดียว หน้าเว็บจะมีรายการเอกสารแต่เปิดไฟล์ไม่ได้ หรือมีไฟล์แต่ไม่มีรายการ
+
+| สิ่งที่ย้าย | บนเครื่องพัฒนา | วางบนเซิร์ฟเวอร์ | ตรวจ |
+|---|---|---|---|
+| ข้อมูล (ข้อความ รายการเอกสาร รายการไฟล์) | `deploy-export\content.sql` | `/opt/agencyas/content.sql` | 5,131,264 ไบต์ |
+| ไฟล์เอกสารจริง (PDF รูป Excel) | ไฟล์ทั้งหมด**ข้างใน** `web\storage\` | `/opt/agencyas/storage-import/` | 3,498 ไฟล์, 4,582,157,798 ไบต์ (ประมาณ 4.26 GB) |
+
+ตัวเลขในคอลัมน์ "ตรวจ" เป็นของไฟล์ส่งออกวันที่ 19 ต.ค. 2569 ถ้าส่งออกใหม่ ให้นับใหม่บนเครื่องพัฒนาด้วยคำสั่งในข้อ 5.2
+
+`web/storage` มีแต่ไฟล์อยู่ชั้นเดียว ไม่มีโฟลเดอร์ย่อย ทั้งสองอย่างไม่อยู่ใน git จึงต้องคัดลอกขึ้นเซิร์ฟเวอร์เอง
+
+**5.1 คัดลอกไฟล์ด้วย FileZilla (SFTP)**
+
+1. File → Site Manager → New site
+   - Protocol: **SFTP - SSH File Transfer Protocol** (ไม่ใช้ FTP ธรรมดา เพราะเซิร์ฟเวอร์ไม่มี FTP server และ FTP ส่งรหัสผ่านแบบไม่เข้ารหัส)
+   - Host: IP ของเซิร์ฟเวอร์, Port: `22`
+   - บัญชี: บัญชีเดียวกับที่ SSH เข้าเซิร์ฟเวอร์ (รหัสผ่าน หรือ Key file)
+2. ฝั่งขวา (Remote site) พิมพ์ `/opt/agencyas` ในช่อง path แล้วกด Enter (FileZilla เปิดที่ `/home/ชื่อบัญชี` เป็นค่าเริ่มต้น)
+   - คลิกขวา → **Create directory** → ตั้งชื่อ `storage-import`
+3. ลาก `content.sql` จาก `deploy-export\` ฝั่งซ้าย ไปวางที่ `/opt/agencyas` (ไม่ใช่ใน `storage-import` หรือ `deploy`)
+4. ฝั่งซ้ายเข้าไปใน `web\storage\` เลือกทุกไฟล์ (Ctrl+A) ลากไปวางใน `/opt/agencyas/storage-import`
+   - ลากเฉพาะไฟล์ข้างใน ไม่ใช่ตัวโฟลเดอร์ `storage`
+5. ระหว่างส่ง อย่าปิด FileZilla และอย่าให้เครื่องพัฒนา sleep (ใช้เวลานาน เพราะไฟล์มีหลายพันไฟล์)
+   - ถ้าหลุดกลางทาง: เชื่อมต่อใหม่ แล้วลากชุดเดิมไปอีกครั้ง เลือก **Overwrite if size differs** ไฟล์ที่ครบแล้วจะถูกข้าม
+6. เมื่อคิวว่าง ดูแท็บ **Failed transfers** ต้องว่าง (ถ้ามี: คลิกขวา → Reset and requeue)
+
+ถ้าสร้างโฟลเดอร์หรือวางไฟล์ไม่ได้ (Permission denied / Directory not found) แสดงว่ายังไม่ได้ทำ SERVER_PREP ข้อ 8 ให้รันบนเซิร์ฟเวอร์ด้วยบัญชีเดียวกับที่ใช้ใน FileZilla:
 
 ```bash
-scp deploy-export/content.sql user@server:/opt/agencyas/
+sudo mkdir -p /opt/agencyas && sudo chown $USER /opt/agencyas
 ```
+
+> ทางเลือกแทน FileZilla: `scp` จาก Git Bash บนเครื่องพัฒนา (แทน `user@server` ด้วยบัญชีจริง)
+> `scp deploy-export/content.sql user@server:/opt/agencyas/` และ `scp -r web/storage user@server:/opt/agencyas/storage-import`
+> (`scp -r` แบบนี้จะได้ไฟล์อยู่ตรงใน `storage-import` เลย)
+
+**5.2 ตรวจว่าไฟล์มาครบ** (บนเซิร์ฟเวอร์)
+
+ไฟล์ต้องอยู่ตรงใน `storage-import` ต้องเห็นชื่อไฟล์ เช่น `ACR.jpg`, `article_NO.1.pdf` ไม่ใช่โฟลเดอร์ `storage`
 
 ```bash
-scp -r web/storage user@server:/opt/agencyas/storage-import
+ls /opt/agencyas/storage-import | head
 ```
 
-**5.1 นำเข้าเนื้อหาในฐานข้อมูล** (บนเซิร์ฟเวอร์ ในโฟลเดอร์ `deploy`) ต้องทำกับฐานข้อมูลที่ยังว่าง ถ้ารันซ้ำจะชนกับข้อมูลเดิม
+> ถ้าเห็นแค่ `storage` แปลว่าลากทั้งโฟลเดอร์ไป ให้ใช้ `../storage-import/storage/.` แทน `../storage-import/.` ในข้อ 5.5 และในคำสั่งตรวจด้านล่าง
+
+จำนวนไฟล์ต้องได้ **3498** และขนาดรวมประมาณ **4582157798** (เกินได้ไม่กี่ KB เพราะรวมขนาดของตัวโฟลเดอร์)
+
+```bash
+find /opt/agencyas/storage-import -maxdepth 1 -type f | wc -l && du -sb /opt/agencyas/storage-import
+```
+
+ขนาด `content.sql` ต้องได้ **5131264**
+
+```bash
+ls -l /opt/agencyas/content.sql
+```
+
+นับบนเครื่องพัฒนาเพื่อเทียบ (Git Bash ที่โฟลเดอร์ `agencyasv3`)
+
+```bash
+find web/storage -type f | wc -l && du -sb web/storage && ls -l deploy-export/content.sql
+```
+
+**5.3 ตรวจก่อนนำเข้า** (ในโฟลเดอร์ `deploy`)
+
+ระบบต้องทำงานอยู่: `db` เป็น healthy, `web` เป็น Up
+
+```bash
+docker compose ps
+```
+
+ฐานข้อมูลต้องยัง**ไม่มีเนื้อหา** ต้องได้ `0` ถ้าไม่ใช่ 0 ให้หยุด อย่านำเข้า (จะชนกับข้อมูลที่มีอยู่)
+
+```bash
+docker compose exec -T db psql -U agencyas -d agencyas -At -c "select count(*) from documents"
+```
+
+> เปิดใช้บัญชีผู้ดูแลคนแรก (ข้อ 4) ก่อนได้ ไม่ชนกัน เพราะ `content.sql` ไม่มีบัญชีผู้ใช้
+> แต่ห้ามเพิ่มเอกสาร แดชบอร์ด หรือเนื้อหาใดๆ ในหลังบ้านก่อนนำเข้า
+
+**5.4 นำเข้าเนื้อหาในฐานข้อมูล** (ทำครั้งเดียว ถ้ารันซ้ำจะชนกับข้อมูลเดิม)
 
 ```bash
 docker compose exec -T db psql -U agencyas -d agencyas -v ON_ERROR_STOP=1 < ../content.sql
 ```
 
-**5.2 คัดลอกไฟล์เอกสารเข้าระบบ**
+ถ้าขึ้น ERROR ให้หยุดและเก็บข้อความไว้ อย่ารันซ้ำ
+
+**5.5 คัดลอกไฟล์เอกสารเข้าระบบ** (ใช้เวลาหลายนาที)
 
 ```bash
 docker compose cp ../storage-import/. web:/app/storage/
 ```
 
+ให้แอปมีสิทธิ์อ่านไฟล์
+
 ```bash
 docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 ```
 
-**5.3 ตรวจจำนวน** (ไฟล์ส่งออกวันที่ 19 ต.ค. 2569 ได้ 76 / 2966 / 558 / 20 ถ้าส่งออกใหม่ ตัวเลขอาจต่างตามข้อมูลบนเครื่องพัฒนา)
+**5.6 ตรวจผล**
+
+ไฟล์ในระบบต้องได้ **3498**
+
+```bash
+docker compose exec web sh -c "find /app/storage -type f | wc -l && du -sh /app/storage"
+```
+
+จำนวนในฐานข้อมูล (ไฟล์ส่งออกวันที่ 19 ต.ค. 2569 ได้ 76 / 2966 / 558 / 20 ถ้าส่งออกใหม่ ตัวเลขอาจต่างตามข้อมูลบนเครื่องพัฒนา)
 
 ```bash
 docker compose exec -T db psql -U agencyas -d agencyas -c "select (select count(*) from provinces) provinces, (select count(*) from documents where deleted_at is null) documents, (select count(*) from dashboards where deleted_at is null) dashboards, (select count(*) from central_contents) central"
 ```
 
-- [ ] ตรวจแล้ว ลบไฟล์ชั่วคราว `../content.sql` และ `../storage-import` ได้ (เก็บสำเนาไว้นอกเครื่องแล้ว)
+เปิดในเบราว์เซอร์ (หลังตั้ง nginx ข้อ 6) เช่น `https://newagencyas.gdcatalog.go.th/sisaket/docs`
+- กดเปิด PDF สักไฟล์ ต้องเปิดได้
+- ภาพเด่นจังหวัดและภาพหน้าแดชบอร์ดต้องขึ้น
+
+**5.7 ลบไฟล์ชั่วคราว** (เมื่อตรวจผ่านแล้ว และยังมีสำเนาบนเครื่องพัฒนา)
+
+```bash
+rm -rf /opt/agencyas/storage-import /opt/agencyas/content.sql
+```
+
+ไฟล์เอกสารอยู่ใน Docker volume `storage` แล้ว อยู่ครบหลัง restart และ `git pull` (ยกเว้นสั่ง `docker compose down -v` ซึ่งห้ามทำ)
+
+- [ ] ไฟล์ครบ 3498 ทั้งใน `storage-import` และใน container
+- [ ] นำเข้า `content.sql` ไม่มี ERROR และจำนวนตรง
+- [ ] เปิด PDF และภาพได้จากหน้าเว็บ
+- [ ] ลบไฟล์ชั่วคราวแล้ว
 
 ### 6. nginx และ HTTPS
 
