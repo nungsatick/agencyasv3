@@ -39,3 +39,6 @@ assets/login/
 docs/design/
 web/.vscode/
 76province_logo/
+
+# data exported for the server (content.sql): copy it over, never commit it
+deploy-export/

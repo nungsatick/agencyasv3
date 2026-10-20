@@ -70,12 +70,12 @@ docker compose logs web | grep "First admin"
 บนเครื่องพัฒนา:
 
 ```bash
-docker exec agencyasv3-db-1 pg_dump -U agencyas -d agencyas --data-only --disable-triggers \
-  -T 'payload_migrations' -T 'users*' -T 'user_tokens*' -T 'payload_preferences*' \
-  -T 'payload_locked_documents*' -T 'cookie_consents' -T 'page_views' -T 'hit_counts' -T 'activity_logs' > content.sql
+mkdir -p deploy-export && { docker exec agencyasv3-db-1 pg_dump -U agencyas -d agencyas --data-only --disable-triggers -T 'payload_migrations' -T 'users*' -T 'user_tokens*' -T 'payload_preferences*' -T 'payload_locked_documents*' -T 'cookie_consents' -T 'page_views' -T 'hit_counts' -T 'activity_logs' -T 'account_requests*' -T 'session_activity' -T 'payload_kv'; echo 'UPDATE public.files SET uploaded_by_id = NULL WHERE uploaded_by_id IS NOT NULL;'; } > deploy-export/content.sql
 ```
 
-คัดลอก `content.sql` ไปเซิร์ฟเวอร์ แล้วรันในโฟลเดอร์ `deploy`:
+ไม่รวมคำขอบัญชีและ session ของเครื่องพัฒนา และล้างช่องผู้อัปโหลดของไฟล์ (บัญชีผู้ใช้ไม่ได้ย้าย)
+
+คัดลอก `deploy-export/content.sql` ไปเซิร์ฟเวอร์ แล้วรันในโฟลเดอร์ `deploy`:
 
 ```bash
 docker compose exec -T db psql -U agencyas -d agencyas -v ON_ERROR_STOP=1 < content.sql
@@ -99,7 +99,7 @@ docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 
 - เปิด `https://<โดเมน>/sisaket`, `/sisaket/docs`, `/sisaket/utilization`, `/sisaket/guides`
 - เปิดไฟล์ตัวอย่าง `https://<โดเมน>/uploads/content/smprakan/file01_20220527040401.pdf`
-- จำนวนที่ควรได้: 76 จังหวัด, 2,968 เอกสาร, 559 แดชบอร์ด, 2,902 ไฟล์, 20 หัวข้อเนื้อหากลาง
+- จำนวนที่ควรได้ (ไฟล์ส่งออก 19 ต.ค. 2569): 76 จังหวัด, 2,966 เอกสาร, 558 แดชบอร์ด, 3,498 ไฟล์, 20 หัวข้อเนื้อหากลาง
 
 ทางเลือก: ถ้าไม่ย้ายจากเครื่องพัฒนา ให้นำเข้าจากต้นทางใหม่ด้วย `web/scripts/import.ts` ซึ่งต้องมีโฟลเดอร์ `migration/` (รวม `files/`) และ Node.js บนเครื่องที่รัน
 

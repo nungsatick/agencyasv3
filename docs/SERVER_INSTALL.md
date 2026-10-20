@@ -22,13 +22,14 @@
 - [ ] ส่งออกเนื้อหาจากฐานข้อมูลพัฒนาเป็น `content.sql` (รันที่โฟลเดอร์ `agencyasv3` บนเครื่องพัฒนา):
 
 ```bash
-docker exec agencyasv3-db-1 pg_dump -U agencyas -d agencyas --data-only --disable-triggers -T 'payload_migrations' -T 'users*' -T 'user_tokens*' -T 'payload_preferences*' -T 'payload_locked_documents*' -T 'cookie_consents' -T 'page_views' -T 'hit_counts' -T 'activity_logs' > content.sql
+mkdir -p deploy-export && { docker exec agencyasv3-db-1 pg_dump -U agencyas -d agencyas --data-only --disable-triggers -T 'payload_migrations' -T 'users*' -T 'user_tokens*' -T 'payload_preferences*' -T 'payload_locked_documents*' -T 'cookie_consents' -T 'page_views' -T 'hit_counts' -T 'activity_logs' -T 'account_requests*' -T 'session_activity' -T 'payload_kv'; echo 'UPDATE public.files SET uploaded_by_id = NULL WHERE uploaded_by_id IS NOT NULL;'; } > deploy-export/content.sql
 ```
 
-ไม่รวมบัญชีผู้ใช้ สถิติ ประวัติการใช้งาน และบันทึกคุกกี้ (ข้อมูลทดสอบ ระบบจริงเริ่มนับใหม่)
+ไม่รวมบัญชีผู้ใช้ สถิติ ประวัติการใช้งาน บันทึกคุกกี้ คำขอบัญชี และ session (ข้อมูลทดสอบ ระบบจริงเริ่มนับใหม่) ช่อง "ผู้อัปโหลด" ของไฟล์ถูกล้าง เพราะบัญชีบนเครื่องพัฒนาไม่ได้ย้ายไป
+ไฟล์อยู่ที่ `deploy-export/content.sql` (ไม่อยู่ใน git) ตรวจแล้ว 19 ต.ค. 2569 ว่านำเข้าฐานข้อมูลเปล่าได้ครบ ไม่มีการอ้างอิงที่ขาด
 
 - [ ] เตรียมไฟล์ที่จะคัดลอกไปเซิร์ฟเวอร์:
-  - `content.sql`
+  - `deploy-export/content.sql`
   - โฟลเดอร์ `web/storage/` (ประมาณ 4.3 GB)
   - `migration/import/province_managers_76.xlsx` (บัญชีผู้ดูแลจังหวัด 76 บัญชี)
 
@@ -111,7 +112,7 @@ docker compose logs web | grep "First admin"
 คัดลอกไฟล์จากเครื่องพัฒนาไปเซิร์ฟเวอร์ เช่นด้วย WinSCP หรือ `scp` (จาก Git Bash บนเครื่องพัฒนา แทน `user@server` ด้วยบัญชีจริง)
 
 ```bash
-scp content.sql user@server:/opt/agencyas/
+scp deploy-export/content.sql user@server:/opt/agencyas/
 ```
 
 ```bash
@@ -134,7 +135,7 @@ docker compose cp ../storage-import/. web:/app/storage/
 docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 ```
 
-**5.3 ตรวจจำนวน** (ควรได้ 76 / 2968 / 559 / 20)
+**5.3 ตรวจจำนวน** (ไฟล์ส่งออกวันที่ 19 ต.ค. 2569 ได้ 76 / 2966 / 558 / 20 ถ้าส่งออกใหม่ ตัวเลขอาจต่างตามข้อมูลบนเครื่องพัฒนา)
 
 ```bash
 docker compose exec -T db psql -U agencyas -d agencyas -c "select (select count(*) from provinces) provinces, (select count(*) from documents where deleted_at is null) documents, (select count(*) from dashboards where deleted_at is null) dashboards, (select count(*) from central_contents) central"
