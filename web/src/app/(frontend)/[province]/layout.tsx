@@ -15,7 +15,12 @@ type Props = { children: React.ReactNode; params: Promise<{ province: string }> 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const province = await getProvince((await params).province)
   if (!province) return {}
-  return { title: `ระบบสนับสนุนการจัดทำบัญชีข้อมูล จังหวัด${province.nameTh}` }
+  // the province seal as the tab icon (replaces the GD Catalog icon set in the root layout)
+  const seal = `/logos/${province.code}.png`
+  return {
+    title: `ระบบสนับสนุนการจัดทำบัญชีข้อมูล จังหวัด${province.nameTh}`,
+    icons: { icon: { url: seal, type: 'image/png' }, apple: seal },
+  }
 }
 
 export default async function ProvinceLayout({ children, params }: Props) {
