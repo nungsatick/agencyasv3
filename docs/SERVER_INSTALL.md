@@ -3,7 +3,7 @@
 ทำต่อจาก [SERVER_PREP.md](SERVER_PREP.md) (เตรียมเครื่องเสร็จแล้ว deploy key เชื่อม GitHub ได้)
 รายละเอียดเพิ่มเติมและเหตุผลของแต่ละขั้นอยู่ใน [DEPLOY.md](DEPLOY.md)
 
-- โดเมน: **`https://agencyas.gdcatalog.go.th`** (เซิร์ฟเวอร์ที่ติดตั้งไว้ที่ newagencyas แล้ว ให้ย้ายตาม DEPLOY.md ข้อ 6.1)
+- โดเมน: **`https://newagencyas.gdcatalog.go.th`**
 - โฟลเดอร์ติดตั้ง: `/opt/agencyas`
 - คำสั่ง `docker compose …` ทุกคำสั่ง รันในโฟลเดอร์ `/opt/agencyas/deploy`
 
@@ -69,7 +69,7 @@ nano .env
 |---|---|
 | `DB_PASSWORD` | ผลลัพธ์บรรทัดแรก (48 ตัว) |
 | `PAYLOAD_SECRET` | ผลลัพธ์บรรทัดที่สอง (64 ตัว) |
-| `SITE_URL` | `https://agencyas.gdcatalog.go.th` — **ตรงทุกตัวอักษร ไม่มี / ท้าย** ไม่อย่างนั้นเข้าหลังบ้านไม่ได้ |
+| `SITE_URL` | `https://newagencyas.gdcatalog.go.th` — **ตรงทุกตัวอักษร ไม่มี / ท้าย** ไม่อย่างนั้นเข้าหลังบ้านไม่ได้ |
 | `FIRST_ADMIN_USERNAME` | ชื่อผู้ใช้ผู้ดูแลส่วนกลางคนแรก (อังกฤษพิมพ์เล็ก 4–32 ตัว) |
 | `FIRST_ADMIN_NAME` | ชื่อ นามสกุล ของผู้ดูแลคนแรก |
 | `WEB_PORT` | เว้นไว้ (3000) |
@@ -224,7 +224,7 @@ docker compose exec web sh -c "find /app/storage -type f | wc -l && du -sh /app/
 docker compose exec -T db psql -U agencyas -d agencyas -c "select (select count(*) from provinces) provinces, (select count(*) from documents where deleted_at is null) documents, (select count(*) from dashboards where deleted_at is null) dashboards, (select count(*) from central_contents) central"
 ```
 
-เปิดในเบราว์เซอร์ (หลังตั้ง nginx ข้อ 6) เช่น `https://agencyas.gdcatalog.go.th/sisaket/docs`
+เปิดในเบราว์เซอร์ (หลังตั้ง nginx ข้อ 6) เช่น `https://newagencyas.gdcatalog.go.th/sisaket/docs`
 - กดเปิด PDF สักไฟล์ ต้องเปิดได้
 - ภาพเด่นจังหวัดและภาพหน้าแดชบอร์ดต้องขึ้น
 
@@ -246,17 +246,17 @@ rm -rf /opt/agencyas/storage-import /opt/agencyas/content.sql
 คัดลอกไฟล์ตั้งค่า
 
 ```bash
-sudo cp /opt/agencyas/deploy/nginx.conf /etc/nginx/sites-available/agencyas
+sudo cp /opt/agencyas/deploy/nginx.conf /etc/nginx/sites-available/newagencyas
 ```
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/agencyas /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/newagencyas /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default
 ```
 
-แก้ไฟล์: เปิดบรรทัด `ssl_certificate` และ `ssl_certificate_key` แล้วใส่ path ของใบรับรอง (เอาเครื่องหมาย `#` ออก) บล็อกสุดท้ายของไฟล์ส่งต่อที่อยู่ชั่วคราว newagencyas มาที่ agencyas ถ้าไม่มีใบรับรองของ newagencyas ให้ใส่ `#` หน้าทั้งบล็อก ไม่อย่างนั้น `nginx -t` ไม่ผ่าน
+แก้ไฟล์: เปิดบรรทัด `ssl_certificate` และ `ssl_certificate_key` แล้วใส่ path ของใบรับรอง (เอาเครื่องหมาย `#` ออก)
 
 ```bash
-sudo nano /etc/nginx/sites-available/agencyas
+sudo nano /etc/nginx/sites-available/newagencyas
 ```
 
 ตรวจไฟล์และโหลดใหม่ (ต้องขึ้น `syntax is ok` และ `test is successful`)
@@ -265,7 +265,7 @@ sudo nano /etc/nginx/sites-available/agencyas
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-- [ ] เปิด `https://agencyas.gdcatalog.go.th/sisaket` จากเครื่องอื่นได้ และมีรูปกุญแจ
+- [ ] เปิด `https://newagencyas.gdcatalog.go.th/sisaket` จากเครื่องอื่นได้ และมีรูปกุญแจ
 - [ ] ไฟล์ตั้งค่าส่ง HSTS อยู่แล้ว (บังคับ https 1 ปี) ใช้เมื่อใบรับรองใช้งานได้จริงเท่านั้น ถ้ายังทดสอบใบรับรองอยู่ ให้ใส่ `#` หน้าบรรทัด `Strict-Transport-Security` ก่อน
 
 ### 7. ตรวจหน้าเว็บและหลังบ้าน
@@ -304,7 +304,8 @@ sudo mkdir -p /var/backups/agencyas && sudo chown $USER /var/backups/agencyas &&
 ### 10. เปิดใช้งาน
 
 - [ ] แจ้งจังหวัดหยุดลงข้อมูลในเว็บเดิม ถ้ามีข้อมูลใหม่หลัง 11 ต.ค. 2569 ต้องนำเข้าเพิ่มก่อน
-- [ ] แจ้งจังหวัดว่าเว็บใหม่เปิดที่ `https://agencyas.gdcatalog.go.th` (โดเมนเดิม ลิงก์เดิมใช้ได้ต่อ)
+- [ ] แจ้งที่อยู่เว็บใหม่ `https://newagencyas.gdcatalog.go.th` ให้จังหวัด
+- [ ] (ถ้าต้องการ) ให้โดเมนเดิม `agencyas.gdcatalog.go.th` ส่งต่อมาโดเมนใหม่โดยคง path ไว้ ลิงก์เดิมที่จังหวัดแชร์ไว้จะมาเว็บใหม่ (ตัวอย่างอยู่ท้าย `deploy/nginx.conf`)
 - [ ] ใส่นโยบายความเป็นส่วนตัวและนโยบายคุกกี้ฉบับจริง (หลังบ้าน → ตั้งค่าเว็บไซต์)
 
 ---

@@ -34,7 +34,7 @@ cp .env.example .env
 |---|---|
 | `DB_PASSWORD` | รหัสผ่านฐานข้อมูล สุ่มยาวๆ (ตัวอักษรและตัวเลข) |
 | `PAYLOAD_SECRET` | ค่าลับของระบบ สุ่มยาวอย่างน้อย 32 ตัวอักษร |
-| `SITE_URL` | ที่อยู่เว็บจริง ไม่มี / ต่อท้าย: `https://agencyas.gdcatalog.go.th` |
+| `SITE_URL` | ที่อยู่เว็บจริง ไม่มี / ต่อท้าย: `https://newagencyas.gdcatalog.go.th` |
 | `FIRST_ADMIN_USERNAME` | ชื่อผู้ใช้ของผู้ดูแลระบบส่วนกลางคนแรก (ใช้เฉพาะการเริ่มระบบครั้งแรก) |
 | `FIRST_ADMIN_NAME` | ชื่อ นามสกุล ของผู้ดูแลคนแรก |
 | `WEB_PORT` | พอร์ตในเครื่องที่แอปเปิด (ค่าเริ่มต้น 3000) |
@@ -106,7 +106,7 @@ docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 ## 5. nginx และ HTTPS
 
 **ความปลอดภัย (ตรวจ 17 ต.ค. 2569):**
-- `SITE_URL` ต้องตรงกับที่อยู่ที่ผู้ใช้เปิดจริงทุกตัวอักษร (`https://agencyas.gdcatalog.go.th` ไม่มี / ท้าย) ระบบรับคุกกี้เข้าสู่ระบบเฉพาะคำขอจากที่อยู่นี้ ถ้าไม่ตรง จะเข้าหลังบ้านไม่ได้ และคุกกี้จะส่งเฉพาะ HTTPS เมื่อที่อยู่ขึ้นต้นด้วย https://
+- `SITE_URL` ต้องตรงกับที่อยู่ที่ผู้ใช้เปิดจริงทุกตัวอักษร (`https://newagencyas.gdcatalog.go.th` ไม่มี / ท้าย) ระบบรับคุกกี้เข้าสู่ระบบเฉพาะคำขอจากที่อยู่นี้ ถ้าไม่ตรง จะเข้าหลังบ้านไม่ได้ และคุกกี้จะส่งเฉพาะ HTTPS เมื่อที่อยู่ขึ้นต้นด้วย https://
 - ใช้ `deploy/nginx.conf`: มี HSTS (เปิดเมื่อใบรับรองใช้งานได้แล้ว) ซ่อนเวอร์ชัน nginx และจำกัดคำขอเข้าสู่ระบบ 10 ครั้งต่อนาทีต่อ IP (`limit_req_zone` ต้องอยู่ในบล็อก `http`; ถ้าไฟล์ site ถูก include ภายใน `http` อยู่แล้ว วางตามตัวอย่างได้เลย)
 - `PAYLOAD_SECRET` สุ่มยาวอย่างน้อย 32 ตัวอักษร เช่น `openssl rand -hex 32`
 - ก่อนขึ้นระบบ: อัปเดตแพ็กเกจตาม `npm audit` แล้วรันชุดทดสอบทั้ง 4 ชุด
@@ -118,49 +118,11 @@ docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 
 ## 6. สลับจากเว็บเดิม
 
-**โดเมน (ปรับ 26 ต.ค. 2569):** เว็บใหม่ใช้โดเมนเดิม `https://agencyas.gdcatalog.go.th` และรองรับ path เดิมทั้งหมด (`/{จังหวัด}`, `/docs`, `/utilization`, `/uploads/content/...`) ลิงก์เดิมที่จังหวัดเคยแชร์จึงใช้ได้ต่อ
-ช่วงเปลี่ยนผ่าน (ตั้งแต่ 19 ต.ค. 2569) ระบบเปิดที่ที่อยู่ชั่วคราว `https://newagencyas.gdcatalog.go.th` เมื่อย้ายมาโดเมนเดิมแล้ว ที่อยู่ชั่วคราวส่งต่อ (301) มาที่ agencyas โดยคง path ไว้ (บล็อกท้าย `deploy/nginx.conf`) บุ๊กมาร์กและลิงก์เปิดใช้บัญชีที่ออกช่วงนั้นจึงยังใช้ได้
-
-### 6.1 ย้ายจาก newagencyas กลับมาที่ agencyas (เซิร์ฟเวอร์ที่ติดตั้งไว้แล้ว)
-
-ข้อมูล บัญชี รหัสผ่าน 2FA และสถิติใช้ต่อได้ทั้งหมด (ผูกกับฐานข้อมูล ไม่ผูกกับโดเมน) ผู้ใช้แค่เข้าสู่ระบบใหม่ 1 ครั้ง ผู้เข้าชมที่เคยตอบแถบคุกกี้จะเห็นแถบอีกครั้ง
-
-**ก่อนวันสลับ**
-- [ ] ขอผู้ดูแล DNS ลด TTL ของ `agencyas.gdcatalog.go.th` ล่วงหน้า 1–2 วัน (ตอนนี้ชี้เครื่องเว็บเดิม)
-- [ ] เตรียมใบรับรอง HTTPS ของ `agencyas.gdcatalog.go.th` (หรือขอ Let's Encrypt หลัง DNS ชี้มาแล้ว) และให้ใบรับรองของ `newagencyas` ยังไม่หมดอายุ (ใช้กับการส่งต่อ)
-- [ ] สำรองเว็บเดิมไว้ หลังสลับ DNS จะเข้าเครื่องเดิมทางโดเมนไม่ได้แล้ว
-
-**วันสลับ** (บนเซิร์ฟเวอร์ใหม่ ในโฟลเดอร์ `/opt/agencyas/deploy`)
-1. ขอผู้ดูแล DNS ชี้ `agencyas.gdcatalog.go.th` มาที่เครื่องนี้ แล้วตรวจว่าได้ IP ของเครื่องนี้: `getent hosts agencyas.gdcatalog.go.th`
-2. สำรองฐานข้อมูล (`before-update-…dump` ตามข้อ 8)
-3. `git pull` เพื่อให้ได้ `deploy/nginx.conf` รุ่นที่ใช้ agencyas
-4. nginx: แทนไฟล์ site เดิมด้วยไฟล์ใหม่ แล้วใส่ path ใบรับรองทั้ง 2 บล็อก 443 (agencyas และบล็อกส่งต่อ newagencyas)
-   ```bash
-   sudo cp /opt/agencyas/deploy/nginx.conf /etc/nginx/sites-available/newagencyas && sudo nano /etc/nginx/sites-available/newagencyas
-   ```
-   ```bash
-   sudo nginx -t && sudo systemctl reload nginx
-   ```
-   ไฟล์ site ชื่อ `newagencyas` ตามที่ติดตั้งไว้ จะเปลี่ยนชื่อไฟล์หรือไม่ก็ได้ ถ้าไม่มีใบรับรองของ newagencyas แล้ว ให้ใส่ `#` หน้าบล็อกส่งต่อท้ายไฟล์ ไม่อย่างนั้น `nginx -t` ไม่ผ่าน
-5. แก้ `deploy/.env` เป็น `SITE_URL=https://agencyas.gdcatalog.go.th` แล้วสั่ง `docker compose up -d` (ไม่ต้อง `--build`)
-6. หลังบ้าน → ตั้งค่าเว็บไซต์ → นโยบายความเป็นส่วนตัว: แก้ `https://newagencyas.gdcatalog.go.th` ในข้อความเป็น agencyas แล้วตรวจว่าไม่มีคำว่า newagencyas เหลือในเนื้อหา (ต้องได้ 0)
-   ```bash
-   docker compose exec -T db pg_dump -U agencyas -d agencyas --data-only | grep -c "newagencyas"
-   ```
-7. Google Analytics (ถ้าตั้งแล้ว): แก้ URL ของ Data stream เป็น agencyas (Measurement ID เดิมใช้ต่อได้)
-
-**ตรวจหลังสลับ**
-- [ ] `https://agencyas.gdcatalog.go.th/sisaket` เปิดได้ มีรูปกุญแจ
-- [ ] `https://newagencyas.gdcatalog.go.th/sisaket/docs` พาไป `https://agencyas.gdcatalog.go.th/sisaket/docs`
-- [ ] เข้าหลังบ้านที่ agencyas ได้ (ถ้าเข้าไม่ได้ ตรวจ `SITE_URL` ก่อน)
-- [ ] ลิงก์ไฟล์เดิม `/uploads/content/...` เปิดได้
-- [ ] แจ้งจังหวัดว่าย้ายเสร็จแล้ว ใช้บัญชีเดิมเข้าสู่ระบบที่ agencyas ได้ทันที
-
-### 6.2 เปิดใช้งานแทนเว็บเดิม
+**โดเมน (ตัดสินใจ 19 ต.ค. 2569):** เว็บใหม่ใช้ `https://newagencyas.gdcatalog.go.th` (ไม่ใช้โดเมนเดิม) ลิงก์เดิม `https://agencyas.gdcatalog.go.th/...` ที่จังหวัดเคยแชร์จะยังไปเว็บเดิม ถ้าต้องการให้ไปเว็บใหม่ ให้โดเมนเดิมส่งต่อ (301) มาที่โดเมนใหม่โดยคง path ไว้ (ตัวอย่างอยู่ท้าย `deploy/nginx.conf`) เว็บใหม่รองรับ path เดิมทั้งหมดอยู่แล้ว (`/{จังหวัด}`, `/docs`, `/utilization`, `/uploads/content/...`)
 
 1. แจ้งจังหวัดหยุดลงข้อมูลในเว็บเดิม
 2. ถ้ามีข้อมูลใหม่ในเว็บเดิมหลังวันที่ดึงข้อมูล (11 ต.ค. 2569) ต้องดึงและนำเข้าเพิ่มก่อน
-3. ชี้โดเมน agencyas.gdcatalog.go.th มาที่เซิร์ฟเวอร์ใหม่ (ข้อ 6.1)
+3. ชี้โดเมนมาที่เซิร์ฟเวอร์ใหม่
 4. ตรวจลิงก์เดิม: `/{slug}`, `/{slug}/docs`, `/{slug}/utilization`, `/uploads/content/...` ต้องเปิดได้เหมือนเดิม
 5. นำเข้าผู้ดูแลจังหวัด 76 คนจากไฟล์ Excel แล้วส่งลิงก์เปิดใช้บัญชีให้แต่ละคน
 
