@@ -5,6 +5,7 @@ import React from 'react'
 import { thaiDay, thaiDayTime } from '@/lib/thaiDate'
 
 import { Shell } from '../Shell'
+import { FreshOnReturn } from './FreshOnReturn'
 import { type CheckDef, ListFilters, type SelectDef } from './ListFilters'
 import { LIMITS } from './limits'
 import { Pager } from './Pager'
@@ -126,6 +127,7 @@ export function ListPage<T extends { id: number | string }>(props: {
   return (
     <Shell {...props.view} title={props.title}>
       <div className="agy agy-dl">
+        <FreshOnReturn mark={`${Date.now()}-${Math.random()}`} />
         <div className="agy__head">
           <div>
             <h1>{props.title}</h1>
