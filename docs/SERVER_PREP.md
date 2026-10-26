@@ -3,7 +3,7 @@
 ขั้นตอนนี้ทำครั้งเดียวบนเครื่องเซิร์ฟเวอร์ใหม่ ก่อนเริ่มติดตั้งตาม [DEPLOY.md](DEPLOY.md)
 คำสั่งด้านล่างใช้กับ **Ubuntu 22.04 / 24.04** ถ้าเป็นระบบอื่นต้องปรับคำสั่ง
 
-- โดเมนของเว็บใหม่: **`https://newagencyas.gdcatalog.go.th`**
+- โดเมนของเว็บ: **`https://agencyas.gdcatalog.go.th`** (โดเมนเดิม เซิร์ฟเวอร์ที่ติดตั้งไว้ที่ newagencyas แล้ว ให้ย้ายตาม DEPLOY.md ข้อ 6.1)
 - Repository: `nungsatick/agencyasv3` บน GitHub (private)
 
 ปรับปรุงล่าสุด: 19 ตุลาคม 2569
@@ -79,15 +79,15 @@ sudo ufw status
 
 ## 7. โดเมนและใบรับรอง HTTPS
 
-- [ ] ตั้ง DNS ของ `newagencyas.gdcatalog.go.th` ให้ชี้มาที่ IP ของเครื่องนี้ (ขอผู้ดูแล DNS ของ gdcatalog.go.th)
-- [ ] ใบรับรอง HTTPS ของ `newagencyas.gdcatalog.go.th`
+- [ ] ตั้ง DNS ของ `agencyas.gdcatalog.go.th` ให้ชี้มาที่ IP ของเครื่องนี้ (ขอผู้ดูแล DNS ของ gdcatalog.go.th)
+- [ ] ใบรับรอง HTTPS ของ `agencyas.gdcatalog.go.th`
   - ถ้าหน่วยงานออกใบรับรองให้: เตรียมไฟล์ `.crt` (รวม chain) และ `.key` ไว้ใส่ใน nginx ภายหลัง
   - ถ้าใช้ Let's Encrypt: ทำได้หลัง DNS ชี้มาเครื่องนี้แล้ว
 
 ตรวจว่า DNS ชี้มาถูกเครื่อง (ต้องได้ IP ของเครื่องนี้)
 
 ```bash
-getent hosts newagencyas.gdcatalog.go.th
+getent hosts agencyas.gdcatalog.go.th
 ```
 
 ## 8. สร้างโฟลเดอร์ติดตั้ง
@@ -115,7 +115,7 @@ cat ~/.ssh/agencyas_deploy.pub
 จากนั้น **เจ้าของ repository** ทำบน GitHub:
 
 1. เปิด `nungsatick/agencyasv3` → **Settings** → **Deploy keys** → **Add deploy key**
-2. วางกุญแจที่คัดลอกมา ตั้งชื่อ เช่น `server newagencyas`
+2. วางกุญแจที่คัดลอกมา ตั้งชื่อ เช่น `server agencyas`
 3. **ไม่ติ๊ก** Allow write access
 4. กด **Add key**
 
@@ -135,9 +135,9 @@ ssh -i ~/.ssh/agencyas_deploy -T git@github.com
 - [ ] Docker และ Docker Compose ใช้งานได้ (สั่ง `docker ps` ได้โดยไม่ต้องใช้ sudo)
 - [ ] nginx และ git ติดตั้งแล้ว
 - [ ] firewall เปิดเฉพาะ 22, 80, 443
-- [ ] DNS `newagencyas.gdcatalog.go.th` ชี้มาเครื่องนี้ และมีใบรับรอง HTTPS (หรือพร้อมขอ Let's Encrypt)
+- [ ] DNS `agencyas.gdcatalog.go.th` ชี้มาเครื่องนี้ และมีใบรับรอง HTTPS (หรือพร้อมขอ Let's Encrypt)
 - [ ] มีโฟลเดอร์ `/opt/agencyas`
 - [ ] deploy key เชื่อม GitHub ได้
 
 ครบแล้ว ขั้นต่อไปคือดึงโค้ดและติดตั้งตาม [SERVER_INSTALL.md](SERVER_INSTALL.md)
-(ใน `deploy/.env` ตั้ง `SITE_URL=https://newagencyas.gdcatalog.go.th` ตรงทุกตัวอักษร ไม่มี / ท้าย)
+(ใน `deploy/.env` ตั้ง `SITE_URL=https://agencyas.gdcatalog.go.th` ตรงทุกตัวอักษร ไม่มี / ท้าย)
