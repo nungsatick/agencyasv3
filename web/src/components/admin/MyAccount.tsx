@@ -2,6 +2,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { CodeBoxes } from '../CodeBoxes'
+
 type Info = {
   username: string
   name: string
@@ -168,21 +170,34 @@ export function MyAccount() {
       setTfaPw('')
     })
   }
+  // sent by the button, or straight away once the sixth digit is typed
+  const confirmCode = (value: string) => {
+    if (busy) return
+    void run('tfa', async () => {
+      try {
+        const res = await call('/2fa/confirm', { ticket: setup!.ticket, code: value })
+        setSetup(null)
+        setCode('')
+        setCodes(res.recoveryCodes)
+        return 'ตั้งค่า 2FA ใหม่แล้ว เครื่องเดิมใช้ไม่ได้แล้ว'
+      } catch (e) {
+        setCode('') // a wrong code: empty boxes, ready to type again
+        throw e
+      }
+    })
+  }
   const confirmTfa = (e: React.FormEvent) => {
     e.preventDefault()
-    void run('tfa', async () => {
-      const res = await call('/2fa/confirm', { ticket: setup!.ticket, code })
-      setSetup(null)
-      setCode('')
-      setCodes(res.recoveryCodes)
-      return 'ตั้งค่า 2FA ใหม่แล้ว เครื่องเดิมใช้ไม่ได้แล้ว'
-    })
+    if (!/^\d{6}$/.test(code)) return setMsg({ where: 'tfa', ok: false, text: 'กรอกรหัสให้ครบ 6 หลัก' })
+    confirmCode(code)
   }
 
   // fresh recovery codes
   const [renewCode, setRenewCode] = useState('')
+  // new codes replace the old ones, so this one waits for the button rather than sending on the sixth digit
   const renew = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!/^\d{6}$/.test(renewCode)) return setMsg({ where: 'codes', ok: false, text: 'กรอกรหัสให้ครบ 6 หลัก' })
     void run('codes', async () => {
       const res = await call('/recovery-codes', { code: renewCode })
       setRenewCode('')
@@ -298,16 +313,11 @@ export function MyAccount() {
             <div>
               <p>เปิดแอปยืนยันตัวตนบนโทรศัพท์เครื่องใหม่ แล้วสแกน QR code นี้ หรือพิมพ์รหัส</p>
               <code>{setup.secret.match(/.{1,4}/g)?.join(' ')}</code>
-              <label className="agy__field">
+              <div className="agy__field">
                 <span>รหัส 6 หลักจากเครื่องใหม่</span>
-                <input
-                  inputMode="numeric"
-                  maxLength={6}
-                  required
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                />
-              </label>
+                <CodeBoxes label="รหัส 6 หลักจากเครื่องใหม่" value={code} onChange={setCode} onComplete={confirmCode} disabled={busy} autoFocus />
+                <small>กรอกครบ 6 หลักแล้วระบบยืนยันให้ทันที</small>
+              </div>
               <div className="agy__actions">
                 <button className="agy__btn agy__btn--primary" disabled={busy}>
                   ยืนยัน
@@ -334,16 +344,10 @@ export function MyAccount() {
         </div>
         {note('codes')}
         <div className="agy__grid">
-          <label className="agy__field">
+          <div className="agy__field">
             <span>รหัส 6 หลักจากแอป</span>
-            <input
-              inputMode="numeric"
-              maxLength={6}
-              required
-              value={renewCode}
-              onChange={(e) => setRenewCode(e.target.value)}
-            />
-          </label>
+            <CodeBoxes label="รหัส 6 หลักจากแอป" value={renewCode} onChange={setRenewCode} onComplete={() => undefined} disabled={busy} />
+          </div>
           <div className="agy__actions" style={{ alignSelf: 'end' }}>
             <button className="agy__btn" disabled={busy}>
               ขอรหัสสำรองชุดใหม่

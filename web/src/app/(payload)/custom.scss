@@ -585,6 +585,32 @@ $stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' str
     line-height: 1.45;
   }
 }
+// the 6-digit app code in บัญชีของฉัน, one box per digit (components/CodeBoxes.tsx)
+.agy__field .code-boxes {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 340px;
+}
+.agy__field input.code-boxes__box {
+  min-height: 0;
+  height: 52px;
+  padding: 0;
+  text-align: center;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 24px;
+  font-weight: 600;
+  caret-color: transparent;
+
+  &:focus {
+    border-color: var(--agy-primary, #0f5c6e);
+    outline: 2px solid var(--agy-primary, #0f5c6e);
+    outline-offset: 1px;
+  }
+  &:disabled {
+    opacity: 0.6;
+  }
+}
 // a name typed in two boxes (ชื่อ / นามสกุล) takes two grid columns
 .agy__field--wide {
   grid-column: span 2;

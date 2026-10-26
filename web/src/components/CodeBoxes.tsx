@@ -20,9 +20,14 @@ export function CodeBoxes({ value, onChange, onComplete, disabled, autoFocus, la
   const boxes = useRef<(HTMLInputElement | null)[]>([])
   const focus = (i: number) => boxes.current[Math.max(0, Math.min(LEN - 1, i))]?.focus()
 
-  // back to the first box when the code is cleared (e.g. after a wrong code)
+  // back to the first box when a typed code is cleared (e.g. after a wrong code), not when the page opens
+  const typed = useRef(false)
   useEffect(() => {
-    if (value === '' && !disabled) focus(0)
+    if (value) typed.current = true
+    else if (typed.current && !disabled) {
+      typed.current = false
+      focus(0)
+    }
   }, [value, disabled])
 
   const put = (at: number, digits: string) => {
