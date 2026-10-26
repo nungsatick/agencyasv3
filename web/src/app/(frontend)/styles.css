@@ -2169,6 +2169,15 @@ html[data-mode='dark'] .sec__head {
   height: 18px;
   border-left: 2px solid var(--topic-bg);
 }
+/* a faint rule between steps, starting after the number so it does not cross the joining line */
+.step + .step::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 44px;
+  right: 0;
+  border-top: 1px solid var(--line-soft);
+}
 .step__no {
   flex: none;
   width: 32px;
