@@ -24,6 +24,12 @@ desktop.ini
 
 # also listed in docs/DEPLOY.md: the server's real settings, raw pages saved from the old site
 deploy/.env
+# server configuration (decided 2026-10-26): kept on the dev machine and the server, not in git, so a
+# git pull never changes the running setup. Copy them over by hand (docs/SERVER_INSTALL.md step 1).
+deploy/docker-compose.yml
+deploy/docker-compose.override.yml
+deploy/nginx.conf
+deploy/backup.sh
 crawl/raw/
 
 # province boundaries downloaded for migration/build_thai_map.py (the built paths are in web/src/lib/thaiMapPaths.ts)

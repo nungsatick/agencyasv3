@@ -59,6 +59,7 @@ Next.js 16 (App Router) + Payload CMS 3 + PostgreSQL 17 เป็นแอปเ
 | รายการ | เหตุผล / เก็บไว้ที่ไหน |
 |---|---|
 | `web/.env`, `deploy/.env` | มีรหัสลับ ตัวอย่างของ `web/.env` อยู่ที่ `web/.env.example` ส่วน `deploy/.env` สร้างตาม SERVER_INSTALL.md ข้อ 2 |
+| `deploy/docker-compose.yml`, `deploy/nginx.conf`, `deploy/backup.sh` | ค่าตั้งของเซิร์ฟเวอร์ (ตัดออกจาก git 26 ต.ค. 2569) เพื่อไม่ให้ `git pull` เปลี่ยนการตั้งค่าที่ใช้อยู่ ต้นฉบับอยู่ในเครื่องผู้พัฒนาและบนเซิร์ฟเวอร์ เครื่องใหม่คัดลอกขึ้นไปเอง (SERVER_INSTALL ข้อ 1) |
 | `web/storage/` (ประมาณ 4.3 GB) | ไฟล์ที่เว็บใช้จริง หลังขึ้นระบบชุดหลักอยู่บนเซิร์ฟเวอร์ และสำรองด้วย `deploy/backup.sh` |
 | `migration/files/` (ประมาณ 4.2 GB) | ไฟล์ต้นฉบับจากเว็บเดิม เก็บสำเนาไว้นอก git ตรวจความครบถ้วนได้ด้วย `migration/manifest.json` |
 | `migration/geo/` | ขอบเขตจังหวัดที่ดาวน์โหลดมาสร้างแผนที่ (ผลลัพธ์อยู่ใน `web/src/lib/thaiMapPaths.ts`) |

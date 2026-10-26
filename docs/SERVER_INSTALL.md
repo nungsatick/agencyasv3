@@ -43,6 +43,17 @@ mkdir -p deploy-export && { docker exec agencyasv3-db-1 pg_dump -U agencyas -d a
 GIT_SSH_COMMAND="ssh -i ~/.ssh/agencyas_deploy" git clone git@github.com:nungsatick/agencyasv3.git /opt/agencyas
 ```
 
+ไฟล์ตั้งค่าของเซิร์ฟเวอร์ **ไม่อยู่ใน git** (ตัดออก 26 ต.ค. 2569) ให้คัดลอก 3 ไฟล์นี้จากเครื่องพัฒนา (โฟลเดอร์ `agencyasv3/deploy/`) หรือจากเซิร์ฟเวอร์เดิม ไปไว้ที่ `/opt/agencyas/deploy/` ด้วย FileZilla (SFTP) เหมือนข้อ 5
+- `docker-compose.yml`
+- `nginx.conf`
+- `backup.sh`
+
+ให้ `backup.sh` รันได้
+
+```bash
+chmod +x /opt/agencyas/deploy/backup.sh
+```
+
 ```bash
 cd /opt/agencyas/deploy
 ```
@@ -261,7 +272,7 @@ sudo cp /opt/agencyas/deploy/nginx.conf /etc/nginx/sites-available/agencyas
 sudo ln -s /etc/nginx/sites-available/agencyas /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default
 ```
 
-แก้ไฟล์: เปิดบรรทัด `ssl_certificate` และ `ssl_certificate_key` แล้วใส่ path ของใบรับรอง (เอาเครื่องหมาย `#` ออก)
+ตรวจ path ใบรับรอง: ไฟล์ตั้งไว้ที่ `/etc/nginx/ssl/domain/gdcatalog.crt` และ `gdcatalog.key` (ใบรับรอง gdcatalog.go.th ของหน่วยงาน ตามที่ใช้บนเซิร์ฟเวอร์ 209.15.100.189) ถ้าเครื่องใหม่เก็บใบรับรองที่อื่น ให้แก้ path ทั้งสองบล็อก 443 บล็อกสุดท้าย (newagencyas → 444) ลบออกได้เมื่อลบ DNS ของ newagencyas แล้ว
 
 ```bash
 sudo nano /etc/nginx/sites-available/agencyas
