@@ -50,7 +50,15 @@ cd /opt/agencyas/deploy
 ### 2. ตั้งค่า `deploy/.env`
 
 ```bash
-cp .env.example .env && chmod 600 .env
+cat > .env <<'EOF'
+DB_PASSWORD=
+PAYLOAD_SECRET=
+SITE_URL=https://agencyas.gdcatalog.go.th
+FIRST_ADMIN_USERNAME=
+FIRST_ADMIN_NAME=
+WEB_PORT=3000
+EOF
+chmod 600 .env
 ```
 
 สร้างค่าลับสองค่า (คัดลอกผลลัพธ์ไปใส่ใน `.env`)

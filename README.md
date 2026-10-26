@@ -45,7 +45,7 @@ Next.js 16 (App Router) + Payload CMS 3 + PostgreSQL 17 เป็นแอปเ
 | `web/src/migrations/` | migration ฐานข้อมูล ระบบรันเองตอนเริ่ม |
 | `web/scripts/` | สคริปต์นำเข้าข้อมูล โหลดข้อมูลตั้งต้น และชุดทดสอบ |
 | `web/public/logos/` | ตราจังหวัด 76 ไฟล์ (`{CODE}.png`) |
-| `deploy/` | ชุดติดตั้งบนเซิร์ฟเวอร์ (Docker Compose, nginx, สคริปต์สำรองข้อมูล, `.env.example`) |
+| `deploy/` | ชุดติดตั้งบนเซิร์ฟเวอร์ (Docker Compose, nginx, สคริปต์สำรองข้อมูล) |
 | `migration/` | ข้อมูลจากเว็บเดิมที่จับคู่เข้าโครงสร้างใหม่ (`import/*.json`), `manifest.json` (sha256 ของไฟล์เดิม), บัญชีผู้ดูแลจังหวัด 76 บัญชี และสคริปต์สร้างข้อมูล |
 | `crawl/` | ผลสำรวจเว็บเดิม (`sites.json`) |
 | `76province_hero/` | ภาพเด่นส่วนหัว 76 จังหวัด (`{CODE}.jpg`) |
@@ -58,7 +58,7 @@ Next.js 16 (App Router) + Payload CMS 3 + PostgreSQL 17 เป็นแอปเ
 
 | รายการ | เหตุผล / เก็บไว้ที่ไหน |
 |---|---|
-| `web/.env`, `deploy/.env` | มีรหัสลับ ดูตัวอย่างได้จาก `.env.example` ในโฟลเดอร์เดียวกัน |
+| `web/.env`, `deploy/.env` | มีรหัสลับ ตัวอย่างของ `web/.env` อยู่ที่ `web/.env.example` ส่วน `deploy/.env` สร้างตาม SERVER_INSTALL.md ข้อ 2 |
 | `web/storage/` (ประมาณ 4.3 GB) | ไฟล์ที่เว็บใช้จริง หลังขึ้นระบบชุดหลักอยู่บนเซิร์ฟเวอร์ และสำรองด้วย `deploy/backup.sh` |
 | `migration/files/` (ประมาณ 4.2 GB) | ไฟล์ต้นฉบับจากเว็บเดิม เก็บสำเนาไว้นอก git ตรวจความครบถ้วนได้ด้วย `migration/manifest.json` |
 | `migration/geo/` | ขอบเขตจังหวัดที่ดาวน์โหลดมาสร้างแผนที่ (ผลลัพธ์อยู่ใน `web/src/lib/thaiMapPaths.ts`) |

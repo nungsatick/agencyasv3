@@ -25,7 +25,15 @@
 
 ```bash
 cd deploy
-cp .env.example .env
+cat > .env <<'EOF'
+DB_PASSWORD=
+PAYLOAD_SECRET=
+SITE_URL=https://agencyas.gdcatalog.go.th
+FIRST_ADMIN_USERNAME=
+FIRST_ADMIN_NAME=
+WEB_PORT=3000
+EOF
+chmod 600 .env
 ```
 
 แก้ `.env`:

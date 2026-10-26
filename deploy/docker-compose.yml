@@ -1,5 +1,5 @@
 # Production stack: the web app and its PostgreSQL database.
-# Copy .env.example to .env, fill it in, then:  docker compose up -d --build
+# Create .env next to this file (DB_PASSWORD, PAYLOAD_SECRET, SITE_URL, ...: docs/SERVER_INSTALL.md step 2), then:  docker compose up -d --build
 # The app listens on 127.0.0.1:3000; put nginx (see nginx.conf) in front of it.
 
 services:

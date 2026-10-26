@@ -66,7 +66,7 @@ agencyasv3/
 ├─ README.md                   ภาพรวมโปรเจกต์ วิธีเปิดระบบ และสิ่งที่ไม่อยู่ใน git
 ├─ .gitignore                  ไฟล์ที่ไม่เข้า git (ดูหัวข้อ 3.2)
 ├─ docker-compose.yml          ฐานข้อมูลสำหรับพัฒนา (PostgreSQL พอร์ต 5433)
-├─ deploy/                     ชุดติดตั้งสำหรับเซิร์ฟเวอร์จริง (docker-compose.yml, .env.example, nginx.conf, backup.sh)
+├─ deploy/                     ชุดติดตั้งสำหรับเซิร์ฟเวอร์จริง (docker-compose.yml, nginx.conf, backup.sh; .env สร้างบนเซิร์ฟเวอร์ ไม่อยู่ใน git)
 ├─ 76province_logo/            สำเนาตราจังหวัด (ไม่อยู่ใน git ชุดที่ใช้จริงคือ web/public/logos/)
 ├─ assets/logos/               โลโก้สีขาวของกระทรวง DE, สสช., GDcatalog
 ├─ crawl/                      หน้าเว็บเดิมที่ดึงมา (raw/ 228 หน้า ไม่อยู่ใน git) และ sites.json
