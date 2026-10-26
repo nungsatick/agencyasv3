@@ -7,13 +7,16 @@ import { themes } from '@/lib/themes'
 import { ProvinceSites, type SiteCard } from './ProvinceSites'
 import { Shell, type Staff } from './Shell'
 
-// The six regions used to group the province sites (by province code).
+// Regions used to group the province sites (by province code), following the NESDC (สภาพัฒน์)
+// grouping used for gross provincial product. Bangkok has no site, so its region lists only the
+// five surrounding provinces.
 const REGIONS: [string, string[]][] = [
-  ['ภาคเหนือ', ['CMI', 'CRI', 'LPG', 'LPN', 'MSN', 'NAN', 'PYO', 'PRE', 'UTT']],
+  ['กรุงเทพฯ และปริมณฑล', ['SPK', 'NBI', 'PTE', 'SKN', 'NPT']],
+  ['ภาคกลาง', ['AYA', 'ATG', 'LRI', 'SBR', 'CNT', 'SRI']],
+  ['ภาคตะวันออก', ['CBI', 'RYG', 'CTI', 'TRT', 'CCO', 'PRI', 'NYK', 'SKW']],
+  ['ภาคตะวันตก', ['RBR', 'KRI', 'SPB', 'SKM', 'PBI', 'PKN']],
+  ['ภาคเหนือ', ['CMI', 'CRI', 'LPG', 'LPN', 'MSN', 'NAN', 'PYO', 'PRE', 'UTT', 'TAK', 'STI', 'PLK', 'KPT', 'PCT', 'PNB', 'NSN', 'UTI']],
   ['ภาคตะวันออกเฉียงเหนือ', ['KSN', 'KKN', 'CPM', 'NPM', 'NMA', 'BKN', 'BRM', 'MKM', 'MDH', 'YST', 'RET', 'LEI', 'SSK', 'SNK', 'SRN', 'NKI', 'NBP', 'ACR', 'UDN', 'UBN']],
-  ['ภาคกลาง', ['KPT', 'CNT', 'NYK', 'NPT', 'NSN', 'NBI', 'PTE', 'AYA', 'PCT', 'PLK', 'PNB', 'LRI', 'SPK', 'SKM', 'SKN', 'SBR', 'STI', 'SPB', 'ATG', 'UTI', 'SRI']],
-  ['ภาคตะวันออก', ['CTI', 'CCO', 'CBI', 'TRT', 'PRI', 'RYG', 'SKW']],
-  ['ภาคตะวันตก', ['KRI', 'TAK', 'PKN', 'PBI', 'RBR']],
   ['ภาคใต้', ['KBI', 'CPN', 'TRG', 'NST', 'NWT', 'PTN', 'PNA', 'PLG', 'PKT', 'YLA', 'RNG', 'SKA', 'STN', 'SNI']],
 ]
 const regionOf = new Map(REGIONS.flatMap(([r, codes]) => codes.map((c) => [c, r] as const)))
