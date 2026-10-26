@@ -151,57 +151,109 @@ export function CookieSettingsButton() {
 
 type PopupData = { key: string; title: string | null; body: string | null; imageUrl: string | null; imageAlt: string | null; buttonLabel: string | null; buttonUrl: string | null; frequency: 'always' | 'daily' | 'once' }
 
-/** Announcement pop-up. Remembers that it was closed (per province and announcement version) in localStorage. */
-const AUTO_CLOSE = 10 // seconds
+// how long each announcement stays: one alone 10 seconds; several take turns, 5 seconds each
+const ALONE_SECONDS = 10
+const EACH_SECONDS = 5
 
-export function AnnouncementPopup({ popup }: { popup: PopupData }) {
-  const [open, setOpen] = useState(false)
+const readStore = (k: string): string | null => {
+  try {
+    return window.localStorage.getItem(k)
+  } catch {
+    return null
+  }
+}
+const writeStore = (k: string, v: string) => {
+  try {
+    window.localStorage.setItem(k, v)
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Announcement pop-ups for one page. One announcement stays 10 seconds; several change by themselves every
+ * 5 seconds in the order the server sends them (highest priority first), then the pop-up closes. Closing it
+ * (✕, "ปิด", Esc, the backdrop) ends the whole pop-up. Each announcement shown is remembered as seen per
+ * province and version in localStorage, following its own frequency; one not reached yet shows next time.
+ * "ไม่ต้องแสดงอีกวันนี้" hides every announcement of this province for the rest of the day.
+ */
+export function AnnouncementQueue({ popups, provinceId }: { popups: PopupData[]; provinceId: number }) {
+  const [due, setDue] = useState<PopupData[] | null>(null)
+  const [at, setAt] = useState(0)
   const [hideToday, setHideToday] = useState(false)
-  const box = useRef<HTMLDivElement>(null)
-  const storeKey = `agy_popup_${popup.key}`
+  const dayKey = `agy_popup_day_${provinceId}`
 
   useEffect(() => {
-    let seen: string | null = null
-    try {
-      seen = window.localStorage.getItem(storeKey)
-    } catch {
-      /* ignore */
-    }
     const today = new Date().toDateString()
-    // "ไม่ต้องแสดงอีกวันนี้" hides it for the rest of the day whatever the frequency
-    const hide = seen === `today:${today}` || (popup.frequency === 'once' && seen) || (popup.frequency === 'daily' && (seen === today || seen === `today:${today}`))
-    if (!hide) setOpen(true)
-  }, [popup.frequency, storeKey])
+    if (readStore(dayKey) === today) return setDue([])
+    setDue(
+      popups.filter((p) => {
+        const seen = readStore(`agy_popup_${p.key}`)
+        // older versions kept "today:<date>" per announcement for "ไม่ต้องแสดงอีกวันนี้"
+        if (seen === `today:${today}`) return false
+        if (p.frequency === 'once') return !seen
+        if (p.frequency === 'daily') return seen !== today
+        return true
+      }),
+    )
+  }, [popups, dayKey])
 
-  const close = useCallback(() => {
-    try {
+  const current = due?.[at]
+  const finish = useCallback(
+    (closeAll: boolean) => {
+      if (!due || !current) return
       const today = new Date().toDateString()
-      window.localStorage.setItem(storeKey, hideToday ? `today:${today}` : today)
-    } catch {
-      /* ignore */
-    }
-    setOpen(false)
-  }, [hideToday, storeKey])
+      writeStore(`agy_popup_${current.key}`, today)
+      if (hideToday) writeStore(dayKey, today)
+      setAt(closeAll || hideToday ? due.length : at + 1)
+    },
+    [due, current, hideToday, dayKey, at],
+  )
 
-  // closes by itself after AUTO_CLOSE seconds; resting the pointer on it (or touching it) pauses the count
-  const [left, setLeft] = useState(AUTO_CLOSE)
+  if (!due || !current) return null
+  return (
+    <AnnouncementPopup
+      key={current.key}
+      popup={current}
+      seconds={due.length > 1 ? EACH_SECONDS : ALONE_SECONDS}
+      last={at === due.length - 1}
+      hideToday={hideToday}
+      setHideToday={setHideToday}
+      onTimeUp={() => finish(false)}
+      onClose={() => finish(true)}
+    />
+  )
+}
+
+/** One announcement: the picture, a short caption, and a count that moves on (or closes) by itself. */
+function AnnouncementPopup({ popup, seconds, last, hideToday, setHideToday, onTimeUp, onClose }: {
+  popup: PopupData
+  seconds: number
+  last: boolean
+  hideToday: boolean
+  setHideToday: (v: boolean) => void
+  onTimeUp: () => void
+  onClose: () => void
+}) {
+  const box = useRef<HTMLDivElement>(null)
+
+  // resting the pointer on it (or touching it) pauses the count
+  const [left, setLeft] = useState(seconds)
   const [paused, setPaused] = useState(false)
   useEffect(() => {
-    if (!open || paused) return
-    if (left <= 0) return close()
+    if (paused) return
+    if (left <= 0) return onTimeUp()
     const t = window.setTimeout(() => setLeft((n) => n - 1), 1000)
     return () => window.clearTimeout(t)
-  }, [open, paused, left, close])
+  }, [paused, left, onTimeUp])
 
   useEffect(() => {
-    if (!open) return
     box.current?.focus()
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close()
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, close])
+  }, [onClose])
 
-  if (!open) return null
   // visitors see the picture and, under it, the short description; the title only names the dialog for screen readers
   const alt = popup.imageAlt || popup.title || 'ภาพประกาศ'
   const picture = popup.imageUrl && (
@@ -211,14 +263,14 @@ export function AnnouncementPopup({ popup }: { popup: PopupData }) {
   // without a button label, the picture itself leads to the link
   const linkedPicture =
     picture && popup.buttonUrl && !popup.buttonLabel ? (
-      <a href={popup.buttonUrl} onClick={close} className="popup__image-link">
+      <a href={popup.buttonUrl} onClick={onClose} className="popup__image-link">
         {picture}
       </a>
     ) : (
       picture
     )
   return (
-    <div className="overlay popup" onClick={(e) => e.target === e.currentTarget && close()}>
+    <div className="overlay popup" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div
         className={`dialog popup__box${popup.imageUrl ? ' popup__box--image' : ''}`}
         role="dialog"
@@ -230,24 +282,27 @@ export function AnnouncementPopup({ popup }: { popup: PopupData }) {
         onMouseLeave={() => setPaused(false)}
         onTouchStart={() => setPaused(true)}
       >
-        <button type="button" className="btn btn--icon popup__close" aria-label="ปิดประกาศ" onClick={close}>✕</button>
+        <button type="button" className="btn btn--icon popup__close" aria-label="ปิดประกาศ" onClick={onClose}>✕</button>
         {linkedPicture}
         {popup.body && <p className={`popup__caption${popup.imageUrl ? '' : ' popup__caption--alone'}`}>{popup.body}</p>}
         <div className="popup__foot">
-          <span className="popup__timer" aria-hidden="true" style={{ width: `${(left / AUTO_CLOSE) * 100}%` }} />
+          <span className="popup__timer" aria-hidden="true" style={{ width: `${(left / seconds) * 100}%` }} />
           <label className="popup__never">
             <input type="checkbox" checked={hideToday} onChange={(e) => setHideToday(e.target.checked)} /> ไม่ต้องแสดงอีกวันนี้
           </label>
           <div className="popup__actions">
-            <span className="popup__count" aria-live="off">
-              {paused ? 'หยุดนับชั่วคราว' : `ปิดเองใน ${left} วินาที`}
-            </span>
+            {/* the bar above shows the time left; the words only for the one that closes the pop-up */}
+            {(last || paused) && (
+              <span className="popup__count" aria-live="off">
+                {paused ? 'หยุดนับชั่วคราว' : `ปิดเองใน ${left} วินาที`}
+              </span>
+            )}
             {popup.buttonLabel && popup.buttonUrl && (
-              <a className="btn btn--primary btn--sm" href={popup.buttonUrl} onClick={close}>
+              <a className="btn btn--primary btn--sm" href={popup.buttonUrl} onClick={onClose}>
                 {popup.buttonLabel}
               </a>
             )}
-            <button type="button" className="btn btn--sm" onClick={close}>ปิด</button>
+            <button type="button" className="btn btn--sm" onClick={onClose}>ปิด</button>
           </div>
         </div>
       </div>

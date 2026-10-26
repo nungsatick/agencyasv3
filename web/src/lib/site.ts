@@ -51,8 +51,11 @@ export type Popup = {
   frequency: 'always' | 'daily' | 'once'
 }
 
-/** The one announcement to pop up for this province and page, if any (highest priority wins). */
-export async function activePopup(provinceId: number, page: string): Promise<Popup | null> {
+/**
+ * The announcements to pop up for this province and page, in the order they are shown: highest priority
+ * first, then the one that started showing earlier. The page shows them one after another.
+ */
+export async function activePopups(provinceId: number, page: string): Promise<Popup[]> {
   const payload = await getPayload({ config })
   const now = new Date().toISOString()
   const res = await payload.find({
@@ -66,24 +69,24 @@ export async function activePopup(provinceId: number, page: string): Promise<Pop
         ...(page === 'home' ? [] : [{ showOn: { equals: 'all' } }]),
       ],
     },
-    sort: ['-priority', '-startsAt'],
-    limit: 1,
+    sort: ['-priority', 'startsAt', 'id'],
+    limit: 10,
     depth: 1,
   })
-  const a = res.docs[0]
-  if (!a) return null
-  const image = typeof a.image === 'object' ? (a.image as FileDoc | null) : null
-  return {
-    // per province: closing it (or "don't show again") on one province's site leaves the other provinces alone
-    key: `${provinceId}:${a.id}:${a.updatedAt}`,
-    title: a.title?.trim() || null,
-    body: a.body ?? null,
-    imageUrl: image?.url ?? null,
-    imageAlt: a.imageAlt?.trim() || null,
-    buttonLabel: a.buttonLabel ?? null,
-    buttonUrl: a.buttonUrl ?? null,
-    frequency: a.frequency,
-  }
+  return res.docs.map((a) => {
+    const image = typeof a.image === 'object' ? (a.image as FileDoc | null) : null
+    return {
+      // per province: closing it (or "don't show again") on one province's site leaves the other provinces alone
+      key: `${provinceId}:${a.id}:${a.updatedAt}`,
+      title: a.title?.trim() || null,
+      body: a.body ?? null,
+      imageUrl: image?.url ?? null,
+      imageAlt: a.imageAlt?.trim() || null,
+      buttonLabel: a.buttonLabel ?? null,
+      buttonUrl: a.buttonUrl ?? null,
+      frequency: a.frequency,
+    }
+  })
 }
 
 export type HitKind = 'file_view' | 'file_download' | 'doc_link' | 'dashboard_view' | 'guide_link'
