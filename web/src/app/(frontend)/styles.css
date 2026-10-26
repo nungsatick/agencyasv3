@@ -1440,6 +1440,17 @@ html[data-mode='dark'] .popup__caption {
   background: var(--primary);
   transition: width 1s linear;
 }
+/* several announcements: the bar fills up to the next one (length set inline), then starts again */
+.popup__timer--next {
+  width: 0;
+  transition: none;
+  animation: popup-next linear forwards;
+}
+@keyframes popup-next {
+  to {
+    width: 100%;
+  }
+}
 .popup__count {
   align-self: center;
   font-size: 13px;
@@ -1453,6 +1464,9 @@ html[data-mode='dark'] .popup__count {
 @media (prefers-reduced-motion: reduce) {
   .popup__timer {
     transition: none;
+  }
+  .popup__timer--next {
+    display: none;
   }
 }
 .popup__actions {

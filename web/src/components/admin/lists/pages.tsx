@@ -450,7 +450,7 @@ export async function AnnouncementsListView(view: AdminViewServerProps) {
       view={view}
       basePath="/admin/announcements"
       title="ประกาศ"
-      intro="ประกาศที่แสดงเป็นหน้าต่างบนหน้าเว็บจังหวัดตามช่วงเวลาที่กำหนด ถ้าช่วงเวลาซ้อนกัน แสดงต่อกันเองเรื่องละ 5 วินาที เรียงตามลำดับความสำคัญ (มากก่อน)"
+      intro="ประกาศที่แสดงเป็นหน้าต่างบนหน้าเว็บจังหวัดตามช่วงเวลาที่กำหนด แสดงค้างไว้จนผู้เข้าชมกดปิด ถ้าช่วงเวลาซ้อนกัน เปลี่ยนเรื่องเองทุก 5 วินาทีวนไป เรียงตามลำดับความสำคัญ (มากก่อน)"
       actions={<Link className="agy__btn agy__btn--primary" href="/admin/collections/announcements/create">+ เพิ่มประกาศ</Link>}
       search={{ label: 'ค้นหาหัวข้อ', placeholder: 'พิมพ์บางส่วนของหัวข้อ' }}
       selects={[{ key: 'status', label: 'สถานะ', all: 'ทุกสถานะ', options: [{ value: 'published', label: 'เผยแพร่แล้ว' }, { value: 'draft', label: 'ร่าง' }] }]}

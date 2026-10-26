@@ -151,8 +151,7 @@ export function CookieSettingsButton() {
 
 type PopupData = { key: string; title: string | null; body: string | null; imageUrl: string | null; imageAlt: string | null; buttonLabel: string | null; buttonUrl: string | null; frequency: 'always' | 'daily' | 'once' }
 
-// how long each announcement stays: one alone 10 seconds; several take turns, 5 seconds each
-const ALONE_SECONDS = 10
+// several announcements take turns, each this many seconds, round and round until the visitor closes the pop-up
 const EACH_SECONDS = 5
 
 const readStore = (k: string): string | null => {
@@ -171,16 +170,19 @@ const writeStore = (k: string, v: string) => {
 }
 
 /**
- * Announcement pop-ups for one page. One announcement stays 10 seconds; several change by themselves every
- * 5 seconds in the order the server sends them (highest priority first), then the pop-up closes. Closing it
- * (✕, "ปิด", Esc, the backdrop) ends the whole pop-up. Each announcement shown is remembered as seen per
- * province and version in localStorage, following its own frequency; one not reached yet shows next time.
- * "ไม่ต้องแสดงอีกวันนี้" hides every announcement of this province for the rest of the day.
+ * Announcement pop-ups for one page. The pop-up stays until the visitor closes it (✕, "ปิด", Esc, the
+ * backdrop). Several announcements change by themselves every 5 seconds, in the order the server sends them
+ * (highest priority first), and start again from the first. Every announcement shown is remembered as seen
+ * per province and version in localStorage, following its own frequency; "ไม่ต้องแสดงอีกวันนี้" hides every
+ * announcement of this province for the rest of the day.
  */
 export function AnnouncementQueue({ popups, provinceId }: { popups: PopupData[]; provinceId: number }) {
   const [due, setDue] = useState<PopupData[] | null>(null)
   const [at, setAt] = useState(0)
+  const [open, setOpen] = useState(true)
   const [hideToday, setHideToday] = useState(false)
+  const [paused, setPaused] = useState(false)
+  const shownKeys = useRef(new Set<string>())
   const dayKey = `agy_popup_day_${provinceId}`
 
   useEffect(() => {
@@ -199,53 +201,49 @@ export function AnnouncementQueue({ popups, provinceId }: { popups: PopupData[];
   }, [popups, dayKey])
 
   const current = due?.[at]
-  const finish = useCallback(
-    (closeAll: boolean) => {
-      if (!due || !current) return
-      const today = new Date().toDateString()
-      writeStore(`agy_popup_${current.key}`, today)
-      if (hideToday) writeStore(dayKey, today)
-      setAt(closeAll || hideToday ? due.length : at + 1)
-    },
-    [due, current, hideToday, dayKey, at],
-  )
+  if (current) shownKeys.current.add(current.key)
+  const many = (due?.length ?? 0) > 1
 
-  if (!due || !current) return null
+  // the next one every EACH_SECONDS, back to the first after the last; resting the pointer pauses it
+  useEffect(() => {
+    if (!open || !many || paused) return
+    const t = window.setTimeout(() => setAt((i) => (i + 1) % due!.length), EACH_SECONDS * 1000)
+    return () => window.clearTimeout(t)
+  }, [open, many, paused, at, due])
+
+  const close = useCallback(() => {
+    const today = new Date().toDateString()
+    for (const k of shownKeys.current) writeStore(`agy_popup_${k}`, today)
+    if (hideToday) writeStore(dayKey, today)
+    setOpen(false)
+  }, [hideToday, dayKey])
+
+  if (!open || !due || !current) return null
   return (
     <AnnouncementPopup
-      key={current.key}
       popup={current}
-      seconds={due.length > 1 ? EACH_SECONDS : ALONE_SECONDS}
-      last={at === due.length - 1}
+      rotating={many && !paused ? `${at}` : null}
+      paused={many && paused}
+      onPause={setPaused}
       hideToday={hideToday}
       setHideToday={setHideToday}
-      onTimeUp={() => finish(false)}
-      onClose={() => finish(true)}
+      onClose={close}
     />
   )
 }
 
-/** One announcement: the picture, a short caption, and a count that moves on (or closes) by itself. */
-function AnnouncementPopup({ popup, seconds, last, hideToday, setHideToday, onTimeUp, onClose }: {
+/** The pop-up box: the picture, a short caption, and (with several announcements) a bar for the time to the next. */
+function AnnouncementPopup({ popup, rotating, paused, onPause, hideToday, setHideToday, onClose }: {
   popup: PopupData
-  seconds: number
-  last: boolean
+  /** set while announcements are changing by themselves; a new value restarts the time bar */
+  rotating: string | null
+  paused: boolean
+  onPause: (v: boolean) => void
   hideToday: boolean
   setHideToday: (v: boolean) => void
-  onTimeUp: () => void
   onClose: () => void
 }) {
   const box = useRef<HTMLDivElement>(null)
-
-  // resting the pointer on it (or touching it) pauses the count
-  const [left, setLeft] = useState(seconds)
-  const [paused, setPaused] = useState(false)
-  useEffect(() => {
-    if (paused) return
-    if (left <= 0) return onTimeUp()
-    const t = window.setTimeout(() => setLeft((n) => n - 1), 1000)
-    return () => window.clearTimeout(t)
-  }, [paused, left, onTimeUp])
 
   useEffect(() => {
     box.current?.focus()
@@ -278,23 +276,23 @@ function AnnouncementPopup({ popup, seconds, last, hideToday, setHideToday, onTi
         aria-label={popup.title || popup.imageAlt || 'ประกาศ'}
         tabIndex={-1}
         ref={box}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onTouchStart={() => setPaused(true)}
+        onMouseEnter={() => onPause(true)}
+        onMouseLeave={() => onPause(false)}
+        onTouchStart={() => onPause(true)}
       >
         <button type="button" className="btn btn--icon popup__close" aria-label="ปิดประกาศ" onClick={onClose}>✕</button>
         {linkedPicture}
         {popup.body && <p className={`popup__caption${popup.imageUrl ? '' : ' popup__caption--alone'}`}>{popup.body}</p>}
         <div className="popup__foot">
-          <span className="popup__timer" aria-hidden="true" style={{ width: `${(left / seconds) * 100}%` }} />
+          {/* the bar fills up to the next announcement; restarts with each one */}
+          {rotating !== null && <span key={rotating} className="popup__timer popup__timer--next" aria-hidden="true" style={{ animationDuration: `${EACH_SECONDS}s` }} />}
           <label className="popup__never">
             <input type="checkbox" checked={hideToday} onChange={(e) => setHideToday(e.target.checked)} /> ไม่ต้องแสดงอีกวันนี้
           </label>
           <div className="popup__actions">
-            {/* the bar above shows the time left; the words only for the one that closes the pop-up */}
-            {(last || paused) && (
+            {paused && (
               <span className="popup__count" aria-live="off">
-                {paused ? 'หยุดนับชั่วคราว' : `ปิดเองใน ${left} วินาที`}
+                หยุดเปลี่ยนชั่วคราว
               </span>
             )}
             {popup.buttonLabel && popup.buttonUrl && (
