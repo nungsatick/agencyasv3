@@ -119,7 +119,7 @@ docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 ## 6. สลับจากเว็บเดิม
 
 **โดเมน (ปรับ 26 ต.ค. 2569):** เว็บใหม่ใช้โดเมนเดิม `https://agencyas.gdcatalog.go.th` และรองรับ path เดิมทั้งหมด (`/{จังหวัด}`, `/docs`, `/utilization`, `/uploads/content/...`) ลิงก์เดิมที่จังหวัดเคยแชร์จึงใช้ได้ต่อ
-ช่วงเปลี่ยนผ่าน (ตั้งแต่ 19 ต.ค. 2569) ระบบเปิดที่ที่อยู่ชั่วคราว `https://newagencyas.gdcatalog.go.th` เมื่อย้ายมาโดเมนเดิมแล้ว ที่อยู่ชั่วคราวส่งต่อ (301) มาที่ agencyas โดยคง path ไว้ (บล็อกท้าย `deploy/nginx.conf`) บุ๊กมาร์กและลิงก์เปิดใช้บัญชีที่ออกช่วงนั้นจึงยังใช้ได้
+ช่วงเปลี่ยนผ่าน (19–26 ต.ค. 2569) ระบบเปิดที่ที่อยู่ชั่วคราว `newagencyas.gdcatalog.go.th` ซึ่งเลิกใช้แล้ว (ไม่มีการส่งต่อมาที่ agencyas)
 
 ### 6.1 ย้ายจาก newagencyas กลับมาที่ agencyas (เซิร์ฟเวอร์ที่ติดตั้งไว้แล้ว)
 
@@ -127,21 +127,21 @@ docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 
 **ก่อนวันสลับ**
 - [ ] ขอผู้ดูแล DNS ลด TTL ของ `agencyas.gdcatalog.go.th` ล่วงหน้า 1–2 วัน (ตอนนี้ชี้เครื่องเว็บเดิม)
-- [ ] เตรียมใบรับรอง HTTPS ของ `agencyas.gdcatalog.go.th` (หรือขอ Let's Encrypt หลัง DNS ชี้มาแล้ว) และให้ใบรับรองของ `newagencyas` ยังไม่หมดอายุ (ใช้กับการส่งต่อ)
+- [ ] เตรียมใบรับรอง HTTPS ของ `agencyas.gdcatalog.go.th` (หรือขอ Let's Encrypt หลัง DNS ชี้มาแล้ว)
 - [ ] สำรองเว็บเดิมไว้ หลังสลับ DNS จะเข้าเครื่องเดิมทางโดเมนไม่ได้แล้ว
 
 **วันสลับ** (บนเซิร์ฟเวอร์ใหม่ ในโฟลเดอร์ `/opt/agencyas/deploy`)
 1. ขอผู้ดูแล DNS ชี้ `agencyas.gdcatalog.go.th` มาที่เครื่องนี้ แล้วตรวจว่าได้ IP ของเครื่องนี้: `getent hosts agencyas.gdcatalog.go.th`
 2. สำรองฐานข้อมูล (`before-update-…dump` ตามข้อ 8)
 3. `git pull` เพื่อให้ได้ `deploy/nginx.conf` รุ่นที่ใช้ agencyas
-4. nginx: แทนไฟล์ site เดิมด้วยไฟล์ใหม่ แล้วใส่ path ใบรับรองทั้ง 2 บล็อก 443 (agencyas และบล็อกส่งต่อ newagencyas)
+4. nginx: แทนไฟล์ site เดิมด้วยไฟล์ใหม่ แล้วใส่ path ใบรับรองของ agencyas
    ```bash
    sudo cp /opt/agencyas/deploy/nginx.conf /etc/nginx/sites-available/newagencyas && sudo nano /etc/nginx/sites-available/newagencyas
    ```
    ```bash
    sudo nginx -t && sudo systemctl reload nginx
    ```
-   ไฟล์ site ชื่อ `newagencyas` ตามที่ติดตั้งไว้ จะเปลี่ยนชื่อไฟล์หรือไม่ก็ได้ ถ้าไม่มีใบรับรองของ newagencyas แล้ว ให้ใส่ `#` หน้าบล็อกส่งต่อท้ายไฟล์ ไม่อย่างนั้น `nginx -t` ไม่ผ่าน
+   ไฟล์ site ชื่อ `newagencyas` ตามที่ติดตั้งไว้ จะเปลี่ยนชื่อไฟล์หรือไม่ก็ได้ หลังสลับแล้ว newagencyas จะเปิดไม่ได้อีก (ไม่มีการส่งต่อ)
 5. แก้ `deploy/.env` เป็น `SITE_URL=https://agencyas.gdcatalog.go.th` แล้วสั่ง `docker compose up -d` (ไม่ต้อง `--build`)
 6. หลังบ้าน → ตั้งค่าเว็บไซต์ → นโยบายความเป็นส่วนตัว: แก้ `https://newagencyas.gdcatalog.go.th` ในข้อความเป็น agencyas แล้วตรวจว่าไม่มีคำว่า newagencyas เหลือในเนื้อหา (ต้องได้ 0)
    ```bash
@@ -151,7 +151,6 @@ docker compose exec -u 0 web chown -R nextjs:nodejs /app/storage
 
 **ตรวจหลังสลับ**
 - [ ] `https://agencyas.gdcatalog.go.th/sisaket` เปิดได้ มีรูปกุญแจ
-- [ ] `https://newagencyas.gdcatalog.go.th/sisaket/docs` พาไป `https://agencyas.gdcatalog.go.th/sisaket/docs`
 - [ ] เข้าหลังบ้านที่ agencyas ได้ (ถ้าเข้าไม่ได้ ตรวจ `SITE_URL` ก่อน)
 - [ ] ลิงก์ไฟล์เดิม `/uploads/content/...` เปิดได้
 - [ ] แจ้งจังหวัดว่าย้ายเสร็จแล้ว ใช้บัญชีเดิมเข้าสู่ระบบที่ agencyas ได้ทันที

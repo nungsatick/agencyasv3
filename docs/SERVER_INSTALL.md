@@ -253,7 +253,7 @@ sudo cp /opt/agencyas/deploy/nginx.conf /etc/nginx/sites-available/agencyas
 sudo ln -s /etc/nginx/sites-available/agencyas /etc/nginx/sites-enabled/ && sudo rm -f /etc/nginx/sites-enabled/default
 ```
 
-แก้ไฟล์: เปิดบรรทัด `ssl_certificate` และ `ssl_certificate_key` แล้วใส่ path ของใบรับรอง (เอาเครื่องหมาย `#` ออก) บล็อกสุดท้ายของไฟล์ส่งต่อที่อยู่ชั่วคราว newagencyas มาที่ agencyas ถ้าไม่มีใบรับรองของ newagencyas ให้ใส่ `#` หน้าทั้งบล็อก ไม่อย่างนั้น `nginx -t` ไม่ผ่าน
+แก้ไฟล์: เปิดบรรทัด `ssl_certificate` และ `ssl_certificate_key` แล้วใส่ path ของใบรับรอง (เอาเครื่องหมาย `#` ออก)
 
 ```bash
 sudo nano /etc/nginx/sites-available/agencyas
