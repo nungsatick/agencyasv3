@@ -4,6 +4,9 @@ import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 
 import { checkAll, type RuleName, rules } from '@/lib/fieldRules'
+import { joinName, type NameParts, nameError } from '@/lib/nameParts'
+
+import { NamePair } from './NamePair'
 
 type Province = { id: number; name: string }
 type Form = { name: string; nameEn: string; province: string; position: string; unit: string; phone: string; email: string; note: string; website: string; consent: boolean }
@@ -34,6 +37,18 @@ export function AccountRequestForm({ provinces }: { provinces: Province[] }) {
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)
 
+  // each name is typed in two boxes and sent joined (lib/nameParts.ts); a person needs both parts here
+  const [th, setTh] = useState<NameParts>({ first: '', last: '' })
+  const [en, setEn] = useState<NameParts>({ first: '', last: '' })
+  const nameMsg = (k: 'name' | 'nameEn', p: NameParts) => nameError(p, SPEC[k]!.rule, { lastRequired: true }) ?? undefined
+  const setName = (k: 'name' | 'nameEn') => (p: NameParts) => {
+    if (k === 'name') setTh(p)
+    else setEn(p)
+    setForm((f) => ({ ...f, [k]: joinName(p) }))
+    if (errors[k]) setErrors((prev) => ({ ...prev, [k]: nameMsg(k, p) }))
+  }
+  const leaveName = (k: 'name' | 'nameEn') => () => setErrors((prev) => ({ ...prev, [k]: nameMsg(k, k === 'name' ? th : en) }))
+
   const checkOne = (k: Field, value: unknown): string | undefined => {
     if (k === 'province') return value ? undefined : 'กรุณาเลือกจังหวัด'
     if (k === 'consent') return value ? undefined : 'กรุณาติ๊กยินยอมก่อนส่งคำขอ'
@@ -58,6 +73,12 @@ export function AccountRequestForm({ provinces }: { provinces: Province[] }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     const found: Partial<Record<Field, string>> = { ...checkAll(form, SPEC) }
+    delete found.name
+    delete found.nameEn
+    for (const [k, p] of [['name', th], ['nameEn', en]] as const) {
+      const m = nameMsg(k, p)
+      if (m) found[k] = m
+    }
     for (const k of ['province', 'consent'] as const) {
       const m = checkOne(k, form[k])
       if (m) found[k] = m
@@ -116,16 +137,16 @@ export function AccountRequestForm({ provinces }: { provinces: Province[] }) {
           {error}
         </div>
       )}
-      <label className="field">
+      <div className="field" role="group" aria-label="ชื่อ นามสกุล ภาษาไทย">
         <span>ชื่อ นามสกุล (ภาษาไทย)</span>
-        <input data-field="name" value={form.name} onChange={set('name')} {...props('name')} maxLength={120} autoComplete="name" placeholder="เช่น นางสาวสมใจ ใจดี" />
-        {msg('name') ?? <small className="muted">ตัวอักษรภาษาไทย ใส่คำนำหน้าหรือไม่ก็ได้</small>}
-      </label>
-      <label className="field">
+        <NamePair value={th} onChange={setName('name')} onBlur={leaveName('name')} invalid={Boolean(errors.name)} describedBy={errors.name ? 'err-name' : undefined} dataField="name" />
+        {msg('name') ?? <small className="muted">ตัวอักษรภาษาไทย ใส่คำนำหน้าในช่องชื่อหรือไม่ก็ได้</small>}
+      </div>
+      <div className="field" role="group" aria-label="ชื่อ นามสกุล ภาษาอังกฤษ">
         <span>ชื่อ-นามสกุล (ภาษาอังกฤษ)</span>
-        <input data-field="nameEn" value={form.nameEn} onChange={set('nameEn')} {...props('nameEn')} maxLength={120} lang="en" autoComplete="off" placeholder="เช่น Somjai Jaidee" />
+        <NamePair value={en} onChange={setName('nameEn')} onBlur={leaveName('nameEn')} invalid={Boolean(errors.nameEn)} describedBy={errors.nameEn ? 'err-nameEn' : undefined} dataField="nameEn" english />
         {msg('nameEn') ?? <small className="muted">ตามที่สะกดในบัตรหรืออีเมลราชการ ใช้ตั้งชื่อผู้ใช้</small>}
-      </label>
+      </div>
       <label className="field">
         <span>จังหวัด</span>
         <select data-field="province" value={form.province} onChange={set('province')} {...props('province')}>

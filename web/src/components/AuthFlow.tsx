@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { AuthIcon } from './AuthIcon'
+import { CodeBoxes } from './CodeBoxes'
 
 function LoginProgress({ current }: { current: 1 | 2 }) {
   return <ol className="auth-progress" aria-label="ขั้นตอนเข้าสู่ระบบ">
@@ -85,11 +86,12 @@ export function AuthFlow({ token, notice }: { token?: string; notice?: string })
     })
   }
 
-  const submitCode = (e: React.FormEvent) => {
-    e.preventDefault()
+  // sent by the button, or straight away once the sixth digit is typed
+  const verifyCode = (value: string) => {
     if (step.name !== 'code' && step.name !== 'setup') return
+    if (busy) return
     void run(async () => {
-      const { ok, body } = await post('/api/users/sign-in/code', { ticket: step.ticket, code })
+      const { ok, body } = await post('/api/users/sign-in/code', { ticket: step.ticket, code: value })
       if (!ok) {
         setError(body.error ?? 'รหัสไม่ถูกต้อง')
         setCode('')
@@ -99,6 +101,11 @@ export function AuthFlow({ token, notice }: { token?: string; notice?: string })
       if (body.recoveryCodes) setStep({ name: 'recovery', codes: body.recoveryCodes })
       else window.location.assign('/admin')
     })
+  }
+  const submitCode = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!useRecovery && !/^\d{6}$/.test(code)) return setError('กรอกรหัสให้ครบ 6 หลัก')
+    verifyCode(code)
   }
 
   const alert = error && (
@@ -201,10 +208,10 @@ export function AuthFlow({ token, notice }: { token?: string; notice?: string })
             <code className="auth__secret">{step.secret.match(/.{1,4}/g)?.join(' ')}</code>
           </li>
           <li>
-            <label className="field">
+            <div className="field field--code">
               <span>กรอกรหัส 6 หลักที่แอปแสดง</span>
-              <input className="auth__code" value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="000000" required />
-            </label>
+              <CodeBoxes label="รหัส 6 หลักที่แอปแสดง" value={code} onChange={setCode} onComplete={verifyCode} disabled={busy} />
+            </div>
           </li>
         </ol>
         <button className="btn btn--primary btn--lg auth__submit" disabled={busy}>
@@ -222,15 +229,18 @@ export function AuthFlow({ token, notice }: { token?: string; notice?: string })
         </div>
         {!token && <LoginProgress current={2} />}
         {alert}
-        <label className="field">
-          <span>{useRecovery ? 'รหัสสำรอง' : 'รหัส 6 หลักจากแอปยืนยันตัวตน'}</span>
-          {useRecovery ? (
+        {useRecovery ? (
+          <label className="field">
+            <span>รหัสสำรอง</span>
             <input className="auth__code auth__code--text" value={code} onChange={(e) => setCode(e.target.value)} autoComplete="off" placeholder="XXXX-XXXX" required autoFocus />
-          ) : (
-            <input className="auth__code" value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="000000" required autoFocus />
-          )}
-          {!useRecovery && <small className="muted">รหัสเปลี่ยนทุก 30 วินาที</small>}
-        </label>
+          </label>
+        ) : (
+          <div className="field field--code">
+            <span>รหัส 6 หลักจากแอปยืนยันตัวตน</span>
+            <CodeBoxes label="รหัส 6 หลักจากแอปยืนยันตัวตน" value={code} onChange={setCode} onComplete={verifyCode} disabled={busy} autoFocus />
+            <small className="muted">รหัสเปลี่ยนทุก 30 วินาที กรอกครบ 6 หลักแล้วระบบเข้าสู่ระบบให้ทันที</small>
+          </div>
+        )}
         <button className="btn btn--primary btn--lg auth__submit" disabled={busy}>
           {busy ? 'กำลังตรวจสอบ...' : 'เข้าสู่ระบบ'}
         </button>

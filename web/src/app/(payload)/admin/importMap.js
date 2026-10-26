@@ -13,6 +13,8 @@ import { HeroFocus as HeroFocus_1ab9144af86f91dcf87f4c36df1e21d8 } from '../../.
 import { TopicTools as TopicTools_0b8f9d7ef1a7df588c8d29d36c5c173d } from '../../../components/admin/TopicTools'
 import { TopicColorField as TopicColorField_b45620c7ac7558fc8bb95afe32f8f6dc } from '../../../components/admin/TopicColorField'
 import { UserTools as UserTools_d04504941e0eeec14b405b1c0779d3e7 } from '../../../components/admin/UserTools'
+import { NameThField as NameThField_fe1862ad3bd2161290b721fb8def64c2 } from '../../../components/admin/NameField'
+import { NameEnField as NameEnField_fe1862ad3bd2161290b721fb8def64c2 } from '../../../components/admin/NameField'
 import { UserStatusCell as UserStatusCell_d1bdb5fa7deae9c2662da2418074128c } from '../../../components/admin/MyAccountView'
 import { Avatar as Avatar_ff2b3aef4ce7bf470d100ee3d53f4ed9 } from '../../../components/admin/Avatar'
 import { Icon as Icon_81fda60f3e3709e861f40982a767707d } from '../../../components/admin/Brand'
@@ -58,6 +60,8 @@ export const importMap = {
   "/components/admin/TopicTools#TopicTools": TopicTools_0b8f9d7ef1a7df588c8d29d36c5c173d,
   "/components/admin/TopicColorField#TopicColorField": TopicColorField_b45620c7ac7558fc8bb95afe32f8f6dc,
   "/components/admin/UserTools#UserTools": UserTools_d04504941e0eeec14b405b1c0779d3e7,
+  "/components/admin/NameField#NameThField": NameThField_fe1862ad3bd2161290b721fb8def64c2,
+  "/components/admin/NameField#NameEnField": NameEnField_fe1862ad3bd2161290b721fb8def64c2,
   "/components/admin/MyAccountView#UserStatusCell": UserStatusCell_d1bdb5fa7deae9c2662da2418074128c,
   "/components/admin/Avatar#Avatar": Avatar_ff2b3aef4ce7bf470d100ee3d53f4ed9,
   "/components/admin/Brand#Icon": Icon_81fda60f3e3709e861f40982a767707d,

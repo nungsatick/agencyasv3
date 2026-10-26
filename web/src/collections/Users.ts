@@ -136,8 +136,9 @@ export const Users: CollectionConfig = {
       admin: { components: { Field: '/components/admin/UserTools#UserTools' } },
     },
     section('ข้อมูลผู้ใช้', [
-      { name: 'name', type: 'text', label: 'ชื่อ นามสกุล', required: true },
-      { name: 'nameEn', type: 'text', label: 'ชื่อ-นามสกุล (ภาษาอังกฤษ)', admin: { placeholder: 'เช่น Somjai Jaidee' } },
+      // shown as two boxes (ชื่อ / นามสกุล) but stored as one text, as before
+      { name: 'name', type: 'text', label: 'ชื่อ นามสกุล', required: true, admin: { components: { Field: '/components/admin/NameField#NameThField' } } },
+      { name: 'nameEn', type: 'text', label: 'ชื่อ-นามสกุล (ภาษาอังกฤษ)', admin: { components: { Field: '/components/admin/NameField#NameEnField' } } },
       {
         type: 'row',
         fields: [

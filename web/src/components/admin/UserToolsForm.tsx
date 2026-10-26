@@ -4,8 +4,10 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 import { checkAll, type RuleName, rules } from '@/lib/fieldRules'
+import { joinName, type NameParts, nameError, splitName } from '@/lib/nameParts'
 import { thaiDayTime } from '@/lib/thaiDate'
 
+import { NamePair } from '../NamePair'
 import { EmailDraft } from './EmailDraft'
 import { FileDrop } from './FileDrop'
 
@@ -78,6 +80,19 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
   const [error, setError] = useState('')
   const [link, setLink] = useState<LinkResult | null>(null)
   const [errors, setErrors] = useState<Record<string, string | undefined>>({})
+  // names are typed in two boxes each and kept joined in form.name / form.nameEn (lib/nameParts.ts);
+  // นามสกุล is optional in Thai because the 76 province manager accounts are offices
+  const [th, setTh] = useState<NameParts>(splitName(fromRequest?.name))
+  const [en, setEn] = useState<NameParts>(splitName(fromRequest?.nameEn))
+  const nameMsg = (k: 'name' | 'nameEn', p: NameParts) =>
+    nameError(p, SPEC[k].rule, { required: SPEC[k].required !== false }) ?? undefined
+  const setName = (k: 'name' | 'nameEn') => (p: NameParts) => {
+    if (k === 'name') setTh(p)
+    else setEn(p)
+    setForm((f) => ({ ...f, [k]: joinName(p) }))
+    if (errors[k]) setErrors((prev) => ({ ...prev, [k]: nameMsg(k, p) }))
+  }
+  const leaveName = (k: 'name' | 'nameEn') => () => setErrors((prev) => ({ ...prev, [k]: nameMsg(k, k === 'name' ? th : en) }))
   const checkOne = (k: string, v: string) => (SPEC[k] ? (rules[SPEC[k].rule](v, { required: SPEC[k].required !== false }) ?? undefined) : undefined)
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [k]: e.target.value })
@@ -110,7 +125,11 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const found = checkAll(form, SPEC)
+    const found: Record<string, string | undefined> = { ...checkAll(form, SPEC) }
+    delete found.name
+    delete found.nameEn
+    const nameFound = { name: nameMsg('name', th), nameEn: nameMsg('nameEn', en) }
+    for (const [k, m] of Object.entries(nameFound)) if (m) found[k] = m
     setErrors(found)
     const first = Object.keys(found)[0]
     if (first) {
@@ -137,6 +156,8 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
       setLink({ ...body, email: form.email.trim() || undefined, name: form.name.trim() || undefined })
       setRequest(null)
       setForm({ ...form, username: '', name: '', nameEn: '', position: '', phone: '', email: '' })
+      setTh({ first: '', last: '' })
+      setEn({ first: '', last: '' })
     } catch {
       setError('เชื่อมต่อระบบไม่ได้')
     } finally {
@@ -223,6 +244,7 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
               }}
               {...rule('username')}
               autoCapitalize="none"
+              placeholder="เช่น somjai.j"
               autoComplete="off"
               spellCheck={false}
               aria-describedby="username-help"
@@ -249,16 +271,16 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
               </span>
             )}
           </label>
-          <label className="agy__field">
+          <div className="agy__field agy__field--wide" role="group" aria-label="ชื่อ นามสกุล">
             <span>ชื่อ นามสกุล</span>
-            <input value={form.name} onChange={set('name')} {...rule('name')} placeholder="เช่น นางสาวสมใจ ใจดี" />
-            {msg('name') ?? <small>พิมพ์ภาษาไทยได้ ใส่คำนำหน้าหรือไม่ก็ได้</small>}
-          </label>
-          <label className="agy__field">
+            <NamePair value={th} onChange={setName('name')} onBlur={leaveName('name')} invalid={Boolean(errors.name)} dataField="name" />
+            {msg('name') ?? <small>พิมพ์ภาษาไทยได้ ใส่คำนำหน้าในช่องชื่อหรือไม่ก็ได้</small>}
+          </div>
+          <div className="agy__field agy__field--wide" role="group" aria-label="ชื่อ-นามสกุล ภาษาอังกฤษ">
             <span>ชื่อ-นามสกุล (ภาษาอังกฤษ)</span>
-            <input value={form.nameEn} onChange={set('nameEn')} {...rule('nameEn')} lang="en" autoComplete="off" placeholder="เช่น Somjai Jaidee" />
-            {msg('nameEn') ?? <small>ใช้สร้างชื่อผู้ใช้แนะนำ</small>}
-          </label>
+            <NamePair value={en} onChange={setName('nameEn')} onBlur={leaveName('nameEn')} invalid={Boolean(errors.nameEn)} dataField="nameEn" english />
+            {msg('nameEn') ?? <small>ไม่บังคับ ใช้สร้างชื่อผู้ใช้แนะนำ</small>}
+          </div>
           {isAdmin && (
             <label className="agy__field">
               <span>บทบาท</span>
@@ -281,7 +303,7 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
           )}
           <label className="agy__field">
             <span>ตำแหน่ง</span>
-            <input value={form.position} onChange={set('position')} {...rule('position')} />
+            <input value={form.position} onChange={set('position')} {...rule('position')} placeholder="เช่น นักวิชาการสถิติชำนาญการ" />
             {msg('position')}
           </label>
           <label className="agy__field">
@@ -291,7 +313,7 @@ export function UserToolsForm({ isAdmin, provinces, fromRequest = null }: { isAd
           </label>
           <label className="agy__field">
             <span>อีเมล</span>
-            <input value={form.email} onChange={set('email')} {...rule('email')} type="email" />
+            <input value={form.email} onChange={set('email')} {...rule('email')} type="email" placeholder="เช่น somjai.j@nso.go.th" />
             {msg('email') ?? <small>มีอีเมล ระบบจะร่างอีเมลส่งลิงก์เปิดใช้บัญชีให้</small>}
           </label>
         </div>

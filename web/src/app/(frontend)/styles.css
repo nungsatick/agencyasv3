@@ -997,6 +997,72 @@ html[data-mode='dark'] .site .dash-card .topic-tag {
   letter-spacing: 0.35em;
   text-align: center;
 }
+/* a name typed in two boxes: ชื่อ / นามสกุล (stored joined, lib/nameParts.ts) */
+.name-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.name-pair__part {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+/* "ชื่อ" / "นามสกุล" for screen readers only: the field name and the examples say it on screen */
+.name-pair__part > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+@media (max-width: 380px) {
+  .name-pair {
+    grid-template-columns: 1fr;
+  }
+}
+/* the 6-digit app code, one box per digit, centred with its label and hint */
+.field--code {
+  align-items: center;
+  text-align: center;
+}
+.code-boxes {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+}
+.field .code-boxes__box {
+  width: 100%;
+  height: 56px;
+  min-height: 0;
+  padding: 0;
+  text-align: center;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 26px;
+  font-weight: 600;
+  caret-color: transparent;
+}
+.field .code-boxes__box:focus {
+  border-color: #147f88;
+  outline: 2px solid #147f88;
+  outline-offset: 1px;
+}
+.field .code-boxes__box:disabled {
+  opacity: 0.6;
+}
+@media (max-width: 380px) {
+  .code-boxes {
+    gap: 6px;
+  }
+  .field .code-boxes__box {
+    height: 50px;
+    font-size: 22px;
+  }
+}
 .auth__code--text {
   font-size: 22px;
   letter-spacing: 0.12em;

@@ -585,6 +585,36 @@ $stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' str
     line-height: 1.45;
   }
 }
+// a name typed in two boxes (ชื่อ / นามสกุล) takes two grid columns
+.agy__field--wide {
+  grid-column: span 2;
+
+  @media (max-width: 600px) {
+    grid-column: auto;
+  }
+}
+.name-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  // same gap as .agy__grid, so the two boxes line up with the columns around them
+  gap: 16px;
+}
+.name-pair__part {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  // "ชื่อ" / "นามสกุล" for screen readers only; on screen the field name and the examples say it,
+  // and the boxes stay level with the other boxes in the row
+  > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
 .agy__link-box {
   border: 2px solid var(--agy-dark);
   border-radius: 12px;
