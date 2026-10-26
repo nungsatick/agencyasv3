@@ -251,12 +251,15 @@ export default async function DocsPage({ params, searchParams }: { params: Promi
                                     <span className="step__no">{n ?? '•'}</span>
                                     <span className="step__main">
                                       <span className="step__name">{d.type.nameTh}</span>
-                                      <HitStats {...hitsOf(d)} />
+                                      {/* a template file is downloaded, not previewed: its download count only (a link-only step keeps its opens) */}
+                                      <HitStats {...(f ? { downloads: hitsOf(d).downloads } : { views: hitsOf(d).views })} />
                                     </span>
                                     {f ? (
                                       <StepFile url={fileUrl(f)} kind={fileKind(f)} name={d.title} itemId={String(d.legacyId ?? d.id)} fileId={f.id}>
-                                        <a href={fileUrl(f)} target="_blank" rel="noopener noreferrer" className="step__open">
-                                          <FileIcon file={f} size={22} withLabel />
+                                        <a href={fileUrl(f)} target="_blank" rel="noopener noreferrer" className="btn btn--icon step__open" aria-label={`ดาวน์โหลด ${fileKind(f)}: ${d.title}`} title={`ดาวน์โหลด ${fileKind(f)}`}>
+                                          <Svg size={20}>
+                                            <path d="M12 4v11M7 11l5 5 5-5M5 20h14" />
+                                          </Svg>
                                         </a>
                                       </StepFile>
                                     ) : d.externalUrl ? (
