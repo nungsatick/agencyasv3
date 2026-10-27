@@ -88,9 +88,12 @@ export const Users: CollectionConfig = {
       },
     ],
     beforeValidate: [
-      ({ data, operation, req, context }) => {
+      ({ data, operation, originalDoc, req, context }) => {
         if (!data) return data
         if (typeof data.username === 'string') data.username = data.username.trim().toLowerCase()
+        // central admins cover every province: drop provinces left over from an earlier province role
+        // (the field is hidden for admins, so it would otherwise keep the old value)
+        if ((data.role ?? originalDoc?.role) === 'admin') data.provinces = []
         if (operation === 'create' && !/^[a-z0-9][a-z0-9._-]{3,31}$/.test(data.username ?? ''))
           throw new APIError('ชื่อผู้ใช้ต้องเป็นอังกฤษพิมพ์เล็ก ตัวเลข จุด ขีด ยาว 4-32 ตัว', 400, undefined, true)
         // Accounts made from the admin screens always start "invited" with a password nobody knows;
