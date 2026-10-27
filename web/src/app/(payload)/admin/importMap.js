@@ -15,6 +15,7 @@ import { TopicColorField as TopicColorField_b45620c7ac7558fc8bb95afe32f8f6dc } f
 import { UserTools as UserTools_d04504941e0eeec14b405b1c0779d3e7 } from '../../../components/admin/UserTools'
 import { NameThField as NameThField_fe1862ad3bd2161290b721fb8def64c2 } from '../../../components/admin/NameField'
 import { NameEnField as NameEnField_fe1862ad3bd2161290b721fb8def64c2 } from '../../../components/admin/NameField'
+import { EmailField as EmailField_94fc3cb9729b8b06942dbffd696b1080 } from '../../../components/admin/EmailField'
 import { UserStatusCell as UserStatusCell_d1bdb5fa7deae9c2662da2418074128c } from '../../../components/admin/MyAccountView'
 import { Avatar as Avatar_ff2b3aef4ce7bf470d100ee3d53f4ed9 } from '../../../components/admin/Avatar'
 import { Icon as Icon_81fda60f3e3709e861f40982a767707d } from '../../../components/admin/Brand'
@@ -62,6 +63,7 @@ export const importMap = {
   "/components/admin/UserTools#UserTools": UserTools_d04504941e0eeec14b405b1c0779d3e7,
   "/components/admin/NameField#NameThField": NameThField_fe1862ad3bd2161290b721fb8def64c2,
   "/components/admin/NameField#NameEnField": NameEnField_fe1862ad3bd2161290b721fb8def64c2,
+  "/components/admin/EmailField#EmailField": EmailField_94fc3cb9729b8b06942dbffd696b1080,
   "/components/admin/MyAccountView#UserStatusCell": UserStatusCell_d1bdb5fa7deae9c2662da2418074128c,
   "/components/admin/Avatar#Avatar": Avatar_ff2b3aef4ce7bf470d100ee3d53f4ed9,
   "/components/admin/Brand#Icon": Icon_81fda60f3e3709e861f40982a767707d,

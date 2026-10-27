@@ -146,6 +146,8 @@ export const Users: CollectionConfig = {
           { name: 'phone', type: 'text', label: 'โทรศัพท์', admin: { width: '40%' } },
         ],
       },
+      // edits the auth `email` value, which Payload does not draw for username sign-in
+      { name: 'emailBox', type: 'ui', admin: { components: { Field: '/components/admin/EmailField#EmailField' } } },
     ]),
     section('บทบาทและจังหวัดที่ดูแล', [
       {
