@@ -783,7 +783,7 @@ export async function UsersListView(view: AdminViewServerProps) {
   const sorts: Record<string, SortDef> = { name: { label: 'ชื่อผู้ใช้ ก–ฮ', sort: ['username'] }, login: { label: 'เข้าสู่ระบบล่าสุดก่อน', sort: ['-lastLoginAt'] }, created: { label: 'สร้างล่าสุดก่อน', sort: ['-createdAt'] } }
   const { sp } = c
   const and: Where[] = []
-  if (sp.q) and.push({ or: [{ username: { like: sp.q } }, { name: { like: sp.q } }] })
+  if (sp.q) and.push({ or: [{ username: { like: sp.q } }, { name: { like: sp.q } }, { email: { like: sp.q } }] })
   if (sp.role) and.push({ role: { equals: sp.role } })
   if (sp.status) and.push({ status: { equals: sp.status } })
   if (sp.province) and.push({ provinces: { in: [Number(sp.province)] } })
@@ -820,7 +820,7 @@ export async function UsersListView(view: AdminViewServerProps) {
         </>
       }
       actions={canAdd ? <Link className="agy__btn agy__btn--primary" href="/admin/user-tools">+ เพิ่มและนำเข้าผู้ใช้</Link> : undefined}
-      search={{ label: 'ค้นหาผู้ใช้', placeholder: 'ชื่อผู้ใช้ หรือชื่อ นามสกุล' }}
+      search={{ label: 'ค้นหาผู้ใช้', placeholder: 'ชื่อผู้ใช้ ชื่อ นามสกุล หรืออีเมล' }}
       selects={[
         ...(c.isAdmin
           ? [
@@ -840,6 +840,7 @@ export async function UsersListView(view: AdminViewServerProps) {
             <>
               <Title href={`/admin/collections/users/${u.id}`}>{u.username}</Title>
               <Meta>{u.name}</Meta>
+              {u.email && <Meta><a href={`mailto:${u.email}`}>{u.email}</a></Meta>}
             </>
           ),
         },
