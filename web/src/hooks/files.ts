@@ -50,8 +50,19 @@ export const archiveBeforeReplace: CollectionBeforeOperationHook = async ({ args
   return args
 }
 
+// Set by the system only. The edit screen shows them read-only, but a request to the API could still send
+// them: a chosen publicPath would let one account's upload answer another file's public link.
+const SYSTEM_FIELDS = ['publicPath', 'isCurrent', 'versionNo', 'versionOf', 'legacyUrl', 'sha256', 'uploadedBy'] as const
+
 /** Record checksum, uploader, original name and a stable public path whenever bytes are uploaded. */
 export const describeUpload: CollectionBeforeChangeHook = ({ data, operation, originalDoc, req }) => {
+  // requests from the admin screens and the API; our own scripts and hooks call the local API
+  if (req.payloadAPI !== 'local') {
+    for (const key of SYSTEM_FIELDS) {
+      if (operation === 'create') delete data[key]
+      else data[key] = originalDoc?.[key]
+    }
+  }
   if (!req.file) return data
   data.sha256 = crypto.createHash('sha256').update((req.context.originalUpload as Buffer | undefined) ?? req.file.data).digest('hex')
   data.originalName = req.file.name
