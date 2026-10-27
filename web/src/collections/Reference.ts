@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { hiddenUnlessAdmin, isAdmin } from '../access'
+import { hiddenUnlessAdmin, isAdmin, isAdminField } from '../access'
 import { logChanges, logDeletes } from '../lib/activity'
 import { section } from './section'
 import { mergeTopic, refuseDeleteWhileUsed, topicUsage } from '../endpoints/topics'
@@ -30,7 +30,8 @@ export const Provinces: CollectionConfig = {
       {
         type: 'row',
         fields: [
-          { name: 'nameTh', type: 'text', required: true, label: 'ชื่อจังหวัด', admin: { width: '50%' } },
+          // only central admins rename a province; province staff see it read-only
+          { name: 'nameTh', type: 'text', required: true, label: 'ชื่อจังหวัด', access: { update: isAdminField }, admin: { width: '50%' } },
           { name: 'code', type: 'text', required: true, unique: true, label: 'รหัสย่อ', access: { update: () => false }, admin: { width: '20%' } },
           // slug is the legacy path segment (e.g. "smprakan"); old URLs depend on it.
           { name: 'slug', type: 'text', required: true, unique: true, index: true, label: 'รหัสในลิงก์เว็บ', access: { update: () => false }, admin: { width: '30%' } },
