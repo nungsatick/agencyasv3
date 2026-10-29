@@ -970,6 +970,11 @@ $stroke: "fill='none' stroke='black' stroke-width='2' stroke-linecap='round' str
   --agy-icon: #{agy-icon("%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1'/%3E")};
 }
 
+// ── user manual ──
+.agy-nav [data-icon='book'] {
+  --agy-icon: #{agy-icon("%3Cpath d='M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z'/%3E%3Cpath d='M4 21a2 2 0 0 1 2-2h13v2H6M9 7h6'/%3E")};
+}
+
 // ── my account ──
 .agy-nav [data-icon='key'] {
   --agy-icon: #{agy-icon("%3Ccircle cx='8' cy='15' r='4'/%3E%3Cpath d='M11 12l9-9M16 7l3 3M14 9l2 2'/%3E")};

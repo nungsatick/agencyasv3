@@ -91,6 +91,10 @@ export async function NavExtras({ user, payload }: ServerProps) {
 export function LogoutLink() {
   return (
     <div className="agy-nav agy-nav--end">
+      {/* the manual for the signed-in role (app/manual/route.ts), as a PDF in a new tab */}
+      <a href="/manual" target="_blank" rel="noopener noreferrer" className="nav__link" data-icon="book">
+        คู่มือการใช้งาน
+      </a>
       <Link href="/admin/my-account" className="nav__link" data-icon="key">
         บัญชีของฉัน
       </Link>

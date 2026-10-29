@@ -32,6 +32,8 @@ RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# user manuals served to signed-in staff at /manual
+COPY --from=builder /app/manuals ./manuals
 
 # Uploaded files live here; mount a volume on it.
 RUN mkdir -p /app/storage && chown nextjs:nodejs /app/storage
