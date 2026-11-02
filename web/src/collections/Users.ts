@@ -14,6 +14,7 @@ import {
   usernamesTaken,
 } from '../endpoints/auth'
 import { changeOwnPassword, confirmOwnTwoFactor, ownAccount, renewOwnRecoveryCodes, startOwnTwoFactor } from '../endpoints/account'
+import { exportUsers } from '../endpoints/exportUsers'
 import { importUsers } from '../endpoints/importUsers'
 import { randomPassword } from '../lib/auth'
 import { idleSessionStrategy, reportActivity } from '../lib/idle'
@@ -125,6 +126,7 @@ export const Users: CollectionConfig = {
     { path: '/invite', method: 'post', handler: invite },
     { path: '/usernames', method: 'get', handler: usernamesTaken },
     { path: '/import', method: 'post', handler: importUsers },
+    { path: '/export', method: 'get', handler: exportUsers },
     { path: '/:id/link', method: 'post', handler: createLink },
     { path: '/:id/reset-2fa', method: 'post', handler: resetTwoFactor },
     { path: '/:id/suspend', method: 'post', handler: setSuspended },

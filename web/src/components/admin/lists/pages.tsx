@@ -8,6 +8,7 @@ import { ACTIONS } from '@/lib/activity'
 import { provinceFileIds as fileIdsOf } from '@/lib/provinceFiles'
 import { INACTIVE_DAYS, INACTIVE_WARN_DAYS } from '@/lib/maintenance'
 import { themes, topicColor } from '@/lib/themes'
+import { usersExportHref, usersListWhere } from '@/lib/usersList'
 import type { AccountRequest, ActivityLog, Announcement, CentralContent, Dashboard, Document, DocumentType, File as FileDoc, Province, Topic, User } from '@/payload-types'
 
 import { type Staff, staffProvinces } from '../Shell'
@@ -782,21 +783,7 @@ export async function UsersListView(view: AdminViewServerProps) {
   const prov = new Map(provinces.docs.map((p) => [p.id, p]))
   const sorts: Record<string, SortDef> = { name: { label: 'ชื่อผู้ใช้ ก–ฮ', sort: ['username'] }, login: { label: 'เข้าสู่ระบบล่าสุดก่อน', sort: ['-lastLoginAt'] }, created: { label: 'สร้างล่าสุดก่อน', sort: ['-createdAt'] } }
   const { sp } = c
-  const and: Where[] = []
-  if (sp.q) and.push({ or: [{ username: { like: sp.q } }, { name: { like: sp.q } }, { email: { like: sp.q } }] })
-  if (sp.role) and.push({ role: { equals: sp.role } })
-  if (sp.status) and.push({ status: { equals: sp.status } })
-  // central admins are not province staff (old accounts may still carry a province from an earlier role)
-  if (sp.province) and.push({ provinces: { in: [Number(sp.province)] } }, { role: { not_equals: 'admin' } })
-  if (sp.no2fa === '1') and.push({ totpConfirmedAt: { exists: false } })
-  // accounts that will be suspended within 90 days (same clock as lib/maintenance.ts)
-  const warnFrom = new Date(Date.now() - INACTIVE_WARN_DAYS * DAY_MS).toISOString()
-  if (sp.idle === '1')
-    and.push(
-      { status: { equals: 'active' } },
-      { role: { not_equals: 'admin' } },
-      { or: [{ lastLoginAt: { less_than: warnFrom } }, { and: [{ lastLoginAt: { exists: false } }, { passwordSetAt: { less_than: warnFrom } }] }] },
-    )
+  const and = usersListWhere(sp)
   const result = await c.payload.find({ collection: 'users', where: asWhere(and), sort: sortFor(sp, sorts), limit: pickLimit(sp), page: pickPage(sp), depth: 0, user: c.req.user, overrideAccess: false })
   // accounts not opened yet: is their activation link still usable?
   const invited = result.docs.filter((u) => u.status === 'invited').map((u) => u.id)
@@ -820,7 +807,15 @@ export async function UsersListView(view: AdminViewServerProps) {
           {!c.isAdmin && ' (แสดงเฉพาะบัญชีที่คุณดูแล)'}
         </>
       }
-      actions={canAdd ? <Link className="agy__btn agy__btn--primary" href="/admin/user-tools">+ เพิ่มและนำเข้าผู้ใช้</Link> : undefined}
+      actions={
+        canAdd ? (
+          <>
+            {/* a file download, so a plain link rather than client navigation */}
+            <a className="agy__btn" href={usersExportHref(sp)}>ส่งออกเป็น Excel</a>
+            <Link className="agy__btn agy__btn--primary" href="/admin/user-tools">+ เพิ่มและนำเข้าผู้ใช้</Link>
+          </>
+        ) : undefined
+      }
       search={{ label: 'ค้นหาผู้ใช้', placeholder: 'ชื่อผู้ใช้ ชื่อ นามสกุล หรืออีเมล' }}
       selects={[
         ...(c.isAdmin
