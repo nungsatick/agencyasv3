@@ -77,8 +77,15 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 32px;
+  gap: 12px 20px;
   padding-block: 10px;
+}
+.site-header__end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin-left: auto;
 }
 .brand {
   display: flex;
@@ -113,7 +120,6 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 8px;
-  margin-left: auto;
   font-weight: 500;
 }
 .nav-link {
@@ -849,8 +855,11 @@ html[data-mode='dark'] .site .dash-card .topic-tag {
   .brand__sub {
     font-size: 22px;
   }
-  .nav {
+  .site-header__end {
     margin-left: 0;
+    width: 100%;
+  }
+  .nav {
     width: 100%;
   }
   .hero__in {

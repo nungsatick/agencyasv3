@@ -23,8 +23,11 @@ export function SiteHeader({ province }: { province: Province }) {
             <span className="brand__sub">จังหวัด{province.nameTh}</span>
           </span>
         </Link>
-        <MainNav base={base} />
-        <DisplayTools />
+        {/* one group, so on a narrower screen the menu and the tools move to the next row together */}
+        <div className="site-header__end">
+          <MainNav base={base} />
+          <DisplayTools />
+        </div>
       </div>
     </header>
   )
