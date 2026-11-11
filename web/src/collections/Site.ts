@@ -2,6 +2,7 @@ import { type CollectionConfig, type GlobalConfig, ValidationError } from 'paylo
 
 import { hiddenUnlessAdmin, isAdmin, provinceIds } from '../access'
 import { ACTIONS, logChanges, logDeletes, logGlobalChange } from '../lib/activity'
+import { linkProblem, validateLink } from '../lib/urlRules'
 import { section } from './section'
 
 // Everything here is managed by central admins and applies to every province site.
@@ -82,7 +83,7 @@ export const SiteSettings: GlobalConfig = {
           label: 'ลิงก์เพิ่มเติมในคอลัมน์เมนู',
           fields: [
             { name: 'title', type: 'text', required: true, label: 'ข้อความ' },
-            { name: 'url', type: 'text', required: true, label: 'ลิงก์' },
+            { name: 'url', type: 'text', required: true, label: 'ลิงก์', validate: (value: unknown) => (value ? (linkProblem(value) ?? true) : 'กรุณากรอกลิงก์') },
           ],
         },
       ],
@@ -163,7 +164,7 @@ export const Announcements: CollectionConfig = {
         type: 'row',
         fields: [
           { name: 'buttonLabel', type: 'text', label: 'ข้อความบนปุ่ม (ไม่บังคับ)', admin: { width: '40%' } },
-          { name: 'buttonUrl', type: 'text', label: 'ลิงก์ของปุ่ม (ไม่บังคับ)', admin: { width: '60%', description: 'ถ้าไม่มีข้อความบนปุ่ม กดที่ภาพแล้วไปที่ลิงก์นี้' } },
+          { name: 'buttonUrl', type: 'text', label: 'ลิงก์ของปุ่ม (ไม่บังคับ)', validate: validateLink, admin: { width: '60%', description: 'ถ้าไม่มีข้อความบนปุ่ม กดที่ภาพแล้วไปที่ลิงก์นี้' } },
         ],
       },
     ]),

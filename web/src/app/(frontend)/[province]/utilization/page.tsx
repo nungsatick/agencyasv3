@@ -11,6 +11,7 @@ import { distinctYears, fileUrl, getDashboards, getProvince, selectYears } from 
 import { getHits } from '@/lib/site'
 import type { File as FileDoc } from '@/payload-types'
 import { topicColor } from '@/lib/themes'
+import { safeEmbedUrl } from '@/lib/urlRules'
 
 export default async function UtilizationPage({
   params,
@@ -36,7 +37,7 @@ export default async function UtilizationPage({
   const items: DashCard[] = shown.map((d) => {
     const { label: _label, ...c } = topicColor(d.topic)
     const thumb = d.thumbnail && typeof d.thumbnail === 'object' ? `${fileUrl(d.thumbnail as FileDoc)}?cover=1` : null
-    return { id: d.id, title: d.title, topicName: d.topic?.nameTh ?? null, ...c, embedUrl: d.embedUrl ?? null, provider: d.provider ?? 'other', views: views.get(d.id) ?? 0, thumb, year: d.fiscalYear }
+    return { id: d.id, title: d.title, topicName: d.topic?.nameTh ?? null, ...c, embedUrl: safeEmbedUrl(d.embedUrl, d.provider), provider: d.provider ?? 'other', views: views.get(d.id) ?? 0, thumb, year: d.fiscalYear }
   })
 
   return (

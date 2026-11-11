@@ -3,6 +3,7 @@ import React from 'react'
 
 import { getSettings } from '@/lib/site'
 import { topicColor } from '@/lib/themes'
+import { safeHref } from '@/lib/urlRules'
 import type { Province, Topic } from '@/payload-types'
 
 import { CookieSettingsButton } from './Consent'
@@ -48,7 +49,7 @@ export async function SiteFooter({ province }: { province: Province }) {
   const base = `/${province.slug}`
   const settings = await getSettings()
   const mapUrl =
-    province.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(province.officeName ?? province.nameTh)}`
+    safeHref(province.mapUrl) || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(province.officeName ?? province.nameTh)}`
   return (
     <footer className="site-footer">
       <div className="wrap site-footer__top">
@@ -104,11 +105,11 @@ export async function SiteFooter({ province }: { province: Province }) {
               </span>
             </a>
           )}
-          {province.website && (
-            <a href={province.website} target="_blank" rel="noopener noreferrer" className="site-footer__link contact-line">
+          {safeHref(province.website) && (
+            <a href={safeHref(province.website)} target="_blank" rel="noopener noreferrer" className="site-footer__link contact-line">
               <ContactIcon d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3c2.500 2.700 3.800 5.700 3.800 9s-1.300 6.300-3.800 9c-2.500-2.700-3.800-5.700-3.800-9S9.500 5.700 12 3Z" />
               <span className="sr-only">เว็บไซต์ </span>
-              <span className="contact-line__text">{province.website.replace(/^https?:\/\//, '')}</span>
+              <span className="contact-line__text">{(safeHref(province.website) ?? '').replace(/^https?:\/\//, '')}</span>
             </a>
           )}
         </div>
@@ -124,8 +125,8 @@ export async function SiteFooter({ province }: { province: Province }) {
           <a href="https://gdcatalog.go.th" target="_blank" rel="noopener noreferrer">
             ระบบบัญชีข้อมูลภาครัฐ
           </a>
-          {(settings.footerLinks ?? []).map((l) => (
-            <a key={l.id ?? l.url} href={l.url} target="_blank" rel="noopener noreferrer">
+          {(settings.footerLinks ?? []).filter((l) => safeHref(l.url)).map((l) => (
+            <a key={l.id ?? l.url} href={safeHref(l.url)} target="_blank" rel="noopener noreferrer">
               {l.title}
             </a>
           ))}

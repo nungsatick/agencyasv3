@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { hiddenUnlessAdmin, isAdmin, isAdminField } from '../access'
 import { logChanges, logDeletes } from '../lib/activity'
+import { validateLink } from '../lib/urlRules'
 import { section } from './section'
 import { mergeTopic, refuseDeleteWhileUsed, topicUsage } from '../endpoints/topics'
 import { themeOptions, topicPaletteOptions } from '../lib/themes'
@@ -49,8 +50,8 @@ export const Provinces: CollectionConfig = {
         { name: 'phone', type: 'text', label: 'โทรศัพท์' },
         { name: 'fax', type: 'text', label: 'โทรสาร' },
         { name: 'email', type: 'text', label: 'อีเมล' },
-        { name: 'website', type: 'text', label: 'เว็บไซต์' },
-        { name: 'mapUrl', type: 'text', label: 'ลิงก์แผนที่' },
+        { name: 'website', type: 'text', label: 'เว็บไซต์', validate: validateLink },
+        { name: 'mapUrl', type: 'text', label: 'ลิงก์แผนที่', validate: validateLink },
       ],
     },
     {

@@ -1,11 +1,12 @@
 import path from 'path'
-import type { AccessResult, CollectionBeforeChangeHook, CollectionConfig, Field, PayloadHandler, Where } from 'payload'
+import { type AccessResult, type CollectionBeforeChangeHook, type CollectionConfig, type Field, type PayloadHandler, ValidationError, type Where } from 'payload'
 
 import { hiddenUnlessAdmin, isAdmin, isLoggedIn, ownProvince, provinceField, provinceIds, publishedOrOwnProvince, trashOwnProvince } from '../access'
 import { archiveBeforeReplace, describeUpload, fillTitle, keepOriginalGif, logUpload, rememberOriginal, requireFileToPublish, restoreVersion } from '../hooks/files'
 import { logChanges, logDeletes } from '../lib/activity'
 import { currentFiscalYear } from '../lib/fiscalYear'
 import { myProvinceFileIds } from '../lib/provinceFiles'
+import { embedUrlProblem, validateLink } from '../lib/urlRules'
 import { section } from './section'
 
 
@@ -234,6 +235,13 @@ export const Documents: CollectionConfig = {
   ],
 }
 
+/** Field validation is skipped when a draft is saved, so the dashboard link is checked here as well. */
+const checkEmbedUrl: CollectionBeforeChangeHook = ({ data, originalDoc, req }) => {
+  const problem = embedUrlProblem(data.embedUrl ?? originalDoc?.embedUrl, data.provider ?? originalDoc?.provider)
+  if (problem) throw new ValidationError({ collection: 'dashboards', errors: [{ path: 'embedUrl', label: 'ลิงก์สำหรับฝัง', message: problem }] }, req.t)
+  return data
+}
+
 export const Dashboards: CollectionConfig = {
   slug: 'dashboards',
   labels: { singular: 'แดชบอร์ด', plural: 'แดชบอร์ด' },
@@ -246,7 +254,7 @@ export const Dashboards: CollectionConfig = {
   versions: { drafts: true, maxPerDoc: 20 },
   trash: true,
   access: { read: publishedOrOwnProvince, create: ownProvince, update: ownProvince, delete: trashOwnProvince },
-  hooks: { afterChange: [logChanges('แดชบอร์ด')], afterDelete: [logDeletes('แดชบอร์ด')] },
+  hooks: { beforeChange: [checkEmbedUrl], afterChange: [logChanges('แดชบอร์ด')], afterDelete: [logDeletes('แดชบอร์ด')] },
   fields: [
     section('ข้อมูลหลัก', [
       {
@@ -276,9 +284,18 @@ export const Dashboards: CollectionConfig = {
               { label: 'อื่นๆ', value: 'other' },
               { label: 'ไม่มีแดชบอร์ดฝัง', value: 'none' },
             ],
+            // "อื่นๆ" stays a stored value (no schema change) but is no longer offered: only the three providers below can be embedded
+            filterOptions: ({ options, siblingData }) =>
+              options.filter((o) => (typeof o === 'string' ? o : o.value) !== 'other' || (siblingData as { provider?: string })?.provider === 'other'),
             admin: { width: '30%' },
           },
-          { name: 'embedUrl', type: 'text', label: 'ลิงก์สำหรับฝัง', admin: { width: '70%' } },
+          {
+            name: 'embedUrl',
+            type: 'text',
+            label: 'ลิงก์สำหรับฝัง',
+            admin: { width: '70%' },
+            validate: (value: unknown, { siblingData }: { siblingData: { provider?: string } }) => embedUrlProblem(value, siblingData?.provider) ?? true,
+          },
         ],
       },
       { name: 'thumbnail', type: 'upload', relationTo: 'files', label: 'ภาพตัวอย่าง (ภาพหน้าปกบนการ์ด)', admin: { components: { Field: '/components/admin/ImageField#ImageField' } } },
@@ -364,7 +381,7 @@ export const CentralContents: CollectionConfig = {
                 label: 'ลิงก์',
                 admin: { width: '50%', placeholder: 'https://…' },
                 validate: (value: unknown, { siblingData }: { siblingData: { file?: unknown } }) =>
-                  value || siblingData?.file ? true : 'ใส่ลิงก์หรือเลือกไฟล์อย่างใดอย่างหนึ่ง (ไม่อย่างนั้นบนหน้าเว็บจะกดไม่ได้)',
+                  value || siblingData?.file ? validateLink(value) : 'ใส่ลิงก์หรือเลือกไฟล์อย่างใดอย่างหนึ่ง (ไม่อย่างนั้นบนหน้าเว็บจะกดไม่ได้)',
               },
               { name: 'file', type: 'upload', relationTo: 'files', label: 'หรือไฟล์', admin: { width: '50%' } },
             ],
@@ -372,7 +389,7 @@ export const CentralContents: CollectionConfig = {
         ],
       },
     ]),
-    section('ที่มา', [{ name: 'sourceUrl', type: 'text', label: 'ที่มา', admin: { placeholder: 'https://…' } }]),
+    section('ที่มา', [{ name: 'sourceUrl', type: 'text', label: 'ที่มา', admin: { placeholder: 'https://…' }, validate: validateLink }]),
     {
       type: 'collapsible',
       label: 'ตั้งค่าขั้นสูง (ระบบตั้งให้เอง)',

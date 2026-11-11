@@ -5,6 +5,8 @@ import { cache } from 'react'
 
 import type { File as FileDoc } from '@/payload-types'
 
+import { safeHref } from './urlRules'
+
 /** Today's date in Thailand as YYYY-MM-DD. */
 export const bangkokDay = (d = new Date()): string => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(d)
 
@@ -83,7 +85,7 @@ export async function activePopups(provinceId: number, page: string): Promise<Po
       imageUrl: image?.url ?? null,
       imageAlt: a.imageAlt?.trim() || null,
       buttonLabel: a.buttonLabel ?? null,
-      buttonUrl: a.buttonUrl ?? null,
+      buttonUrl: safeHref(a.buttonUrl) ?? null,
       frequency: a.frequency,
     }
   })

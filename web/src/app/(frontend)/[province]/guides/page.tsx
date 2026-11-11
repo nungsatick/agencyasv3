@@ -12,6 +12,7 @@ import { TrackedLink, YearPicker } from '@/components/Tools'
 import { FileIcon } from '@/components/FileIcon'
 import { fileUrl, getProvince, selectYears } from '@/lib/data'
 import { getHits } from '@/lib/site'
+import { safeHref } from '@/lib/urlRules'
 import type { CentralContent, File as FileDoc } from '@/payload-types'
 
 const isFile = (f: unknown): f is FileDoc => typeof f === 'object' && f !== null
@@ -55,7 +56,7 @@ function Item({ item, year, hits }: { item: CentralContent; year?: number | null
       {(item.links ?? []).length > 0 && (
         <ol className="guide__links">
           {item.links!.map((l, index) => {
-            const href = isFile(l.file) ? fileUrl(l.file) : l.url
+            const href = isFile(l.file) ? fileUrl(l.file) : safeHref(l.url)
             return (
               <li key={l.id}>
                 <span className="guide__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
@@ -78,11 +79,11 @@ function Item({ item, year, hits }: { item: CentralContent; year?: number | null
           })}
         </ol>
       )}
-      {item.sourceUrl && (
+      {safeHref(item.sourceUrl) && (
         <p className="guide__source muted">
           ที่มา:{' '}
-          <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
-            {item.sourceUrl.replace(/^https?:\/\//, '')}
+          <a href={safeHref(item.sourceUrl)} target="_blank" rel="noopener noreferrer">
+            {(safeHref(item.sourceUrl) ?? '').replace(/^https?:\/\//, '')}
           </a>
         </p>
       )}
