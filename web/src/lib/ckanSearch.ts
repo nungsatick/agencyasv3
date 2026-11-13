@@ -27,14 +27,14 @@ export type CkanHit = {
   why: string[]
 }
 /** A term is one typed chunk ("การว่างงาน" → "ว่างงาน") with its smaller words as a fallback ("ว่าง", "งาน"). */
-export type QueryTerm = { text: string; parts: string[] }
+export type QueryTerm = { text: string; parts: string[]; alts?: string[] }
 export type ParsedQuery = { words: string[]; terms: QueryTerm[]; year: number | null; formats: string[]; gis: boolean }
 
 type Doc = Omit<CkanHit, 'score' | 'why'> & { hay: { title: string; tags: string; notes: string; files: string }; wordSet: string[] }
 
 const THAI_DIGITS = '๐๑๒๓๔๕๖๗๘๙'
 const STOP = new Set(
-  'ข้อมูล ชุดข้อมูล ของ ที่ และ หรือ ใน กับ จาก ให้ เป็น จังหวัด ปี พ.ศ เรื่อง เกี่ยวกับ อยาก ต้องการ ขอ ดู หา ค้น ค้นหา มี ไหม มั้ย อะไร บ้าง ค่ะ คะ ครับ จ้า หน่อย ได้ การ ความ ทั้งหมด ล่าสุด ช่วย the of and data'.split(' '),
+  'ข้อมูล ชุดข้อมูล ของ ที่ และ หรือ ใน กับ จาก ให้ เป็น ไม่ ใช่ แบบ ด้วย เลย นี้ นั้น ไหน อย่างไร ยังไง เท่าไร กี่ เมื่อ แน่นอน จังหวัด ปี พ.ศ เรื่อง เกี่ยวกับ อยาก ต้องการ ขอ ดู หา ค้น ค้นหา มี ไหม มั้ย อะไร บ้าง ค่ะ คะ ครับ จ้า หน่อย ได้ การ ความ ทั้งหมด ล่าสุด ช่วย the of and data'.split(' '),
 )
 // words that ask for a kind of file rather than a topic
 const FORMAT_WORDS: [RegExp, string[]][] = [
@@ -183,6 +183,12 @@ function score(d: Doc, q: ParsedQuery): { score: number; why: string[] } {
   for (const t of q.terms) {
     // the whole chunk first
     let [best, where] = place(t.text, [8, 5, 2.5, 2])
+    // then a word that means the same (lib/dataSearch.ts), a little lower
+    for (const alt of t.alts ?? []) {
+      if (best) break
+      const [w, at] = place(alt, [7, 4.5, 2, 1.5])
+      if (w) [best, where] = [w, `คำพ้อง "${alt}" (${at})`]
+    }
     // then its smaller words: short ones (2 letters, e.g. "งาน") count little, and most of them must be there
     if (!best && t.parts.length) {
       let sum = 0
@@ -246,10 +252,20 @@ function score(d: Doc, q: ParsedQuery): { score: number; why: string[] } {
 
 export type CkanSearchResult = { query: ParsedQuery; total: number; indexed: number; hits: CkanHit[] }
 
-/** The best datasets of one province for a question. Statprovince and gdcatalog copies of the same title are both kept. */
-export async function searchCkan(payload: Payload, opts: { provinceId: number; provinceName?: string; q: string; limit?: number }): Promise<CkanSearchResult> {
+/**
+ * The best datasets of one province for a question, `offset` of them skipped (for "more").
+ * `synonyms` are groups of words that stand for each other (lib/dataSearch.ts), already normalized.
+ */
+export async function searchCkan(
+  payload: Payload,
+  opts: { provinceId: number; provinceName?: string; q: string; limit?: number; offset?: number; synonyms?: string[][] },
+): Promise<CkanSearchResult> {
   const docs = await docsOf(payload, opts.provinceId)
   const query = parseQuery(opts.q.slice(0, 200), opts.provinceName)
+  for (const t of query.terms) {
+    const alts = (opts.synonyms ?? []).filter((g) => g.includes(t.text)).flat()
+    t.alts = [...new Set(alts)].filter((w) => w !== t.text)
+  }
   const scored = docs
     .map((d) => ({ d, ...score(d, query) }))
     .filter((x) => x.score > 0)
@@ -263,7 +279,8 @@ export async function searchCkan(payload: Payload, opts: { provinceId: number; p
     if (!had || x.score > had.score || (x.score === had.score && x.d.source === 'province' && had.d.source !== 'province')) best.set(titleKey(x.d), x)
   }
   const unique = scored.filter((x) => best.get(titleKey(x.d)) === x)
-  const hits = unique.slice(0, opts.limit ?? 10).map(({ d, score: s, why }): CkanHit => {
+  const from = Math.max(0, opts.offset ?? 0)
+  const hits = unique.slice(from, from + (opts.limit ?? 10)).map(({ d, score: s, why }): CkanHit => {
     const { hay: _hay, wordSet: _w, ...rest } = d
     return { ...rest, score: s, why }
   })

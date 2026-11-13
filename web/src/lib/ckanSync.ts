@@ -102,7 +102,8 @@ async function fetchStatprovince(provinces: Province[]): Promise<Fetched> {
   for (const pkg of await searchAll(STATPROVINCE, '')) {
     const groups = pkg.groups ?? []
     const isProvince = (g: (typeof groups)[number]) => byGroup.get(g.name) ?? byName.get(groupTitle(g).trim())
-    const topics = groups.filter((g) => !isProvince(g)).map(groupTitle)
+    // topic groups only: no province or Bangkok groups
+    const topics = groups.filter((g) => !isProvince(g) && !/^(จังหวัด|กรุงเทพ)/.test(groupTitle(g).trim())).map(groupTitle)
     for (const g of groups) {
       const p = isProvince(g)
       if (p) rows.push({ key: `statprovince:${pkg.id}:${p.code}`, provinceId: p.id, base: STATPROVINCE, pkg, orgTitle: pkg.organization?.title ?? '', groups: topics })

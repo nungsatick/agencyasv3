@@ -5,8 +5,10 @@ import React, { Suspense } from 'react'
 import { Analytics } from '@/components/Analytics'
 import { MourningRibbon, SiteFooter, SiteHeader } from '@/components/Chrome'
 import { ConsentProvider } from '@/components/Consent'
+import { DataAssistant } from '@/components/DataAssistant'
 import { BackToTop } from '@/components/Tools'
 import { getProvince } from '@/lib/data'
+import { dataSearchSettings } from '@/lib/dataSearch'
 import { activeMourning, analyticsId, getSettings } from '@/lib/site'
 import { themeVars } from '@/lib/themes'
 
@@ -32,6 +34,8 @@ export default async function ProvinceLayout({ children, params }: Props) {
   if (mourning?.grayscale) classes.push('is-mourning')
   if (mourning?.grayscale && mourning.keepEmbeds) classes.push('is-mourning--keep-embeds')
   if (mourning?.ribbon) classes.push(`has-ribbon--${mourning.corner}`)
+  const search = dataSearchSettings(settings.dataSearch)
+  if (search.enabled) classes.push('has-assist')
 
   return (
     <div
@@ -54,6 +58,7 @@ export default async function ProvinceLayout({ children, params }: Props) {
         </div>
         <SiteFooter province={province} />
         <BackToTop />
+        {search.enabled && <DataAssistant province={province.slug} provinceName={province.nameTh} topics={search.topics} />}
       </ConsentProvider>
     </div>
   )

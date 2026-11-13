@@ -1171,6 +1171,44 @@ export interface SiteSetting {
     keepEmbeds?: boolean | null;
     message?: string | null;
   };
+  dataSearch?: {
+    /**
+     * ค้นจากรายการชุดข้อมูลของจังหวัดนั้นใน catalog จังหวัดและ statprovince (ดูสถานะได้ที่เมนู "ข้อมูลจากพอร์ทัล CKAN")
+     */
+    enabled?: boolean | null;
+    /**
+     * กดแล้วค้นด้วยคำในช่อง "คำค้น" ถ้าไม่กรอกเลย ระบบใช้ชุดเริ่มต้น 8 หมวด
+     */
+    topics?:
+      | {
+          label: string;
+          query: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * แต่ละแถวคือกลุ่มคำที่ใช้แทนกันได้ เมื่อผู้เข้าชมพิมพ์คำใดคำหนึ่ง ระบบค้นด้วยคำอื่นในกลุ่มด้วย (ใช้ร่วมกับชุดคำพื้นฐานของระบบ)
+     */
+    synonyms?:
+      | {
+          words: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * ตอบเมื่อผู้เข้าชมพิมพ์คำใดคำหนึ่งในช่อง "คำที่ใช้จับคำถาม" ถ้าไม่กรอกเลย ระบบใช้คำตอบเริ่มต้นเรื่องการดาวน์โหลดและการขอข้อมูล
+     */
+    faq?:
+      | {
+          question: string;
+          keywords: string;
+          answer: string;
+          linkLabel?: string | null;
+          linkUrl?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   copyrightText?: string | null;
   footerNote?: string | null;
   showStaffLogin?: boolean | null;
@@ -1219,6 +1257,34 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         ribbon?: T;
         keepEmbeds?: T;
         message?: T;
+      };
+  dataSearch?:
+    | T
+    | {
+        enabled?: T;
+        topics?:
+          | T
+          | {
+              label?: T;
+              query?: T;
+              id?: T;
+            };
+        synonyms?:
+          | T
+          | {
+              words?: T;
+              id?: T;
+            };
+        faq?:
+          | T
+          | {
+              question?: T;
+              keywords?: T;
+              answer?: T;
+              linkLabel?: T;
+              linkUrl?: T;
+              id?: T;
+            };
       };
   copyrightText?: T;
   footerNote?: T;

@@ -5,6 +5,7 @@ import React from 'react'
 
 import { searchCkan } from '@/lib/ckanSearch'
 import { ckanSyncRunning } from '@/lib/ckanSync'
+import { dataSearchSettings } from '@/lib/dataSearch'
 import { safeHref } from '@/lib/urlRules'
 
 import { CkanSyncButton } from './CkanSyncButton'
@@ -38,7 +39,8 @@ export async function CkanView(props: AdminViewServerProps) {
 
   const province = provinces.find((p) => p.slug === sp.province) ?? provinces.find((p) => p.slug === 'kalasin') ?? provinces[0]
   const q = (sp.q ?? '').trim()
-  const result = province && sp.q !== undefined ? await searchCkan(payload, { provinceId: province.id, provinceName: province.nameTh, q, limit: 15 }) : null
+  const { synonyms } = dataSearchSettings((await payload.findGlobal({ slug: 'site-settings', depth: 0 })).dataSearch)
+  const result = province && sp.q !== undefined ? await searchCkan(payload, { provinceId: province.id, provinceName: province.nameTh, q, limit: 15, synonyms }) : null
 
   return (
     <Shell {...props} title="ข้อมูลจากพอร์ทัล CKAN">

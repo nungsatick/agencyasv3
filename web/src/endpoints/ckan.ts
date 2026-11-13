@@ -1,7 +1,8 @@
 import type { PayloadHandler } from 'payload'
 
 import { searchCkan } from '../lib/ckanSearch'
-import { ckanSyncRunning, syncCkan } from '../lib/ckanSync'
+import { catalogOf, ckanSyncRunning, syncCkan } from '../lib/ckanSync'
+import { type DataSearchSettings, dataSearchSettings, matchFaq } from '../lib/dataSearch'
 import { safeHref } from '../lib/urlRules'
 
 // Searches per visitor per minute. Counted in memory only: the address is never stored.
@@ -19,30 +20,51 @@ function tooMany(req: Parameters<PayloadHandler>[0]): boolean {
   return ++e.n > LIMIT
 }
 
-/** GET /api/ckan-search?province=<slug>&q=<question> — public: one province's datasets on the CKAN portals. */
+// the settings change rarely: read them at most once a minute
+let settings: { at: number; value: DataSearchSettings } | null = null
+async function currentSettings(req: Parameters<PayloadHandler>[0]): Promise<DataSearchSettings> {
+  if (settings && Date.now() - settings.at < 60_000) return settings.value
+  const g = await req.payload.findGlobal({ slug: 'site-settings', depth: 0 })
+  settings = { at: Date.now(), value: dataSearchSettings(g.dataSearch) }
+  return settings.value
+}
+
+/**
+ * GET /api/ckan-search?province=<slug>&q=<question>&offset=<n> — public: one province's datasets on the
+ * CKAN catalogs, plus any frequently asked question the words match. Answers 404 while the search is switched off.
+ */
 export const ckanSearch: PayloadHandler = async (req) => {
-  if (tooMany(req)) return Response.json({ error: 'ค้นหาบ่อยเกินไป กรุณารอสักครู่' }, { status: 429 })
+  if (tooMany(req)) return Response.json({ error: 'ค้นหาบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่' }, { status: 429 })
+  const s = await currentSettings(req)
+  const admin = (req.user as { role?: string } | null)?.role === 'admin'
+  if (!s.enabled && !admin) return Response.json({ error: 'ยังไม่เปิดใช้การค้นหาข้อมูล' }, { status: 404 })
   const sp = new URL(req.url!).searchParams
   const slug = sp.get('province') ?? ''
-  const province = (await req.payload.find({ collection: 'provinces', where: { slug: { equals: slug } }, limit: 1, depth: 0, select: { nameTh: true } })).docs[0]
+  const province = (await req.payload.find({ collection: 'provinces', where: { slug: { equals: slug } }, limit: 1, depth: 0, select: { nameTh: true, slug: true } })).docs[0]
   if (!province) return Response.json({ error: 'ไม่พบจังหวัด' }, { status: 404 })
+  const q = (sp.get('q') ?? '').slice(0, 200)
   const limit = Math.min(Math.max(Number(sp.get('limit')) || 5, 1), 20)
-  const r = await searchCkan(req.payload, { provinceId: province.id, provinceName: province.nameTh, q: sp.get('q') ?? '', limit })
+  const offset = Math.min(Math.max(Number(sp.get('offset')) || 0, 0), 500)
+  const r = await searchCkan(req.payload, { provinceId: province.id, provinceName: province.nameTh, q, limit, offset, synonyms: s.synonyms })
   return Response.json(
     {
       total: r.total,
+      offset,
       results: r.hits.map((h) => ({
+        id: h.id,
         title: h.title,
-        description: h.notes.slice(0, 300),
+        description: h.notes.slice(0, 240),
         organization: h.orgTitle,
         url: safeHref(h.url) ?? null,
-        formats: h.formats,
+        formats: h.formats.slice(0, 5),
         hasTable: h.resources.some((x) => x.datastore),
         modifiedAt: h.modifiedAt,
         source: h.source,
       })),
+      faqs: offset ? [] : matchFaq(q, s.faq).map(({ question, answer, linkLabel, linkUrl }) => ({ question, answer, linkLabel, linkUrl })),
+      catalogUrl: `${catalogOf(province.slug)}/dataset/?q=${encodeURIComponent(q)}`,
     },
-    { headers: { 'Cache-Control': 'public, max-age=60' } },
+    { headers: { 'Cache-Control': 'private, max-age=60' } },
   )
 }
 

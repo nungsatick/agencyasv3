@@ -68,6 +68,70 @@ export const SiteSettings: GlobalConfig = {
     },
     {
       type: 'collapsible',
+      label: 'ผู้ช่วยค้นหาข้อมูล (หน้าเว็บจังหวัด)',
+      admin: { className: 'agy-sec', initCollapsed: true },
+      fields: [
+        {
+          name: 'dataSearch',
+          type: 'group',
+          label: false,
+          fields: [
+            {
+              name: 'enabled',
+              type: 'checkbox',
+              defaultValue: false,
+              label: 'แสดงปุ่ม "ค้นหาข้อมูล" บนหน้าเว็บทุกจังหวัด',
+              admin: { description: 'ค้นจากรายการชุดข้อมูลของจังหวัดนั้นใน catalog จังหวัดและ statprovince (ดูสถานะได้ที่เมนู "ข้อมูลจากพอร์ทัล CKAN")' },
+            },
+            {
+              name: 'topics',
+              type: 'array',
+              label: 'หมวดที่ให้ผู้เข้าชมกดเลือก',
+              labels: { singular: 'หมวด', plural: 'หมวด' },
+              admin: { description: 'กดแล้วค้นด้วยคำในช่อง "คำค้น" ถ้าไม่กรอกเลย ระบบใช้ชุดเริ่มต้น 8 หมวด', initCollapsed: true },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'label', type: 'text', required: true, label: 'ชื่อหมวด', admin: { width: '40%' } },
+                    { name: 'query', type: 'text', required: true, label: 'คำค้น', admin: { width: '60%', placeholder: 'เช่น เกษตร' } },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'synonyms',
+              type: 'array',
+              label: 'คำที่มีความหมายเดียวกัน',
+              labels: { singular: 'กลุ่มคำ', plural: 'กลุ่มคำ' },
+              admin: { description: 'แต่ละแถวคือกลุ่มคำที่ใช้แทนกันได้ เมื่อผู้เข้าชมพิมพ์คำใดคำหนึ่ง ระบบค้นด้วยคำอื่นในกลุ่มด้วย (ใช้ร่วมกับชุดคำพื้นฐานของระบบ)', initCollapsed: true },
+              fields: [{ name: 'words', type: 'text', required: true, label: 'คำ (คั่นด้วยจุลภาค)', admin: { placeholder: 'เช่น อุบัติเหตุ, อุบัติเหตุทางถนน, จราจร' } }],
+            },
+            {
+              name: 'faq',
+              type: 'array',
+              label: 'คำถามที่พบบ่อย',
+              labels: { singular: 'คำถาม', plural: 'คำถาม' },
+              admin: { description: 'ตอบเมื่อผู้เข้าชมพิมพ์คำใดคำหนึ่งในช่อง "คำที่ใช้จับคำถาม" ถ้าไม่กรอกเลย ระบบใช้คำตอบเริ่มต้นเรื่องการดาวน์โหลดและการขอข้อมูล', initCollapsed: true },
+              fields: [
+                { name: 'question', type: 'text', required: true, label: 'คำถาม' },
+                { name: 'keywords', type: 'text', required: true, label: 'คำที่ใช้จับคำถาม (คั่นด้วยจุลภาค)', admin: { placeholder: 'เช่น ดาวน์โหลด, โหลด, บันทึกไฟล์' } },
+                { name: 'answer', type: 'textarea', required: true, label: 'คำตอบ' },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'linkLabel', type: 'text', label: 'ข้อความลิงก์ (ไม่บังคับ)', admin: { width: '40%' } },
+                    { name: 'linkUrl', type: 'text', label: 'ลิงก์ (ไม่บังคับ)', validate: validateLink, admin: { width: '60%' } },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'collapsible',
       label: 'ส่วนท้ายของหน้าเว็บ',
       admin: { className: 'agy-sec' },
       fields: [
