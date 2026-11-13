@@ -3417,3 +3417,79 @@ $agy-upload-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 .upload__dragAndDropText {
   @include agy-drop-hint;
 }
+
+/* ── /admin/ckan-search: CKAN portal copy and search check ── */
+.agy-ckan__runs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  th,
+  td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--agy-line, #e2e8f0);
+    vertical-align: top;
+  }
+  th {
+    font-weight: 600;
+    color: var(--agy-muted, #5b6b80);
+  }
+}
+.agy-ckan__status--ok {
+  color: #15803d;
+  font-weight: 600;
+}
+.agy-ckan__status--failed {
+  color: #b91c1c;
+  font-weight: 600;
+}
+.agy-ckan__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 12px 0;
+}
+.agy-ckan__q {
+  flex: 1 1 320px;
+}
+.agy-ckan__hits {
+  margin: 8px 0 0;
+  padding-left: 24px;
+  display: grid;
+  gap: 14px;
+  li::marker {
+    color: var(--agy-muted, #5b6b80);
+  }
+}
+.agy-ckan__title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-weight: 600;
+}
+.agy-ckan__score {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: var(--agy-tint, #eaf2fb);
+}
+.agy-ckan__meta,
+.agy-ckan__why {
+  font-size: 13px;
+  color: var(--agy-muted, #5b6b80);
+}
+.agy-ckan__why {
+  font-style: italic;
+}
+.agy-ckan__notes {
+  margin: 4px 0;
+  font-size: 14px;
+}
+@media (max-width: 700px) {
+  .agy-ckan__runs {
+    display: block;
+    overflow-x: auto;
+  }
+}

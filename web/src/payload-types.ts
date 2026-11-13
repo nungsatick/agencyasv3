@@ -83,6 +83,8 @@ export interface Config {
     'page-views': PageView;
     'hit-counts': HitCount;
     'cookie-consents': CookieConsent;
+    'ckan-datasets': CkanDataset;
+    'ckan-sync-runs': CkanSyncRun;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -110,6 +112,8 @@ export interface Config {
     'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
     'hit-counts': HitCountsSelect<false> | HitCountsSelect<true>;
     'cookie-consents': CookieConsentsSelect<false> | CookieConsentsSelect<true>;
+    'ckan-datasets': CkanDatasetsSelect<false> | CkanDatasetsSelect<true>;
+    'ckan-sync-runs': CkanSyncRunsSelect<false> | CkanSyncRunsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -550,6 +554,79 @@ export interface CookieConsent {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ckan-datasets".
+ */
+export interface CkanDataset {
+  id: number;
+  key: string;
+  source: string;
+  province: number | Province;
+  ckanId: string;
+  ckanName?: string | null;
+  title: string;
+  notes?: string | null;
+  orgTitle?: string | null;
+  dataType?: string | null;
+  url: string;
+  tags?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  groups?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  formats?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  resources?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  modifiedAt?: string | null;
+  syncedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ckan-sync-runs".
+ */
+export interface CkanSyncRun {
+  id: number;
+  source: string;
+  startedAt: string;
+  finishedAt?: string | null;
+  status: string;
+  fetched?: number | null;
+  removed?: number | null;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -635,6 +712,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'cookie-consents';
         value: number | CookieConsent;
+      } | null)
+    | ({
+        relationTo: 'ckan-datasets';
+        value: number | CkanDataset;
+      } | null)
+    | ({
+        relationTo: 'ckan-sync-runs';
+        value: number | CkanSyncRun;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -987,6 +1072,45 @@ export interface CookieConsentsSelect<T extends boolean = true> {
   policyVersion?: T;
   analytics?: T;
   thirdParty?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ckan-datasets_select".
+ */
+export interface CkanDatasetsSelect<T extends boolean = true> {
+  key?: T;
+  source?: T;
+  province?: T;
+  ckanId?: T;
+  ckanName?: T;
+  title?: T;
+  notes?: T;
+  orgTitle?: T;
+  dataType?: T;
+  url?: T;
+  tags?: T;
+  groups?: T;
+  formats?: T;
+  resources?: T;
+  modifiedAt?: T;
+  syncedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ckan-sync-runs_select".
+ */
+export interface CkanSyncRunsSelect<T extends boolean = true> {
+  source?: T;
+  startedAt?: T;
+  finishedAt?: T;
+  status?: T;
+  fetched?: T;
+  removed?: T;
+  note?: T;
   updatedAt?: T;
   createdAt?: T;
 }

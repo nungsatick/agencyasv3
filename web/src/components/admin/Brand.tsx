@@ -71,6 +71,11 @@ export async function NavExtras({ user, payload }: ServerProps) {
           เว็บไซต์ 76 จังหวัด
         </Link>
       )}
+      {u.role === 'admin' && (
+        <Link href="/admin/ckan-search" className="nav__link" data-icon="chart">
+          ข้อมูลจากพอร์ทัล CKAN
+        </Link>
+      )}
       <Link href="/admin/visit-stats" className="nav__link" data-icon="eye">
         สถิติการเข้าชม
       </Link>

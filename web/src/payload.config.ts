@@ -16,6 +16,9 @@ import { migrations } from './migrations'
 import { ActivityLogs, Announcements, CookieConsents, HitCounts, PageViews, SiteSettings } from './collections/Site'
 import { SessionActivity, Users, UserTokens } from './collections/Users'
 import { AccountRequests } from './collections/AccountRequests'
+import { CkanDatasets, CkanSyncRuns } from './collections/Ckan'
+import { ckanSearch, ckanSyncNow } from './endpoints/ckan'
+import { scheduleCkanSync } from './lib/ckanSync'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -39,6 +42,7 @@ export default buildConfig({
       beforeDashboard: ['/components/admin/Overview#Overview'],
       views: {
         userTools: { Component: '/components/admin/UserToolsView#UserToolsView', path: '/user-tools', meta: { title: 'เพิ่มและนำเข้าผู้ใช้' } },
+        ckanSearch: { Component: '/components/admin/CkanView#CkanView', path: '/ckan-search', meta: { title: 'ข้อมูลจากพอร์ทัล CKAN' } },
         visitStats: { Component: '/components/admin/StatsView#StatsView', path: '/visit-stats', meta: { title: 'สถิติการเข้าชม' } },
         // our list screens (one look for every list); /admin/collections/<slug> redirects here, see proxy.ts
         documentsList: { Component: '/components/admin/lists/pages#DocumentsListView', path: '/documents', meta: { title: 'เอกสาร' } },
@@ -75,10 +79,14 @@ export default buildConfig({
   cors: [process.env.SITE_URL, 'http://localhost:3000'].filter((u): u is string => Boolean(u)),
   // nothing uses GraphQL (the backoffice and the site use the REST API): switched off, with its playground
   graphQL: { disable: true },
-  collections: [Documents, Dashboards, Files, CentralContents, Announcements, Provinces, Topics, DocumentTypes, Users, AccountRequests, UserTokens, SessionActivity, ActivityLogs, PageViews, HitCounts, CookieConsents].map(
+  collections: [Documents, Dashboards, Files, CentralContents, Announcements, Provinces, Topics, DocumentTypes, Users, AccountRequests, UserTokens, SessionActivity, ActivityLogs, PageViews, HitCounts, CookieConsents, CkanDatasets, CkanSyncRuns].map(
     (c) => ({ ...c, admin: { ...c.admin, hideAPIURL: true } }),
   ),
-  endpoints: [{ path: '/overview-export', method: 'get', handler: overviewExport }],
+  endpoints: [
+    { path: '/overview-export', method: 'get', handler: overviewExport },
+    { path: '/ckan-search', method: 'get', handler: ckanSearch },
+    { path: '/ckan-sync', method: 'post', handler: ckanSyncNow },
+  ],
   globals: [SiteSettings].map((g) => ({ ...g, admin: { ...g.admin, hideAPIURL: true } })),
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -98,6 +106,8 @@ export default buildConfig({
   onInit: async (payload) => {
     // auto-suspend accounts unused for 365 days, empty the trash after 30 days
     scheduleMaintenance(payload)
+    // refresh the copy of the CKAN portals' province datasets once a night
+    scheduleCkanSync(payload)
     const username = process.env.FIRST_ADMIN_USERNAME?.trim().toLowerCase()
     if (!username) return
     const { totalDocs } = await payload.count({ collection: 'users' })

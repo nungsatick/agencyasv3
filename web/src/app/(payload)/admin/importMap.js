@@ -25,6 +25,7 @@ import { Overview as Overview_50056eb966237e51038cb651e847dbf5 } from '../../../
 import { NavExtras as NavExtras_81fda60f3e3709e861f40982a767707d } from '../../../components/admin/Brand'
 import { FieldHints as FieldHints_8898ab862f29e0112ebcd61c6b461770 } from '../../../components/admin/FieldHints'
 import { UserToolsView as UserToolsView_590db699a158a184816e2bd193d0c9cc } from '../../../components/admin/UserToolsView'
+import { CkanView as CkanView_2681aaeb8e12dd5a163984355bf94a05 } from '../../../components/admin/CkanView'
 import { StatsView as StatsView_0b84f090b9d2570a8fedbffad015a4f7 } from '../../../components/admin/StatsView'
 import { DocumentsListView as DocumentsListView_fbb4fa1109b7e34996be3c2d9793b7b4 } from '../../../components/admin/lists/pages'
 import { DashboardsListView as DashboardsListView_fbb4fa1109b7e34996be3c2d9793b7b4 } from '../../../components/admin/lists/pages'
@@ -73,6 +74,7 @@ export const importMap = {
   "/components/admin/Brand#NavExtras": NavExtras_81fda60f3e3709e861f40982a767707d,
   "/components/admin/FieldHints#FieldHints": FieldHints_8898ab862f29e0112ebcd61c6b461770,
   "/components/admin/UserToolsView#UserToolsView": UserToolsView_590db699a158a184816e2bd193d0c9cc,
+  "/components/admin/CkanView#CkanView": CkanView_2681aaeb8e12dd5a163984355bf94a05,
   "/components/admin/StatsView#StatsView": StatsView_0b84f090b9d2570a8fedbffad015a4f7,
   "/components/admin/lists/pages#DocumentsListView": DocumentsListView_fbb4fa1109b7e34996be3c2d9793b7b4,
   "/components/admin/lists/pages#DashboardsListView": DashboardsListView_fbb4fa1109b7e34996be3c2d9793b7b4,
