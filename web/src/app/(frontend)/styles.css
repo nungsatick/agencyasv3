@@ -3386,3 +3386,120 @@ html[data-mode='dark'] .assist__bot--error {
     display: none !important;
   }
 }
+.assist__peek {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.assist__preview {
+  margin-top: 6px;
+}
+.assist__table {
+  max-height: 260px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.assist__table table {
+  border-collapse: collapse;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.assist__table th,
+.assist__table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--line-soft);
+  text-align: left;
+}
+.assist__table th {
+  position: sticky;
+  top: 0;
+  background: var(--tint);
+  color: var(--dark);
+  font-weight: 600;
+}
+.assist__table td.is-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.assist__preview-msg {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.assist__preview-msg--error {
+  color: #9b1c1c;
+}
+html[data-mode='dark'] .assist__peek {
+  color: var(--accent);
+}
+html[data-mode='dark'] .assist__table th {
+  background: var(--line-soft);
+  color: var(--ink);
+}
+html[data-mode='dark'] .assist__preview-msg--error {
+  color: #f6b0b0;
+}
+/* a wide table scrolls inside its own box; the conversation never scrolls sideways */
+.assist__list {
+  overflow-x: hidden;
+}
+.assist__bot,
+.assist__card,
+.assist__preview {
+  min-width: 0;
+}
+.assist__results {
+  grid-template-columns: minmax(0, 1fr);
+}
+.assist__table {
+  max-width: 100%;
+}
+/* each result carries its place in the whole list (1 to total) */
+.assist__head-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.assist__no {
+  flex: none;
+  min-width: 26px;
+  height: 22px;
+  margin-top: 1px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--tint);
+  color: var(--dark);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 22px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.assist__peek {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+}
+.assist__peek:hover {
+  text-decoration: underline;
+}
+html[data-mode='dark'] .assist__no {
+  background: var(--line-soft);
+  color: var(--ink);
+}
+/* the details line up under the title, after the number */
+.assist__card > .assist__meta,
+.assist__card > .assist__tags,
+.assist__card > .assist__peek {
+  margin-left: 34px;
+}

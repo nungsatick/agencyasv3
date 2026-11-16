@@ -1,8 +1,11 @@
+import { sql } from '@payloadcms/db-postgres'
 import type { PayloadHandler } from 'payload'
 
-import { searchCkan } from '../lib/ckanSearch'
+import { previewOf } from '../lib/ckanPreview'
+import { normalize, searchCkan } from '../lib/ckanSearch'
 import { catalogOf, ckanSyncRunning, syncCkan } from '../lib/ckanSync'
 import { type DataSearchSettings, dataSearchSettings, matchFaq } from '../lib/dataSearch'
+import { bangkokDay } from '../lib/site'
 import { safeHref } from '../lib/urlRules'
 
 // Searches per visitor per minute. Counted in memory only: the address is never stored.
@@ -46,6 +49,8 @@ export const ckanSearch: PayloadHandler = async (req) => {
   const limit = Math.min(Math.max(Number(sp.get('limit')) || 5, 1), 20)
   const offset = Math.min(Math.max(Number(sp.get('offset')) || 0, 0), 500)
   const r = await searchCkan(req.payload, { provinceId: province.id, provinceName: province.nameTh, q, limit, offset, synonyms: s.synonyms })
+  // count what visitors look for (not staff trying it out, not "more" of the same question)
+  if (!offset && !req.user) await countSearch(req, province.id, q, r.total === 0)
   return Response.json(
     {
       total: r.total,
@@ -66,6 +71,42 @@ export const ckanSearch: PayloadHandler = async (req) => {
     },
     { headers: { 'Cache-Control': 'private, max-age=60' } },
   )
+}
+
+/** One more search of these words today; words that look like a phone or ID number, or an email, are not kept. */
+async function countSearch(req: Parameters<PayloadHandler>[0], provinceId: number, q: string, missed: boolean): Promise<void> {
+  // checked on what was typed, before punctuation is dropped
+  if (/@|\d{6,}/.test(q.replace(/[\s\-–.()]/g, '')) || /[๐-๙]{6,}/.test(q.replace(/[\s-]/g, ''))) return
+  const words = normalize(q).replace(/\s+/g, ' ').trim().slice(0, 80)
+  if (!words) return
+  try {
+    await req.payload.db.drizzle.execute(sql`
+      insert into ckan_search_stats (day, province_id, query, searches, misses, updated_at, created_at)
+      values (${bangkokDay()}, ${provinceId}, ${words}, 1, ${missed ? 1 : 0}, now(), now())
+      on conflict (day, province_id, query) do update set searches = ckan_search_stats.searches + 1,
+        misses = ckan_search_stats.misses + ${missed ? 1 : 0}, updated_at = now()`)
+  } catch (err) {
+    req.payload.logger.error({ err }, 'search stats')
+  }
+}
+
+/**
+ * GET /api/ckan-preview?id=<dataset> — public: the first rows of the dataset's table from its catalog
+ * (this province's rows only, where the table covers every province).
+ */
+export const ckanPreview: PayloadHandler = async (req) => {
+  if (tooMany(req)) return Response.json({ error: 'เรียกดูบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่' }, { status: 429 })
+  const s = await currentSettings(req)
+  if (!s.enabled && (req.user as { role?: string } | null)?.role !== 'admin') return Response.json({ error: 'ยังไม่เปิดใช้การค้นหาข้อมูล' }, { status: 404 })
+  const id = Number(new URL(req.url!).searchParams.get('id'))
+  if (!Number.isInteger(id) || id <= 0) return Response.json({ error: 'ไม่พบชุดข้อมูล' }, { status: 404 })
+  try {
+    const preview = await previewOf(req.payload, id)
+    if (!preview) return Response.json({ error: 'ชุดข้อมูลนี้ไม่มีตารางให้ดูตัวอย่าง' }, { status: 404 })
+    return Response.json(preview, { headers: { 'Cache-Control': 'private, max-age=600' } })
+  } catch {
+    return Response.json({ error: 'ดึงตัวอย่างจากระบบบัญชีข้อมูลไม่ได้ในขณะนี้ ลองเปิดชุดข้อมูลในระบบบัญชีข้อมูลแทน' }, { status: 502 })
+  }
 }
 
 /** POST /api/ckan-sync — central admins: refresh the copy now. Answers at once; the run goes on in the background. */

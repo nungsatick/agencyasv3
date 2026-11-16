@@ -183,6 +183,9 @@ export async function syncCkan(payload: Payload): Promise<SyncResult[] | null> {
       await payload.db.drizzle.execute(sql`delete from ckan_datasets where source not in (${sql.join(CKAN_SOURCES.map((x) => sql`${x}`), sql`, `)})`)
       forgetCkanIndex()
     }
+    // search words are kept for a year
+    const yearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+    await payload.db.drizzle.execute(sql`delete from ckan_search_stats where day < ${yearAgo}`)
     return out
   } finally {
     g.__agyCkanSyncing = false

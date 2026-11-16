@@ -17,7 +17,8 @@ import { ActivityLogs, Announcements, CookieConsents, HitCounts, PageViews, Site
 import { SessionActivity, Users, UserTokens } from './collections/Users'
 import { AccountRequests } from './collections/AccountRequests'
 import { CkanDatasets, CkanSyncRuns } from './collections/Ckan'
-import { ckanSearch, ckanSyncNow } from './endpoints/ckan'
+import { CkanSearchStats } from './collections/CkanStats'
+import { ckanPreview, ckanSearch, ckanSyncNow } from './endpoints/ckan'
 import { scheduleCkanSync } from './lib/ckanSync'
 
 const filename = fileURLToPath(import.meta.url)
@@ -79,12 +80,13 @@ export default buildConfig({
   cors: [process.env.SITE_URL, 'http://localhost:3000'].filter((u): u is string => Boolean(u)),
   // nothing uses GraphQL (the backoffice and the site use the REST API): switched off, with its playground
   graphQL: { disable: true },
-  collections: [Documents, Dashboards, Files, CentralContents, Announcements, Provinces, Topics, DocumentTypes, Users, AccountRequests, UserTokens, SessionActivity, ActivityLogs, PageViews, HitCounts, CookieConsents, CkanDatasets, CkanSyncRuns].map(
+  collections: [Documents, Dashboards, Files, CentralContents, Announcements, Provinces, Topics, DocumentTypes, Users, AccountRequests, UserTokens, SessionActivity, ActivityLogs, PageViews, HitCounts, CookieConsents, CkanDatasets, CkanSyncRuns, CkanSearchStats].map(
     (c) => ({ ...c, admin: { ...c.admin, hideAPIURL: true } }),
   ),
   endpoints: [
     { path: '/overview-export', method: 'get', handler: overviewExport },
     { path: '/ckan-search', method: 'get', handler: ckanSearch },
+    { path: '/ckan-preview', method: 'get', handler: ckanPreview },
     { path: '/ckan-sync', method: 'post', handler: ckanSyncNow },
   ],
   globals: [SiteSettings].map((g) => ({ ...g, admin: { ...g.admin, hideAPIURL: true } })),

@@ -85,6 +85,7 @@ export interface Config {
     'cookie-consents': CookieConsent;
     'ckan-datasets': CkanDataset;
     'ckan-sync-runs': CkanSyncRun;
+    'ckan-search-stats': CkanSearchStat;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -114,6 +115,7 @@ export interface Config {
     'cookie-consents': CookieConsentsSelect<false> | CookieConsentsSelect<true>;
     'ckan-datasets': CkanDatasetsSelect<false> | CkanDatasetsSelect<true>;
     'ckan-sync-runs': CkanSyncRunsSelect<false> | CkanSyncRunsSelect<true>;
+    'ckan-search-stats': CkanSearchStatsSelect<false> | CkanSearchStatsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -627,6 +629,20 @@ export interface CkanSyncRun {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ckan-search-stats".
+ */
+export interface CkanSearchStat {
+  id: number;
+  day: string;
+  province: number | Province;
+  query: string;
+  searches: number;
+  misses: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -720,6 +736,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'ckan-sync-runs';
         value: number | CkanSyncRun;
+      } | null)
+    | ({
+        relationTo: 'ckan-search-stats';
+        value: number | CkanSearchStat;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1111,6 +1131,19 @@ export interface CkanSyncRunsSelect<T extends boolean = true> {
   fetched?: T;
   removed?: T;
   note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ckan-search-stats_select".
+ */
+export interface CkanSearchStatsSelect<T extends boolean = true> {
+  day?: T;
+  province?: T;
+  query?: T;
+  searches?: T;
+  misses?: T;
   updatedAt?: T;
   createdAt?: T;
 }

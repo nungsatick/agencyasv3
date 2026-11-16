@@ -3493,3 +3493,13 @@ $agy-upload-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     overflow-x: auto;
   }
 }
+.agy-ckan__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px 24px;
+  caption {
+    text-align: left;
+    font-weight: 600;
+    padding: 4px 0 6px;
+  }
+}

@@ -37,6 +37,24 @@ export async function CkanView(props: AdminViewServerProps) {
 
   const runs = (await payload.find({ collection: 'ckan-sync-runs', sort: '-startedAt', limit: 6, depth: 0 })).docs
 
+  // what visitors searched for in the last 30 days, all provinces together
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+  type StatRow = { query: string; searches: number; misses: number; provinces: string }
+  const statRows = (missedOnly: boolean) =>
+    payload.db.drizzle.execute(sql`
+      select s.query, sum(s.searches)::int as searches, sum(s.misses)::int as misses,
+             string_agg(distinct p.name_th, ', ') as provinces
+      from ckan_search_stats s join provinces p on p.id = s.province_id
+      where s.day >= ${since} group by s.query having ${missedOnly ? sql`sum(s.misses) > 0` : sql`true`}
+      order by ${missedOnly ? sql`sum(s.misses)` : sql`sum(s.searches)`} desc, s.query limit 15`)
+  const popular = (await statRows(false)).rows as StatRow[]
+  const missed = (await statRows(true)).rows as StatRow[]
+  const statTotal = ((await payload.db.drizzle.execute(sql`
+    select coalesce(sum(searches), 0)::int as searches, coalesce(sum(misses), 0)::int as misses from ckan_search_stats where day >= ${since}`)).rows[0] ?? {
+    searches: 0,
+    misses: 0,
+  }) as { searches: number; misses: number }
+
   const province = provinces.find((p) => p.slug === sp.province) ?? provinces.find((p) => p.slug === 'kalasin') ?? provinces[0]
   const q = (sp.q ?? '').trim()
   const { synonyms } = dataSearchSettings((await payload.findGlobal({ slug: 'site-settings', depth: 0 })).dataSearch)
@@ -94,6 +112,47 @@ export async function CkanView(props: AdminViewServerProps) {
             </table>
           )}
           {missing.length > 0 && counts.length > 0 && <p className="agy__sub">จังหวัดที่ไม่พบชุดข้อมูลในทั้งสองแหล่ง: {missing.map((p) => p.nameTh).join(', ')}</p>}
+        </div>
+
+        <div className="agy__card">
+          <div>
+            <h2>คำที่ผู้เข้าชมค้นหา (30 วันล่าสุด)</h2>
+            <p className="agy__sub">
+              จากปุ่ม &quot;ค้นหาข้อมูล&quot; บนหน้าเว็บจังหวัด รวม {n(statTotal.searches)} ครั้ง ไม่พบผล {n(statTotal.misses)} ครั้ง · ไม่นับเจ้าหน้าที่ที่เข้าสู่ระบบ
+              · ไม่เก็บข้อมูลผู้ค้น และไม่เก็บคำที่ดูเหมือนเลขโทรศัพท์ เลขประจำตัว หรืออีเมล · คำที่ค้นไม่พบใช้เพิ่มคำพ้องความหมายได้ที่ ตั้งค่าเว็บไซต์ &gt; ผู้ช่วยค้นหาข้อมูล
+            </p>
+          </div>
+          {statTotal.searches === 0 ? (
+            <p className="agy__sub">ยังไม่มีการค้นหา</p>
+          ) : (
+            <div className="agy-ckan__stats">
+              {[
+                { title: 'ค้นหาบ่อย', rows: popular },
+                { title: 'ค้นแล้วไม่พบผล', rows: missed },
+              ].map((t) => (
+                <table key={t.title} className="agy-ckan__runs">
+                  <caption>{t.title}</caption>
+                  <thead>
+                    <tr><th>คำค้น</th><th>ครั้ง</th><th>ไม่พบ</th><th>จังหวัด</th></tr>
+                  </thead>
+                  <tbody>
+                    {t.rows.length === 0 ? (
+                      <tr><td colSpan={4}>—</td></tr>
+                    ) : (
+                      t.rows.map((r) => (
+                        <tr key={r.query}>
+                          <td>{r.query}</td>
+                          <td>{n(r.searches)}</td>
+                          <td>{n(r.misses)}</td>
+                          <td>{r.provinces}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="agy__card">

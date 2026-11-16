@@ -20,6 +20,8 @@ type Result = {
   modifiedAt: string | null
 }
 type Faq = { question: string; answer: string; linkLabel: string | null; linkUrl: string | null }
+type Preview = { resource: string; fields: string[]; rows: (string | number | null)[][]; total: number; province: boolean; note: string | null }
+type PreviewState = { state: 'loading' } | { state: 'ok'; data: Preview } | { state: 'error'; text: string }
 type Answer = { total: number; offset: number; results: Result[]; faqs: Faq[]; catalogUrl: string }
 type Message =
   | { id: number; who: 'me'; text: string }
@@ -31,6 +33,9 @@ type NewMessage = Message extends infer M ? (M extends Message ? Omit<M, 'id'> :
 
 export type AssistantTopic = { label: string; query: string }
 
+// columns holding years or periods are shown as written (2568, not 2,568)
+const YEARISH = /ปี|year|period|time|date|วันที่|เดือน|code|รหัส/i
+
 const day = (d: string | null) => (d ? new Date(d).toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok', dateStyle: 'medium' }) : null)
 
 const SearchIcon = () => (
@@ -40,11 +45,21 @@ const SearchIcon = () => (
   </svg>
 )
 
+const EyeIcon = ({ closed }: { closed: boolean }) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+    <circle cx="12" cy="12" r="3" />
+    {closed && <path d="M3 3l18 18" />}
+  </svg>
+)
+
 export function DataAssistant({ province, provinceName, topics }: { province: string; provinceName: string; topics: AssistantTopic[] }) {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([{ id: 0, who: 'bot', kind: 'intro' }])
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
+  // the tables opened under results, by dataset id
+  const [previews, setPreviews] = useState<Record<number, PreviewState>>({})
   const nextId = useRef(1)
   const input = useRef<HTMLInputElement>(null)
   const launcher = useRef<HTMLButtonElement>(null)
@@ -92,6 +107,64 @@ export function DataAssistant({ province, provinceName, topics }: { province: st
     } finally {
       setBusy(false)
     }
+  }
+
+  /** Shows or hides the first rows of a dataset's table under its card. */
+  const togglePreview = async (id: number) => {
+    if (previews[id]) {
+      setPreviews(({ [id]: _gone, ...rest }) => rest)
+      return
+    }
+    setPreviews((all) => ({ ...all, [id]: { state: 'loading' } }))
+    try {
+      const res = await fetch(`/api/ckan-preview?id=${id}`)
+      const body = (await res.json()) as Preview & { error?: string }
+      if (!res.ok) throw new Error(body.error ?? 'ดึงตัวอย่างไม่ได้')
+      setPreviews((all) => ({ ...all, [id]: { state: 'ok', data: body } }))
+    } catch (err) {
+      const text = (err as Error).message === 'Failed to fetch' ? 'เชื่อมต่อไม่ได้ กรุณาลองใหม่' : (err as Error).message
+      setPreviews((all) => ({ ...all, [id]: { state: 'error', text } }))
+    }
+  }
+
+  const previewOf = (id: number, title: string) => {
+    const p = previews[id]
+    if (!p) return null
+    if (p.state === 'loading') return <p className="assist__preview-msg">กำลังดึงตัวอย่าง…</p>
+    if (p.state === 'error') return <p className="assist__preview-msg assist__preview-msg--error">{p.text}</p>
+    const { data } = p
+    return (
+      <div className="assist__preview">
+        <div className="assist__table" tabIndex={0} role="region" aria-label={`ตัวอย่างตาราง ${title}`}>
+          <table>
+            <thead>
+              <tr>
+                {data.fields.map((f) => (
+                  <th key={f} scope="col">
+                    {f}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.rows.map((row, i) => (
+                <tr key={i}>
+                  {row.map((v, j) => (
+                    <td key={j} className={typeof v === 'number' ? 'is-num' : undefined}>
+                      {v == null ? '' : typeof v === 'number' && !YEARISH.test(data.fields[j]) ? v.toLocaleString('th-TH') : String(v)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="assist__preview-msg">
+          {data.note ?? `แสดง ${data.rows.length.toLocaleString('th-TH')} แถว${data.total > data.rows.length ? ` จากทั้งหมด ${data.total.toLocaleString('th-TH')} แถว` : ''}${data.province ? ` ของจังหวัด${provinceName}` : ''}`}
+          {data.resource && ` · ไฟล์ ${data.resource}`}
+        </p>
+      </div>
+    )
   }
 
   const submit = (e: React.FormEvent) => {
@@ -188,16 +261,22 @@ export function DataAssistant({ province, provinceName, topics }: { province: st
                   <>
                     {!answer.offset && <p>พบ {answer.total.toLocaleString('th-TH')} ชุดข้อมูลที่เกี่ยวข้อง</p>}
                     <ol className="assist__results" start={answer.offset + 1}>
-                      {answer.results.map((r) => (
+                      {answer.results.map((r, i) => (
                         <li key={r.id} className="assist__card">
-                          {r.url ? (
-                            <a href={r.url} target="_blank" rel="noopener noreferrer" className="assist__title">
-                              {r.title}
-                              <span className="sr-only"> (เปิดในแท็บใหม่)</span>
-                            </a>
-                          ) : (
-                            <span className="assist__title">{r.title}</span>
-                          )}
+                          <span className="assist__head-row">
+                            {/* the place in all results (1 to total), so a long list stays easy to follow */}
+                            <span className="assist__no" aria-hidden="true">
+                              {(answer.offset + i + 1).toLocaleString('th-TH')}
+                            </span>
+                            {r.url ? (
+                              <a href={r.url} target="_blank" rel="noopener noreferrer" className="assist__title">
+                                {r.title}
+                                <span className="sr-only"> (เปิดในแท็บใหม่)</span>
+                              </a>
+                            ) : (
+                              <span className="assist__title">{r.title}</span>
+                            )}
+                          </span>
                           <span className="assist__meta">
                             {r.organization}
                             {day(r.modifiedAt) && ` · ปรับปรุง ${day(r.modifiedAt)}`}
@@ -212,6 +291,19 @@ export function DataAssistant({ province, provinceName, topics }: { province: st
                               {r.hasTable && <span className="assist__tag assist__tag--table">มีตารางข้อมูล</span>}
                             </span>
                           )}
+                          {r.hasTable && (
+                            <button
+                              type="button"
+                              className="assist__peek"
+                              aria-expanded={Boolean(previews[r.id])}
+                              aria-label={`${previews[r.id] ? 'ซ่อน' : 'ดู'}ตัวอย่างตัวเลขของ ${r.title}`}
+                              onClick={() => void togglePreview(r.id)}
+                            >
+                              <EyeIcon closed={Boolean(previews[r.id])} />
+                              {previews[r.id] ? 'ซ่อนตัวอย่าง' : 'ตัวอย่าง'}
+                            </button>
+                          )}
+                          {previewOf(r.id, r.title)}
                         </li>
                       ))}
                     </ol>
