@@ -100,7 +100,9 @@ export default async function GuidesPage({ params, searchParams }: { params: Pro
   const plan = all.filter((c) => c.section === 'plan')
   const howto = all.filter((c) => c.section === 'howto')
   const years = [...new Set(plan.map((c) => c.fiscalYear).filter((y): y is number => Boolean(y)))].sort((a, b) => b - a)
-  const { selected, multi } = selectYears((await searchParams).year, years)
+  // with no year in the address the page opens on the latest year; "ทั้งหมด" (year=all) still shows every year
+  const asked = (await searchParams).year
+  const { selected, multi } = selectYears(asked || (years[0] ? String(years[0]) : undefined), years)
   const base = `/${province.slug}/guides`
   const [linkOpens, downloads] = await Promise.all([
     getHits('guide_link', all.map((c) => c.id)),
